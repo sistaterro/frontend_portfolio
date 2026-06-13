@@ -2,11 +2,14 @@
 
 A portable folder for storing and presenting reusable frontend aesthetics. Each card references a PNG preview in `assets/` using the same base name as its HTML file.
 
+For maintenance, handoff, and AI-agent guidance, see [`AGENTS.md`](AGENTS.md).
+
 When you prepare the preview images, save them with these names:
 
 ```text
 assets/
   hrcomponent.png
+  forum.png
   lumex.png
   nexusgrid.png
   soltech_english.png
@@ -29,6 +32,18 @@ assets/
 ---
 
 ## Aesthetic Catalog
+
+### ForoBardo
+
+![ForoBardo aesthetic preview](assets/forum.png)
+
+**File:** `forum.html`  
+**Type:** Forum / community media platform component system  
+**Feel:** loud, underground, opinionated, social, high-energy  
+**Best for:** forums, creator communities, media feeds, social dashboards, content-heavy apps  
+**Visual signature:** dark burnt surfaces, hot orange accents, condensed display type, mono metadata, chunky cards, post composers, media badges, modals, toasts, and forum-native interaction states.
+
+---
 
 ### Lumex
 
@@ -95,3 +110,4 @@ assets/
 - This directory is meant to be moved as a complete package into other projects.
 - The HTML files are full demos; the images in `assets/` act as a quick visual storefront.
 - When adding new aesthetics, keep the same pattern: `name.html` + `assets/name.png` + one catalog card in this README.
+- Keep `AGENTS.md` updated when the repository purpose, naming conventions, or maintenance workflow changes.
