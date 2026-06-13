@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Component Sketch &mdash; HR Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- CSS: move this to tokens.css + components.css later -->
+<style>
+
+/* ============================================================
+   DESIGN TOKENS
+============================================================ */
+:root {
+  /* Surface */
+  --surface-0:    #f7f6f3;
+  --surface-1:    #ffffff;
+  --surface-2:    #f0eef9;
+  --surface-3:    #e8f4f0;
+
+  /* Primary - periwinkle blue (softer than LinkedIn) */
+  --blue-50:      #eef1fc;
+  --blue-100:     #d6dcf8;
+  --blue-200:     #adb9f1;
+  --blue-400:     #6b82e8;
+  --blue-600:     #4560d4;
+  --blue-700:     #3449b8;
+
+  /* Secondary - sage */
+  --sage-50:      #eef5f1;
+  --sage-100:     #cce4d6;
+  --sage-300:     #7ebe9c;
+  --sage-500:     #3d9e6a;
+
+  /* Tertiary - lavender */
+  --lav-50:       #f2effe;
+  --lav-100:      #ddd5fc;
+  --lav-300:      #a992f5;
+  --lav-500:      #7c5ce8;
+
+  /* Amber accent */
+  --amber-50:     #fff8ec;
+  --amber-100:    #fde9be;
+  --amber-400:    #f7b731;
+  --amber-600:    #d4920a;
+
+  /* Rose */
+  --rose-50:      #fef0f2;
+  --rose-100:     #fcd6db;
+  --rose-400:     #f0647a;
+  --rose-600:     #c73651;
+
+  /* Ink */
+  --ink-900:      #1a1828;
+  --ink-700:      #3a3754;
+  --ink-500:      #6b6888;
+  --ink-300:      #a8a5be;
+  --ink-100:      #dddceb;
+  --ink-50:       #f0effe;
+
+  /* Border */
+  --border:       rgba(106,100,168,0.12);
+  --border-med:   rgba(106,100,168,0.2);
+  --border-strong:rgba(69,96,212,0.35);
+
+  /* Shadow */
+  --shadow-xs:    0 1px 2px rgba(26,24,40,0.05);
+  --shadow-sm:    0 2px 8px rgba(26,24,40,0.07), 0 1px 2px rgba(26,24,40,0.04);
+  --shadow-md:    0 4px 20px rgba(26,24,40,0.09), 0 1px 4px rgba(26,24,40,0.05);
+  --shadow-lg:    0 12px 40px rgba(26,24,40,0.11), 0 2px 8px rgba(26,24,40,0.06);
+  --shadow-blue:  0 4px 20px rgba(69,96,212,0.18);
+  --shadow-focus: 0 0 0 3px rgba(107,130,232,0.22);
+
+  /* Radius */
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   16px;
+  --r-xl:   24px;
+  --r-full: 9999px;
+
+  /* Type */
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Inter', sans-serif;
+
+  /* Spacing scale */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+}
+
+/* ============================================================
+   BASE
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface-0);
+  color: var(--ink-900);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── SECTION WRAPPER ── */
+.sketch-section {
+  padding: var(--sp-10) var(--sp-8);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.sketch-section:last-child { border-bottom: none; }
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--blue-400);
+  margin-bottom: var(--sp-5);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  max-width: 120px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink-900);
+  margin-bottom: var(--sp-2);
+  letter-spacing: -0.4px;
+}
+
+.section-desc {
+  font-size: 14px;
+  color: var(--ink-500);
+  margin-bottom: var(--sp-8);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.component-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  align-items: flex-start;
+  margin-bottom: var(--sp-6);
+}
+.component-row.vertical { flex-direction: column; }
+.component-row.center   { align-items: center; }
+
+.component-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--ink-300);
+  text-transform: uppercase;
+  margin-bottom: var(--sp-2);
+  display: block;
+}
+
+/* ============================================================
+   NAVBAR COMPONENT
+============================================================ */
+.c-navbar {
+  width: 100%;
+  height: 60px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--sp-5);
+  gap: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-shrink: 0;
+}
+.brand-mark {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--blue-400), var(--lav-300));
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-blue);
+}
+.brand-mark svg { width: 16px; height: 16px; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-900);
+  letter-spacing: -0.3px;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-left: var(--sp-5);
+}
+.nav-item {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-500);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.nav-item:hover { background: var(--blue-50); color: var(--blue-600); }
+.nav-item.active {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  font-weight: 600;
+}
+
+.navbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+/* Notification bell */
+.c-icon-btn {
+  width: 34px; height: 34px;
+  border-radius: var(--r-md);
+  background: transparent;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-500);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  position: relative;
+  flex-shrink: 0;
+}
+.c-icon-btn:hover {
+  background: var(--blue-50);
+  border-color: var(--blue-200);
+  color: var(--blue-600);
+}
+.icon-badge {
+  position: absolute;
+  top: 6px; right: 7px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--rose-400);
+  border: 1.5px solid var(--surface-1);
+}
+
+/* Avatar */
+.c-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  transition: border-color 0.15s;
+}
+.c-avatar:hover { border-color: var(--blue-200); }
+.c-avatar.sm { width: 28px; height: 28px; font-size: 10px; }
+.c-avatar.lg { width: 40px; height: 40px; font-size: 15px; }
+.c-avatar.xl { width: 52px; height: 52px; font-size: 18px; }
+
+.avatar-blue   { background: var(--blue-100);  color: var(--blue-600); }
+.avatar-sage   { background: var(--sage-100);  color: var(--sage-500); }
+.avatar-lav    { background: var(--lav-100);   color: var(--lav-500); }
+.avatar-amber  { background: var(--amber-100); color: var(--amber-600); }
+.avatar-rose   { background: var(--rose-100);  color: var(--rose-600); }
+
+/* ============================================================
+   SIDEBAR COMPONENT
+============================================================ */
+.c-sidebar {
+  width: 220px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.sidebar-header {
+  padding: var(--sp-4) var(--sp-4) var(--sp-3);
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-org {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-700);
+  margin-bottom: 2px;
+}
+.sidebar-sub {
+  font-size: 11px;
+  color: var(--ink-300);
+}
+
+.sidebar-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  padding: var(--sp-3) var(--sp-4) var(--sp-2);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-500);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.12s, color 0.12s;
+  position: relative;
+}
+.sidebar-item:hover { background: var(--blue-50); color: var(--ink-700); }
+.sidebar-item.active {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  font-weight: 600;
+}
+.sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 4px; bottom: 4px;
+  width: 3px;
+  background: var(--blue-400);
+  border-radius: 0 var(--r-full) var(--r-full) 0;
+}
+
+.sidebar-icon {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.sidebar-item.active .sidebar-icon { opacity: 1; }
+
+.sidebar-count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--blue-400);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: var(--r-full);
+  padding: 1px 7px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+/* Primary */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.1s, opacity 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 1;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--blue-600);
+  color: #fff;
+  border-color: var(--blue-600);
+  box-shadow: var(--shadow-blue);
+}
+.btn-primary:hover {
+  background: var(--blue-700);
+  box-shadow: 0 6px 24px rgba(69,96,212,0.28);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--blue-50);
+  color: var(--blue-600);
+  border-color: var(--blue-100);
+}
+.btn-secondary:hover {
+  background: var(--blue-100);
+  border-color: var(--blue-200);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-500);
+  border-color: var(--border-med);
+}
+.btn-ghost:hover {
+  background: var(--surface-0);
+  color: var(--ink-700);
+  border-color: var(--border-strong);
+}
+
+.btn-danger {
+  background: var(--rose-50);
+  color: var(--rose-600);
+  border-color: var(--rose-100);
+}
+.btn-danger:hover {
+  background: var(--rose-100);
+  border-color: var(--rose-400);
+  transform: translateY(-1px);
+}
+
+.btn-sage {
+  background: var(--sage-50);
+  color: var(--sage-500);
+  border-color: var(--sage-100);
+}
+.btn-sage:hover { background: var(--sage-100); transform: translateY(-1px); }
+
+.btn-sm { font-size: 12px; padding: 5px 12px; border-radius: var(--r-sm); }
+.btn-lg { font-size: 15px; padding: 12px 26px; border-radius: var(--r-lg); }
+.btn-icon-only { padding: 8px; width: 34px; height: 34px; }
+.btn-icon-only.sm { width: 28px; height: 28px; padding: 5px; }
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================================
+   BADGES / STATUS PILLS
+============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  line-height: 1;
+  letter-spacing: 0.2px;
+}
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge-active   { background: var(--sage-50);   color: var(--sage-500);  }
+.badge-active .badge-dot   { background: var(--sage-500); }
+.badge-pending  { background: var(--amber-50);  color: var(--amber-600); }
+.badge-pending .badge-dot  { background: var(--amber-400); }
+.badge-inactive { background: var(--ink-50);    color: var(--ink-300); }
+.badge-inactive .badge-dot { background: var(--ink-300); }
+.badge-new      { background: var(--blue-50);   color: var(--blue-600); }
+.badge-new .badge-dot      { background: var(--blue-400); }
+.badge-review   { background: var(--lav-50);    color: var(--lav-500); }
+.badge-review .badge-dot   { background: var(--lav-300); }
+.badge-leave    { background: var(--rose-50);   color: var(--rose-600); }
+.badge-leave .badge-dot    { background: var(--rose-400); }
+
+/* ============================================================
+   FORM INPUTS
+============================================================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+}
+.form-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-700);
+  letter-spacing: 0.1px;
+}
+.form-hint {
+  font-size: 11px;
+  color: var(--ink-300);
+  margin-top: 4px;
+}
+.form-error-text {
+  font-size: 11px;
+  color: var(--rose-600);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.c-input {
+  height: 38px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-med);
+  border-radius: var(--r-md);
+  color: var(--ink-900);
+  padding: 0 var(--sp-3);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.c-input::placeholder { color: var(--ink-300); }
+.c-input:hover { border-color: var(--blue-200); }
+.c-input:focus { border-color: var(--blue-400); box-shadow: var(--shadow-focus); }
+.c-input.error { border-color: var(--rose-400); box-shadow: 0 0 0 3px rgba(240,100,122,0.12); }
+.c-input.success { border-color: var(--sage-300); box-shadow: 0 0 0 3px rgba(126,190,156,0.12); }
+.c-input:disabled { background: var(--surface-0); opacity: 0.65; cursor: not-allowed; }
+
+.c-textarea {
+  background: var(--surface-1);
+  border: 1px solid var(--border-med);
+  border-radius: var(--r-md);
+  color: var(--ink-900);
+  padding: var(--sp-3);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  width: 100%;
+  line-height: 1.55;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.c-textarea:hover  { border-color: var(--blue-200); }
+.c-textarea:focus  { border-color: var(--blue-400); box-shadow: var(--shadow-focus); }
+
+.c-select {
+  height: 38px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-med);
+  border-radius: var(--r-md);
+  color: var(--ink-900);
+  padding: 0 var(--sp-5) 0 var(--sp-3);
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23a8a5be' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.c-select:focus { border-color: var(--blue-400); box-shadow: var(--shadow-focus); outline: none; }
+
+/* Input with icon */
+.input-wrap { position: relative; width: 100%; }
+.input-wrap .c-input { padding-left: 36px; }
+.input-wrap .input-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--ink-300); pointer-events: none;
+}
+
+/* Toggle */
+.c-toggle {
+  width: 38px; height: 22px;
+  background: var(--ink-100);
+  border-radius: var(--r-full);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+  border: none;
+  outline: none;
+}
+.c-toggle::after {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px; left: 3px;
+  box-shadow: var(--shadow-xs);
+  transition: transform 0.2s;
+}
+.c-toggle.on { background: var(--blue-400); }
+.c-toggle.on::after { transform: translateX(16px); }
+
+/* Checkbox */
+.c-checkbox-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  cursor: pointer;
+}
+.c-checkbox {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border-med);
+  border-radius: var(--r-sm);
+  background: var(--surface-1);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+.c-checkbox.checked {
+  background: var(--blue-600);
+  border-color: var(--blue-600);
+}
+.c-checkbox.checked svg { display: block; }
+.c-checkbox svg { display: none; }
+.c-checkbox-label { font-size: 13px; color: var(--ink-700); user-select: none; }
+
+/* ============================================================
+   CARDS
+============================================================ */
+.c-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.c-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+.card-header {
+  padding: var(--sp-5) var(--sp-5) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-900);
+  letter-spacing: -0.2px;
+  margin-bottom: 2px;
+}
+.card-subtitle { font-size: 12px; color: var(--ink-300); }
+.card-body  { padding: var(--sp-5); }
+.card-footer {
+  padding: var(--sp-4) var(--sp-5);
+  border-top: 1px solid var(--border);
+  background: var(--surface-0);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+/* Stat card */
+.c-stat-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-sm);
+  min-width: 160px;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.c-stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+.stat-icon-wrap {
+  width: 40px; height: 40px;
+  border-radius: var(--r-md);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--sp-3);
+}
+.stat-icon-blue   { background: var(--blue-50);  }
+.stat-icon-sage   { background: var(--sage-50);  }
+.stat-icon-lav    { background: var(--lav-50);   }
+.stat-icon-amber  { background: var(--amber-50); }
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink-900);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 12px; color: var(--ink-500); margin-bottom: 8px; }
+.stat-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--r-full);
+}
+.stat-delta.up   { color: var(--sage-500);  background: var(--sage-50); }
+.stat-delta.down { color: var(--rose-600);  background: var(--rose-50); }
+.stat-delta.flat { color: var(--ink-300);   background: var(--ink-50); }
+
+/* Person card */
+.c-person-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 160px;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.c-person-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.person-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-900);
+  margin-top: var(--sp-3);
+  margin-bottom: 2px;
+}
+.person-role { font-size: 12px; color: var(--ink-300); margin-bottom: var(--sp-3); }
+
+/* ============================================================
+   TABLE
+============================================================ */
+.c-table-wrap {
+  width: 100%;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.c-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.c-table thead {
+  background: var(--surface-0);
+  border-bottom: 1px solid var(--border);
+}
+.c-table th {
+  padding: var(--sp-3) var(--sp-4);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-300);
+  text-align: left;
+  white-space: nowrap;
+}
+.c-table td {
+  padding: var(--sp-3) var(--sp-4);
+  font-size: 13px;
+  color: var(--ink-700);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.c-table tbody tr:last-child td { border-bottom: none; }
+.c-table tbody tr {
+  transition: background 0.12s;
+}
+.c-table tbody tr:hover { background: var(--blue-50); }
+
+.table-person {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.table-person-info {}
+.table-person-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-900);
+  line-height: 1.2;
+}
+.table-person-email { font-size: 11px; color: var(--ink-300); }
+
+/* ============================================================
+   MODAL / DIALOG
+============================================================ */
+.c-modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(26,24,40,0.32);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--sp-5);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.c-modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.c-modal {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 460px;
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+}
+.c-modal-overlay.open .c-modal { transform: translateY(0) scale(1); }
+
+.modal-head {
+  padding: var(--sp-5) var(--sp-6);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+.modal-head-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink-900);
+  letter-spacing: -0.3px;
+}
+.modal-head-desc { font-size: 13px; color: var(--ink-500); margin-top: 3px; }
+
+.modal-body-inner { padding: var(--sp-6); }
+.modal-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+}
+.modal-footer {
+  padding: var(--sp-4) var(--sp-6);
+  border-top: 1px solid var(--border);
+  background: var(--surface-0);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+}
+
+/* ============================================================
+   ALERTS / TOASTS
+============================================================ */
+.c-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-radius: var(--r-md);
+  border: 1px solid;
+  width: 100%;
+}
+.alert-icon { flex-shrink: 0; margin-top: 1px; }
+.alert-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.alert-desc  { font-size: 12px; line-height: 1.55; }
+
+.alert-info    { background: var(--blue-50);  border-color: var(--blue-100);  color: var(--blue-700); }
+.alert-success { background: var(--sage-50);  border-color: var(--sage-100);  color: var(--sage-500); }
+.alert-warning { background: var(--amber-50); border-color: var(--amber-100); color: var(--amber-600); }
+.alert-error   { background: var(--rose-50);  border-color: var(--rose-100);  color: var(--rose-600); }
+
+/* Toast */
+.c-toast-area {
+  position: fixed;
+  bottom: var(--sp-6);
+  right: var(--sp-6);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  pointer-events: none;
+}
+.c-toast {
+  background: var(--ink-900);
+  color: var(--surface-0);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-5);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 260px;
+  max-width: 360px;
+  transform: translateX(120%);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: all;
+}
+.c-toast.show { transform: translateX(0); }
+.toast-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.toast-blue   .toast-dot { background: var(--blue-400); }
+.toast-green  .toast-dot { background: var(--sage-300); }
+.toast-red    .toast-dot { background: var(--rose-400); }
+
+/* ============================================================
+   PROGRESS / CHARTS
+============================================================ */
+.c-progress {
+  height: 8px;
+  background: var(--border);
+  border-radius: var(--r-full);
+  overflow: hidden;
+  width: 100%;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.fill-blue   { background: linear-gradient(90deg, var(--blue-400), var(--lav-300)); }
+.fill-sage   { background: linear-gradient(90deg, var(--sage-300), var(--sage-500)); }
+.fill-amber  { background: linear-gradient(90deg, var(--amber-400), var(--amber-600)); }
+
+/* Bar chart */
+.c-bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 120px;
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--border);
+}
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.bar-fill {
+  width: 100%;
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  min-height: 4px;
+  transition: height 0.5s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer;
+}
+.bar-fill.blue  { background: var(--blue-200); }
+.bar-fill.blue:hover  { background: var(--blue-400); }
+.bar-fill.lav   { background: var(--lav-100); }
+.bar-fill.lav:hover   { background: var(--lav-300); }
+.bar-label { font-size: 10px; color: var(--ink-300); white-space: nowrap; }
+
+/* ============================================================
+   TABS
+============================================================ */
+.c-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-5);
+}
+.c-tab {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-500);
+  padding: var(--sp-3) var(--sp-5);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-family: var(--font-body);
+}
+.c-tab:hover { color: var(--ink-700); }
+.c-tab.active { color: var(--blue-600); border-bottom-color: var(--blue-400); font-weight: 600; }
+
+/* ============================================================
+   DROPDOWN MENU
+============================================================ */
+.c-dropdown-wrap { position: relative; display: inline-block; }
+.c-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 180px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.15s, transform 0.15s;
+  z-index: 100;
+}
+.c-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+.dropdown-header {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-300);
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: 13px;
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.dropdown-item:hover { background: var(--blue-50); color: var(--blue-600); }
+.dropdown-item.danger { color: var(--rose-600); }
+.dropdown-item.danger:hover { background: var(--rose-50); }
+.dropdown-divider { height: 1px; background: var(--border); margin: var(--sp-1) 0; }
+
+/* ============================================================
+   SEARCH BAR
+============================================================ */
+.c-search {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--surface-1);
+  border: 1px solid var(--border-med);
+  border-radius: var(--r-lg);
+  padding: 0 var(--sp-4);
+  height: 42px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  max-width: 420px;
+}
+.c-search:focus-within {
+  border-color: var(--blue-400);
+  box-shadow: var(--shadow-focus);
+}
+.c-search input {
+  border: none; outline: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-900);
+  flex: 1;
+}
+.c-search input::placeholder { color: var(--ink-300); }
+.c-search-icon { color: var(--ink-300); flex-shrink: 0; }
+
+/* ============================================================
+   SKELETON LOADER
+============================================================ */
+.skeleton {
+  background: linear-gradient(90deg, var(--border) 25%, var(--ink-50) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: var(--r-sm);
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================================
+   CHIP / TAG COMPONENT
+============================================================ */
+.c-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--r-full);
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--surface-0);
+  border: 1px solid var(--border-med);
+  color: var(--ink-700);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.c-chip:hover, .c-chip.selected {
+  background: var(--blue-50);
+  border-color: var(--blue-200);
+  color: var(--blue-600);
+}
+.chip-remove {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--ink-100);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  color: var(--ink-500);
+  transition: background 0.12s, color 0.12s;
+}
+.c-chip:hover .chip-remove { background: var(--blue-100); color: var(--blue-600); }
+
+/* ============================================================
+   EMPTY STATE
+============================================================ */
+.c-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-12) var(--sp-8);
+  text-align: center;
+  background: var(--surface-1);
+  border: 1px dashed var(--border-med);
+  border-radius: var(--r-lg);
+}
+.empty-icon {
+  width: 56px; height: 56px;
+  background: var(--blue-50);
+  border-radius: var(--r-lg);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--sp-4);
+}
+.empty-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink-900);
+  margin-bottom: var(--sp-2);
+}
+.empty-desc { font-size: 13px; color: var(--ink-500); line-height: 1.6; margin-bottom: var(--sp-5); max-width: 320px; }
+
+/* ============================================================
+   HEADER (sketch page header)
+============================================================ */
+.sketch-header {
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border);
+  padding: var(--sp-6) var(--sp-8);
+  position: sticky; top: 0; z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+}
+.sketch-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.sketch-header-mark {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--blue-400) 0%, var(--lav-300) 100%);
+  border-radius: var(--r-md);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-blue);
+}
+.sketch-header-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink-900);
+  letter-spacing: -0.4px;
+}
+.sketch-header-sub {
+  font-size: 12px;
+  color: var(--ink-300);
+  margin-top: 1px;
+}
+.sketch-header-badge {
+  background: var(--lav-50);
+  color: var(--lav-500);
+  border: 1px solid var(--lav-100);
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  letter-spacing: 0.3px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- HTML STRUCTURE -->
+
+<!-- SKETCH PAGE HEADER -->
+<header class="sketch-header">
+  <div class="sketch-header-brand">
+    <div class="sketch-header-mark">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="3" y="3" width="6" height="6" rx="1.5" fill="white" opacity="0.9"/>
+        <rect x="11" y="3" width="6" height="6" rx="1.5" fill="white" opacity="0.6"/>
+        <rect x="3" y="11" width="6" height="6" rx="1.5" fill="white" opacity="0.6"/>
+        <rect x="11" y="11" width="6" height="6" rx="1.5" fill="white" opacity="0.3"/>
+      </svg>
+    </div>
+    <div>
+      <div class="sketch-header-title">HR Platform</div>
+      <div class="sketch-header-sub">Component Sketch &mdash; v0.1</div>
+    </div>
+  </div>
+  <span class="sketch-header-badge">Design Tokens Active</span>
+</header>
+
+<!-- ============================================================
+     SECTION 1: NAVBAR
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Navigation</div>
+  <h2 class="section-title">Navbar</h2>
+  <p class="section-desc">Barra de navegacion principal. Sticky, con logo, nav items, busqueda rapida, notificaciones y avatar de usuario.</p>
+
+  <div class="c-navbar">
+    <div class="navbar-brand">
+      <div class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="2" y="2" width="5" height="5" rx="1.2" fill="white" opacity="0.9"/>
+          <rect x="9" y="2" width="5" height="5" rx="1.2" fill="white" opacity="0.6"/>
+          <rect x="2" y="9" width="5" height="5" rx="1.2" fill="white" opacity="0.6"/>
+          <rect x="9" y="9" width="5" height="5" rx="1.2" fill="white" opacity="0.3"/>
+        </svg>
+      </div>
+      <span class="brand-name">Hireflow</span>
+    </div>
+
+    <nav class="navbar-nav">
+      <span class="nav-item active">Panel</span>
+      <span class="nav-item">Empleados</span>
+      <span class="nav-item">Reclutamiento</span>
+      <span class="nav-item">Turnos</span>
+      <span class="nav-item">Reportes</span>
+    </nav>
+
+    <div class="navbar-right">
+      <div class="c-search" style="max-width:200px">
+        <svg class="c-search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+        <input placeholder="Buscar..." readonly>
+      </div>
+
+      <button class="c-icon-btn" title="Notificaciones">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2a5 5 0 00-5 5v2l-1.5 2.5h13L13 9V7a5 5 0 00-5-5z"/><path d="M6.5 13.5a1.5 1.5 0 003 0"/></svg>
+        <span class="icon-badge"></span>
+      </button>
+
+      <div class="c-avatar avatar-blue">MR</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 2: SIDEBAR
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Navigation</div>
+  <h2 class="section-title">Sidebar</h2>
+  <p class="section-desc">Menu lateral para dashboards de HR. Secciones colapsables, indicadores de actividad y contadores.</p>
+
+  <div class="component-row">
+    <div class="c-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-org">Acme Corp</div>
+        <div class="sidebar-sub">Plan Profesional</div>
+      </div>
+      <div class="sidebar-section-title">Principal</div>
+      <div class="sidebar-item active">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>
+        Panel
+      </div>
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        Empleados
+        <span class="sidebar-count">142</span>
+      </div>
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 2H3a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V3a1 1 0 00-1-1z"/><path d="M5 7h6M5 10h4"/></svg>
+        Vacantes
+        <span class="sidebar-count">8</span>
+      </div>
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="11" rx="1"/><path d="M5 3V1M11 3V1M2 7h12"/></svg>
+        Turnos
+      </div>
+      <div class="sidebar-section-title">Gestion</div>
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 1l2 4 5 .7-3.5 3.5.8 5L8 12l-4.3 2.2.8-5L1 5.7 6 5z"/></svg>
+        Evaluaciones
+      </div>
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+        Licencias
+        <span class="sidebar-count">3</span>
+      </div>
+      <div class="sidebar-item">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12l3-3 3 3 6-6"/></svg>
+        Reportes
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 3: BUTTONS
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Actions</div>
+  <h2 class="section-title">Botones</h2>
+  <p class="section-desc">Sistema de botones con jerarquia clara. Primary para acciones principales, Secondary para alternativas, Ghost para acciones terciarias.</p>
+
+  <span class="component-label">Variantes</span>
+  <div class="component-row center">
+    <button class="btn btn-primary">Agregar Empleado</button>
+    <button class="btn btn-secondary">Exportar</button>
+    <button class="btn btn-ghost">Cancelar</button>
+    <button class="btn btn-sage">Aprobar</button>
+    <button class="btn btn-danger">Dar de Baja</button>
+  </div>
+
+  <span class="component-label">Tama&ntilde;os</span>
+  <div class="component-row center">
+    <button class="btn btn-primary btn-sm">Pequeño</button>
+    <button class="btn btn-primary">Normal</button>
+    <button class="btn btn-primary btn-lg">Grande</button>
+  </div>
+
+  <span class="component-label">Con icono</span>
+  <div class="component-row center">
+    <button class="btn btn-primary">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3v10M3 8h10"/></svg>
+      Nuevo Empleado
+    </button>
+    <button class="btn btn-secondary">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 10v3a1 1 0 01-1 1H3a1 1 0 01-1-1v-3M8 2v8M4 6l4 4 4-4"/></svg>
+      Descargar CSV
+    </button>
+    <button class="btn btn-ghost btn-icon-only" title="Configurar">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.2 3.2l1.4 1.4M11.4 11.4l1.4 1.4M3.2 12.8l1.4-1.4M11.4 4.6l1.4-1.4"/></svg>
+    </button>
+  </div>
+
+  <span class="component-label">Estado deshabilitado</span>
+  <div class="component-row center">
+    <button class="btn btn-primary" disabled>Guardar Cambios</button>
+    <button class="btn btn-secondary" disabled>Exportar</button>
+    <button class="btn btn-ghost" disabled>Cancelar</button>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 4: BADGES
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Status</div>
+  <h2 class="section-title">Badges de Estado</h2>
+  <p class="section-desc">Indicadores de estado para empleados, solicitudes y procesos. Siempre con punto de color para accesibilidad.</p>
+
+  <div class="component-row center">
+    <span class="badge badge-active"><span class="badge-dot"></span>Activo</span>
+    <span class="badge badge-pending"><span class="badge-dot"></span>Pendiente</span>
+    <span class="badge badge-inactive"><span class="badge-dot"></span>Inactivo</span>
+    <span class="badge badge-new"><span class="badge-dot"></span>Nuevo</span>
+    <span class="badge badge-review"><span class="badge-dot"></span>En Revision</span>
+    <span class="badge badge-leave"><span class="badge-dot"></span>Con Licencia</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 5: AVATARS
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Identity</div>
+  <h2 class="section-title">Avatares</h2>
+  <p class="section-desc">Representacion visual de usuarios. Escala de tama&ntilde;os y paleta de colores cohesiva con el sistema.</p>
+
+  <span class="component-label">Tama&ntilde;os</span>
+  <div class="component-row center">
+    <div class="c-avatar sm avatar-blue">MR</div>
+    <div class="c-avatar avatar-sage">SA</div>
+    <div class="c-avatar lg avatar-lav">KL</div>
+    <div class="c-avatar xl avatar-amber">TN</div>
+  </div>
+
+  <span class="component-label">Variantes de color</span>
+  <div class="component-row center">
+    <div class="c-avatar avatar-blue">AB</div>
+    <div class="c-avatar avatar-sage">CD</div>
+    <div class="c-avatar avatar-lav">EF</div>
+    <div class="c-avatar avatar-amber">GH</div>
+    <div class="c-avatar avatar-rose">IJ</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 6: FORMS
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Input</div>
+  <h2 class="section-title">Formularios</h2>
+  <p class="section-desc">Campos de entrada, selects, toggles y checkboxes. Estados: default, hover, focus, error, success y disabled.</p>
+
+  <div class="component-row" style="max-width:800px; flex-wrap:wrap">
+    <div class="form-group">
+      <label class="form-label">Nombre completo</label>
+      <input class="c-input" type="text" placeholder="Maria Rodriguez">
+      <span class="form-hint">Tal como figura en el documento.</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correo electronico</label>
+      <div class="input-wrap">
+        <svg class="input-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3.5" width="14" height="10" rx="1.5"/><path d="M1 5.5l7 5 7-5"/></svg>
+        <input class="c-input" type="email" placeholder="maria@empresa.com">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Departamento</label>
+      <select class="c-select">
+        <option>Recursos Humanos</option>
+        <option>Tecnologia</option>
+        <option>Finanzas</option>
+        <option>Marketing</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Estado &mdash; Error</label>
+      <input class="c-input error" type="text" value="fecha invalida" placeholder="">
+      <span class="form-error-text">
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+        Formato de fecha incorrecto.
+      </span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Estado &mdash; Success</label>
+      <input class="c-input success" type="text" value="juan.diaz@empresa.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Deshabilitado</label>
+      <input class="c-input" type="text" value="Codigo: EMP-1042" disabled>
+    </div>
+  </div>
+
+  <div class="component-row" style="max-width:400px">
+    <div class="form-group" style="width:100%">
+      <label class="form-label">Notas del legajo</label>
+      <textarea class="c-textarea" placeholder="Agrega notas internas sobre este empleado..."></textarea>
+    </div>
+  </div>
+
+  <span class="component-label">Toggles y Checkboxes</span>
+  <div class="component-row center" style="gap:24px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="c-toggle on" id="toggle1" onclick="toggleSwitch(this)"></button>
+      <span style="font-size:13px;color:var(--ink-700)">Notificaciones activas</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="c-toggle" id="toggle2" onclick="toggleSwitch(this)"></button>
+      <span style="font-size:13px;color:var(--ink-500)">Modo auditoria</span>
+    </div>
+    <div class="c-checkbox-wrap" onclick="toggleCheckbox(this)">
+      <div class="c-checkbox checked">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
+      </div>
+      <span class="c-checkbox-label">Contrato firmado</span>
+    </div>
+    <div class="c-checkbox-wrap" onclick="toggleCheckbox(this)">
+      <div class="c-checkbox">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><path d="M2 5l2.5 2.5L8 3"/></svg>
+      </div>
+      <span class="c-checkbox-label">Documentacion completa</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 7: CARDS
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Data Display</div>
+  <h2 class="section-title">Cards</h2>
+  <p class="section-desc">Unidades de informacion. Stat cards para metricas, Person cards para empleados, content cards para contenido general.</p>
+
+  <span class="component-label">Stat Cards</span>
+  <div class="component-row">
+    <div class="c-stat-card">
+      <div class="stat-icon-wrap stat-icon-blue">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--blue-600)" stroke-width="1.8"><circle cx="9" cy="7" r="4"/><path d="M3 18c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M15 5l2 2 3-3"/></svg>
+      </div>
+      <div class="stat-value">142</div>
+      <div class="stat-label">Empleados activos</div>
+      <span class="stat-delta up">&#8593; 12% este mes</span>
+    </div>
+    <div class="c-stat-card">
+      <div class="stat-icon-wrap stat-icon-amber">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--amber-600)" stroke-width="1.8"><rect x="3" y="4" width="14" height="13" rx="1"/><path d="M7 4V2M13 4V2M3 9h14"/></svg>
+      </div>
+      <div class="stat-value">8</div>
+      <div class="stat-label">Vacantes abiertas</div>
+      <span class="stat-delta flat">Sin cambios</span>
+    </div>
+    <div class="c-stat-card">
+      <div class="stat-icon-wrap stat-icon-sage">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--sage-500)" stroke-width="1.8"><path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5L10 14.6l-4.9 2.6.9-5.5L2 7.8l5.5-.8z"/></svg>
+      </div>
+      <div class="stat-value">4.7</div>
+      <div class="stat-label">NPS promedio</div>
+      <span class="stat-delta up">&#8593; 0.3 vs Q1</span>
+    </div>
+    <div class="c-stat-card">
+      <div class="stat-icon-wrap stat-icon-lav">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--lav-500)" stroke-width="1.8"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 3"/></svg>
+      </div>
+      <div class="stat-value">97%</div>
+      <div class="stat-label">Asistencia mensual</div>
+      <span class="stat-delta down">&#8595; 1.2% vs mayo</span>
+    </div>
+  </div>
+
+  <span class="component-label">Person Cards</span>
+  <div class="component-row">
+    <div class="c-person-card">
+      <div class="c-avatar xl avatar-blue">MR</div>
+      <div class="person-name">Maria Rodriguez</div>
+      <div class="person-role">Jefa de RRHH</div>
+      <span class="badge badge-active"><span class="badge-dot"></span>Activa</span>
+    </div>
+    <div class="c-person-card">
+      <div class="c-avatar xl avatar-sage">SA</div>
+      <div class="person-name">Santiago Alvarez</div>
+      <div class="person-role">Dev Senior</div>
+      <span class="badge badge-leave"><span class="badge-dot"></span>Con Licencia</span>
+    </div>
+    <div class="c-person-card">
+      <div class="c-avatar xl avatar-lav">KL</div>
+      <div class="person-name">Karen Leiva</div>
+      <div class="person-role">Analista de Datos</div>
+      <span class="badge badge-new"><span class="badge-dot"></span>Nueva</span>
+    </div>
+  </div>
+
+  <span class="component-label">Content Card</span>
+  <div class="component-row" style="max-width:500px">
+    <div class="c-card" style="width:100%">
+      <div class="card-header">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="card-title">Evaluacion de Desempe&ntilde;o</div>
+            <div class="card-subtitle">Periodo Q2 2026 &mdash; 48 pendientes</div>
+          </div>
+          <span class="badge badge-pending"><span class="badge-dot"></span>Pendiente</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="margin-bottom:var(--sp-4)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2)">
+            <span style="font-size:12px;color:var(--ink-500)">Completadas</span>
+            <span style="font-size:12px;font-weight:600;color:var(--ink-700)">94 / 142</span>
+          </div>
+          <div class="c-progress"><div class="progress-fill fill-blue" style="width:66%"></div></div>
+        </div>
+        <div style="display:flex;gap:var(--sp-3)">
+          <div class="c-chip selected">Tecnologia</div>
+          <div class="c-chip">Finanzas</div>
+          <div class="c-chip">Marketing</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary btn-sm">Ver Detalle</button>
+        <button class="btn btn-ghost btn-sm">Exportar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 8: TABLE
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Data Display</div>
+  <h2 class="section-title">Tabla de Empleados</h2>
+  <p class="section-desc">Vista de lista para datasets de RRHH. Hover states, columnas de acciones y badges de estado inline.</p>
+
+  <div class="c-table-wrap">
+    <table class="c-table">
+      <thead>
+        <tr>
+          <th>Empleado</th>
+          <th>Departamento</th>
+          <th>Cargo</th>
+          <th>Ingreso</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="table-person"><div class="c-avatar sm avatar-blue">MR</div><div class="table-person-info"><div class="table-person-name">Maria Rodriguez</div><div class="table-person-email">m.rodriguez@empresa.com</div></div></div></td>
+          <td>Recursos Humanos</td>
+          <td>Jefa de RRHH</td>
+          <td>Ene 2020</td>
+          <td><span class="badge badge-active"><span class="badge-dot"></span>Activa</span></td>
+          <td><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm">Ver</button><button class="btn btn-ghost btn-sm">Editar</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="table-person"><div class="c-avatar sm avatar-sage">SA</div><div class="table-person-info"><div class="table-person-name">Santiago Alvarez</div><div class="table-person-email">s.alvarez@empresa.com</div></div></div></td>
+          <td>Tecnologia</td>
+          <td>Dev Senior</td>
+          <td>Mar 2019</td>
+          <td><span class="badge badge-leave"><span class="badge-dot"></span>Licencia</span></td>
+          <td><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm">Ver</button><button class="btn btn-ghost btn-sm">Editar</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="table-person"><div class="c-avatar sm avatar-lav">KL</div><div class="table-person-info"><div class="table-person-name">Karen Leiva</div><div class="table-person-email">k.leiva@empresa.com</div></div></div></td>
+          <td>Datos</td>
+          <td>Analista</td>
+          <td>Jun 2026</td>
+          <td><span class="badge badge-new"><span class="badge-dot"></span>Nueva</span></td>
+          <td><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm">Ver</button><button class="btn btn-ghost btn-sm">Editar</button></div></td>
+        </tr>
+        <tr>
+          <td><div class="table-person"><div class="c-avatar sm avatar-amber">TN</div><div class="table-person-info"><div class="table-person-name">Tomas Navarro</div><div class="table-person-email">t.navarro@empresa.com</div></div></div></td>
+          <td>Finanzas</td>
+          <td>Controller</td>
+          <td>Feb 2022</td>
+          <td><span class="badge badge-pending"><span class="badge-dot"></span>Pendiente</span></td>
+          <td><div style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm">Ver</button><button class="btn btn-ghost btn-sm">Editar</button></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 9: MODAL
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Overlays</div>
+  <h2 class="section-title">Modal</h2>
+  <p class="section-desc">Dialogo para formularios criticos. Entrada con animacion de escala, fondo con blur.</p>
+
+  <div class="component-row">
+    <button class="btn btn-primary" onclick="document.getElementById('demoModal').classList.add('open')">Abrir Modal &mdash; Nuevo Empleado</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('demoModal2').classList.add('open')">Abrir Modal &mdash; Confirmar Accion</button>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 10: ALERTS
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Feedback</div>
+  <h2 class="section-title">Alertas</h2>
+  <p class="section-desc">Mensajes de sistema para informar, confirmar, advertir o indicar errores. Jerarquia visual por color.</p>
+
+  <div class="component-row vertical" style="max-width:560px">
+    <div class="c-alert alert-info">
+      <svg class="alert-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--blue-600)" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 5.5v.5"/></svg>
+      <div><div class="alert-title">Integracion de nomina activa</div><div class="alert-desc">Los sueldos del mes se sincronizaron correctamente con el sistema externo.</div></div>
+    </div>
+    <div class="c-alert alert-success">
+      <svg class="alert-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--sage-500)" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M5 8l2.5 2.5L11 6"/></svg>
+      <div><div class="alert-title">Empleado incorporado exitosamente</div><div class="alert-desc">Karen Leiva fue dada de alta con todos sus datos y accesos asignados.</div></div>
+    </div>
+    <div class="c-alert alert-warning">
+      <svg class="alert-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--amber-600)" stroke-width="1.6"><path d="M8 2L15 14H1L8 2z"/><path d="M8 7v3M8 11.5v.5"/></svg>
+      <div><div class="alert-title">4 evaluaciones vencen esta semana</div><div class="alert-desc">Tecnologia y Finanzas tienen evaluaciones sin completar que vencen el viernes.</div></div>
+    </div>
+    <div class="c-alert alert-error">
+      <svg class="alert-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--rose-600)" stroke-width="1.6"><circle cx="8" cy="8" r="6"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5"/></svg>
+      <div><div class="alert-title">Error al sincronizar turnos</div><div class="alert-desc">La conexion con el proveedor externo fallo. Revisa las credenciales en Configuracion.</div></div>
+    </div>
+  </div>
+
+  <span class="component-label" style="margin-top:var(--sp-5)">Toasts</span>
+  <div class="component-row">
+    <button class="btn btn-primary" onclick="showToast('Cambios guardados correctamente.','green')">Toast &mdash; Exito</button>
+    <button class="btn btn-secondary" onclick="showToast('Exportando reporte de empleados...','blue')">Toast &mdash; Info</button>
+    <button class="btn btn-danger" onclick="showToast('No se pudo guardar. Intenta de nuevo.','red')">Toast &mdash; Error</button>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 11: PROGRESS
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Data Viz</div>
+  <h2 class="section-title">Progreso &amp; Graficos</h2>
+  <p class="section-desc">Barras de progreso y charts minimalistas. Animaciones con CSS transitions para una experiencia fluida.</p>
+
+  <span class="component-label">Progress Bars</span>
+  <div class="component-row vertical" style="max-width:480px; gap:16px">
+    <div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--ink-500)">Onboarding completado</span><span style="font-size:12px;font-weight:600;color:var(--ink-700)">78%</span></div>
+      <div class="c-progress"><div class="progress-fill fill-blue" style="width:78%"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--ink-500)">Evaluaciones enviadas</span><span style="font-size:12px;font-weight:600;color:var(--ink-700)">66%</span></div>
+      <div class="c-progress"><div class="progress-fill fill-sage" style="width:66%"></div></div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--ink-500)">Vacantes cubiertas</span><span style="font-size:12px;font-weight:600;color:var(--ink-700)">38%</span></div>
+      <div class="c-progress"><div class="progress-fill fill-amber" style="width:38%"></div></div>
+    </div>
+  </div>
+
+  <span class="component-label" style="margin-top:var(--sp-6)">Bar Chart &mdash; Incorporaciones por mes</span>
+  <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-5);max-width:560px;box-shadow:var(--shadow-sm)">
+    <div style="font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--ink-900);margin-bottom:var(--sp-5)">Nuevas incorporaciones &mdash; 2026</div>
+    <div class="c-bar-chart" id="barChart">
+      <div class="bar-col"><div class="bar-fill blue" style="height:60px" title="Ene: 12"></div><span class="bar-label">Ene</span></div>
+      <div class="bar-col"><div class="bar-fill blue" style="height:80px" title="Feb: 16"></div><span class="bar-label">Feb</span></div>
+      <div class="bar-col"><div class="bar-fill blue" style="height:45px" title="Mar: 9"></div><span class="bar-label">Mar</span></div>
+      <div class="bar-col"><div class="bar-fill blue" style="height:95px" title="Abr: 19"></div><span class="bar-label">Abr</span></div>
+      <div class="bar-col"><div class="bar-fill blue" style="height:70px" title="May: 14"></div><span class="bar-label">May</span></div>
+      <div class="bar-col"><div class="bar-fill lav" style="height:110px" title="Jun: 22"></div><span class="bar-label">Jun</span></div>
+    </div>
+    <div style="font-size:11px;color:var(--ink-300);margin-top:var(--sp-3)">Pasa el mouse por las barras para ver el detalle</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION 12: MISC
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Misc</div>
+  <h2 class="section-title">Tabs, Chips, Dropdown, Skeleton</h2>
+  <p class="section-desc">Componentes de soporte para navegacion secundaria, filtros, menus contextuales y estados de carga.</p>
+
+  <span class="component-label">Tabs</span>
+  <div style="max-width:500px">
+    <div class="c-tabs">
+      <button class="c-tab active" onclick="setTab(this)">Todos</button>
+      <button class="c-tab" onclick="setTab(this)">Activos</button>
+      <button class="c-tab" onclick="setTab(this)">Con Licencia</button>
+      <button class="c-tab" onclick="setTab(this)">En Proceso</button>
+    </div>
+    <div style="font-size:13px;color:var(--ink-500)">Contenido de la tab seleccionada aparece aqui.</div>
+  </div>
+
+  <span class="component-label" style="margin-top:var(--sp-6)">Chips de Filtro</span>
+  <div class="component-row" style="flex-wrap:wrap">
+    <div class="c-chip selected">Tecnologia <span class="chip-remove">&times;</span></div>
+    <div class="c-chip">Finanzas <span class="chip-remove">&times;</span></div>
+    <div class="c-chip">Marketing <span class="chip-remove">&times;</span></div>
+    <div class="c-chip">RRHH <span class="chip-remove">&times;</span></div>
+    <div class="c-chip">Operaciones <span class="chip-remove">&times;</span></div>
+  </div>
+
+  <span class="component-label" style="margin-top:var(--sp-6)">Dropdown Menu</span>
+  <div class="component-row">
+    <div class="c-dropdown-wrap">
+      <button class="btn btn-ghost" onclick="toggleDropdown('dd1')">
+        Acciones
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4l4 4 4-4"/></svg>
+      </button>
+      <div class="c-dropdown" id="dd1">
+        <div class="dropdown-header">Empleado</div>
+        <div class="dropdown-item" onclick="closeDropdown('dd1')">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          Ver perfil
+        </div>
+        <div class="dropdown-item" onclick="closeDropdown('dd1')">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11 2H3a1 1 0 00-1 1v10a1 1 0 001 1h10a1 1 0 001-1V5l-3-3z"/><path d="M11 2v3h3"/></svg>
+          Editar datos
+        </div>
+        <div class="dropdown-item" onclick="closeDropdown('dd1')">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 10v3a1 1 0 01-1 1H3a1 1 0 01-1-1v-3M8 2v8M4 6l4 4 4-4"/></svg>
+          Exportar legajo
+        </div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item danger" onclick="closeDropdown('dd1')">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l1 10h8l1-10"/></svg>
+          Dar de baja
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span class="component-label" style="margin-top:var(--sp-6)">Skeleton Loader</span>
+  <div class="c-card" style="max-width:400px;padding:var(--sp-5)">
+    <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+      <div class="skeleton" style="width:40px;height:40px;border-radius:50%"></div>
+      <div style="flex:1">
+        <div class="skeleton" style="height:12px;width:60%;margin-bottom:8px"></div>
+        <div class="skeleton" style="height:10px;width:40%"></div>
+      </div>
+    </div>
+    <div class="skeleton" style="height:10px;width:100%;margin-bottom:8px"></div>
+    <div class="skeleton" style="height:10px;width:88%;margin-bottom:8px"></div>
+    <div class="skeleton" style="height:10px;width:72%"></div>
+  </div>
+
+  <span class="component-label" style="margin-top:var(--sp-6)">Empty State</span>
+  <div class="c-empty" style="max-width:400px">
+    <div class="empty-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--blue-400)" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3M11 8v3M11 14v.5"/></svg>
+    </div>
+    <div class="empty-title">No hay resultados</div>
+    <p class="empty-desc">No encontramos empleados con ese filtro. Proba ajustando la busqueda o limpiando los filtros activos.</p>
+    <button class="btn btn-primary">Limpiar filtros</button>
+  </div>
+</section>
+
+<!-- ============================================================
+     SEARCH BAR STANDALONE
+============================================================ -->
+<section class="sketch-section">
+  <div class="section-label">Input</div>
+  <h2 class="section-title">Busqueda</h2>
+  <p class="section-desc">Campo de busqueda global con icono inline. Focus state con anillo de color sutil.</p>
+
+  <div class="component-row">
+    <div class="c-search">
+      <svg class="c-search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+      <input placeholder="Buscar empleados, vacantes, reportes...">
+    </div>
+    <button class="btn btn-primary">Buscar</button>
+    <button class="btn btn-ghost" style="gap:6px">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+      Filtros
+    </button>
+  </div>
+</section>
+
+<!-- ============================================================
+     MODALS (hidden, triggered by buttons above)
+============================================================ -->
+<div class="c-modal-overlay" id="demoModal">
+  <div class="c-modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-title">Nuevo Empleado</div>
+        <div class="modal-head-desc">Completa los datos basicos para dar de alta al empleado.</div>
+      </div>
+      <button class="btn btn-ghost btn-icon-only btn-sm" onclick="document.getElementById('demoModal').classList.remove('open')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l12 12M13 1L1 13"/></svg>
+      </button>
+    </div>
+    <div class="modal-body-inner">
+      <div class="modal-field-row" style="margin-bottom:var(--sp-4)">
+        <div class="form-group"><label class="form-label">Nombre</label><input class="c-input" placeholder="Maria"></div>
+        <div class="form-group"><label class="form-label">Apellido</label><input class="c-input" placeholder="Rodriguez"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:var(--sp-4)">
+        <label class="form-label">Correo electronico</label>
+        <input class="c-input" type="email" placeholder="m.rodriguez@empresa.com">
+      </div>
+      <div class="modal-field-row">
+        <div class="form-group"><label class="form-label">Departamento</label><select class="c-select"><option>RRHH</option><option>Tecnologia</option><option>Finanzas</option></select></div>
+        <div class="form-group"><label class="form-label">Cargo</label><input class="c-input" placeholder="Analista Sr."></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="document.getElementById('demoModal').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-primary" onclick="document.getElementById('demoModal').classList.remove('open');showToast('Empleado dado de alta correctamente.','green')">Crear Empleado</button>
+    </div>
+  </div>
+</div>
+
+<div class="c-modal-overlay" id="demoModal2">
+  <div class="c-modal" style="max-width:380px">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-title" style="color:var(--rose-600)">Dar de baja</div>
+        <div class="modal-head-desc">Esta accion no se puede deshacer.</div>
+      </div>
+      <button class="btn btn-ghost btn-icon-only btn-sm" onclick="document.getElementById('demoModal2').classList.remove('open')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l12 12M13 1L1 13"/></svg>
+      </button>
+    </div>
+    <div class="modal-body-inner">
+      <div class="c-alert alert-warning" style="margin-bottom:var(--sp-4)">
+        <svg class="alert-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--amber-600)" stroke-width="1.6"><path d="M8 2L15 14H1L8 2z"/><path d="M8 7v3M8 11.5v.5"/></svg>
+        <div><div class="alert-desc">Se eliminara el acceso de Santiago Alvarez y se archivara su legajo.</div></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Motivo de baja</label>
+        <select class="c-select"><option>Renuncia voluntaria</option><option>Fin de contrato</option><option>Desvinculacion</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="document.getElementById('demoModal2').classList.remove('open')">Cancelar</button>
+      <button class="btn btn-danger" onclick="document.getElementById('demoModal2').classList.remove('open');showToast('Empleado dado de baja.','red')">Confirmar Baja</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST AREA -->
+<div class="c-toast-area" id="toastArea"></div>
+
+<!-- JS: move this to app.js later -->
+<script>
+
+// ── TOGGLE SWITCH ─────────────────────────────────
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+}
+
+// ── TOGGLE CHECKBOX ────────────────────────────────
+function toggleCheckbox(wrap) {
+  const cb = wrap.querySelector('.c-checkbox');
+  cb.classList.toggle('checked');
+}
+
+// ── TABS ───────────────────────────────────────────
+function setTab(el) {
+  el.closest('.c-tabs').querySelectorAll('.c-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── DROPDOWN ───────────────────────────────────────
+function toggleDropdown(id) {
+  const dd = document.getElementById(id);
+  dd.classList.toggle('open');
+}
+function closeDropdown(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.c-dropdown-wrap')) {
+    document.querySelectorAll('.c-dropdown.open').forEach(d => d.classList.remove('open'));
+  }
+});
+
+// ── TOAST ──────────────────────────────────────────
+let toastCount = 0;
+function showToast(msg, type = 'blue') {
+  const area  = document.getElementById('toastArea');
+  const toast = document.createElement('div');
+  toast.className = `c-toast toast-${type}`;
+  toast.innerHTML = `<span class="toast-dot"></span>${msg}`;
+  area.appendChild(toast);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => toast.classList.add('show'));
+  });
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 350);
+  }, 3000);
+}
+
+// ── MODAL CLOSE ON OVERLAY ────────────────────────
+document.querySelectorAll('.c-modal-overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o) o.classList.remove('open');
+  });
+});
+
+// ── ESC TO CLOSE ───────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.c-modal-overlay.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.c-dropdown.open').forEach(d => d.classList.remove('open'));
+  }
+});
+
+// ── CHIP TOGGLE ────────────────────────────────────
+document.querySelectorAll('.c-chip').forEach(chip => {
+  chip.addEventListener('click', function(e) {
+    if (!e.target.closest('.chip-remove')) {
+      this.classList.toggle('selected');
+    }
+  });
+});
+
+// ── BAR CHART TOOLTIP ──────────────────────────────
+document.querySelectorAll('.bar-fill').forEach(bar => {
+  bar.addEventListener('mouseenter', function() {
+    if (this.title) showToast(this.title, 'blue');
+  });
+});
+
+</script>
+
+</body>
+</html>
