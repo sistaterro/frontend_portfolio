@@ -12,6 +12,7 @@ The README acts as a storefront: it gives a quick visual catalog of the availabl
 - `AGENTS.md` - handoff guide for AI agents and maintainers.
 - `assets/` - PNG preview images. Each preview should use the same base filename as its HTML page.
 - `*.html` - self-contained aesthetic demos and component inventories.
+- `debts.txt` - working backlog for design ideas, missing aesthetics, rough prompts, and future collection targets.
 
 Current naming pattern:
 
@@ -28,6 +29,9 @@ assets/hrcomponent.png
 
 forum.html
 assets/forum.png
+
+blackstone.html
+assets/blackstone.png
 ```
 
 ## Maintenance Rules
@@ -38,6 +42,7 @@ assets/forum.png
 - When adding a new aesthetic, add both the HTML file and its matching PNG preview reference in `README.md`.
 - If the PNG is not available yet, still add the expected `assets/name.png` reference if the user says they will provide it later.
 - Keep README descriptions short and storefront-like: type, feel, best use cases, and visual signature.
+- Treat `debts.txt` as a planning scratchpad. Update it only when the user asks to track, remove, or refine future aesthetic ideas.
 - Prefer plain English documentation.
 - Avoid changing filenames unless the user asks; filenames are part of the catalog contract.
 
@@ -49,6 +54,7 @@ Before editing, inspect:
 2. `README.md`
 3. The target HTML file
 4. The matching image in `assets/`, if relevant
+5. `debts.txt`, when the request involves future concepts, missing designs, or design planning
 
 When a user asks to add a page to the catalog:
 
@@ -67,6 +73,7 @@ When a user asks for a new aesthetic:
 ## Current Aesthetics
 
 - `hrcomponent.html` - SaaS / HR platform component system. Clean, professional, compact, dashboard-ready.
+- `blackstone.html` - Premium executive finance / investment design system. Charcoal, ivory, muted gold, formal and high-trust.
 - `forum.html` - Forum / community media platform component system. Dark, loud, orange, condensed, social.
 - `lumex.html` - Neon futurism / solar tech. Dark, glowing, particle-driven, premium tech.
 - `nexusgrid.html` - Cyberpunk / high-tech infrastructure. Scanlines, glitch, telemetry, terminal visuals.

@@ -9,6 +9,7 @@ When you prepare the preview images, save them with these names:
 ```text
 assets/
   hrcomponent.png
+  blackstone.png
   forum.png
   lumex.png
   nexusgrid.png
@@ -32,6 +33,18 @@ assets/
 ---
 
 ## Aesthetic Catalog
+
+### Blackstone
+
+![Blackstone aesthetic preview](assets/blackstone.png)
+
+**File:** `blackstone.html`  
+**Type:** Premium executive finance / investment design system  
+**Feel:** restrained, expensive, institutional, boardroom-ready  
+**Best for:** private equity, wealth management, investor portals, executive dashboards, financial advisory sites  
+**Visual signature:** charcoal surfaces, ivory typography, muted gold accents, Playfair Display headlines, thin dividers, formal cards, data panels, and high-trust financial UI patterns.
+
+---
 
 ### ForoBardo
 
@@ -109,5 +122,6 @@ assets/
 
 - This directory is meant to be moved as a complete package into other projects.
 - The HTML files are full demos; the images in `assets/` act as a quick visual storefront.
+- `debts.txt` is a working backlog for design ideas, missing concepts, and future aesthetic prompts.
 - When adding new aesthetics, keep the same pattern: `name.html` + `assets/name.png` + one catalog card in this README.
 - Keep `AGENTS.md` updated when the repository purpose, naming conventions, or maintenance workflow changes.

@@ -1,0 +1,559 @@
+Atlas
+↓
+Pulse
+↓
+Newsroom
+↓
+MedCore
+
+
+
+
+
+
+
+Create a complete single-file HTML showcase called "Atlas".
+
+A premium aerospace, robotics, defense, satellite, and advanced engineering design system.
+
+This is NOT cyberpunk.
+This is NOT science fiction.
+This is NOT gaming.
+
+The visual language must communicate:
+
+precision
+engineering excellence
+mission-critical reliability
+innovation
+national-scale infrastructure
+advanced technology
+
+Visual inspiration:
+
+Airbus
+ESA
+NASA
+Lockheed Martin
+Anduril
+SpaceX
+Northrop Grumman
+Palantir Government
+
+Aesthetic direction:
+
+- Deep navy backgrounds
+- Titanium gray surfaces
+- Technical orange highlights
+- White engineering typography
+- Blueprint-inspired details
+- Fine technical grids
+- Precision linework
+- Structured layouts
+
+Typography:
+
+- Condensed industrial headings
+- Technical mono metadata
+- Engineering-document feel
+- Large strategic headlines
+
+Visual mood:
+
+Mission control.
+Satellite operations center.
+Aerospace engineering briefing room.
+
+Components to showcase:
+
+- Mission dashboard
+- Satellite telemetry panels
+- Flight status cards
+- Sensor monitoring screens
+- Fleet overview
+- Aerospace product catalog
+- Research projects section
+- Engineering metrics
+- Mission timeline
+- Technical specifications tables
+- Security status indicators
+- System health monitoring
+- Live operations panels
+
+Interaction style:
+
+- Precision-focused
+- Minimal animations
+- Technical transitions
+- Instrument-panel feeling
+
+Keywords:
+
+aerospace
+satellite
+robotics
+defense
+engineering
+mission control
+advanced systems
+infrastructure
+operations
+telemetry
+
+The final result should feel like a control room responsible for something extremely expensive and extremely important.
+
+Someone viewing the page should immediately think:
+
+
+
+
+
+
+
+
+
+
+Atlas
+
+Create a complete single-file HTML showcase called "Atlas".
+
+A premium aerospace, robotics, defense, satellite, and advanced engineering design system.
+
+This is NOT cyberpunk.
+This is NOT science fiction.
+This is NOT gaming.
+
+The visual language must communicate:
+
+precision
+engineering excellence
+mission-critical reliability
+innovation
+national-scale infrastructure
+advanced technology
+
+Visual inspiration:
+
+Airbus
+ESA
+NASA
+Lockheed Martin
+Anduril
+SpaceX
+Northrop Grumman
+Palantir Government
+
+Aesthetic direction:
+
+- Deep navy backgrounds
+- Titanium gray surfaces
+- Technical orange highlights
+- White engineering typography
+- Blueprint-inspired details
+- Fine technical grids
+- Precision linework
+- Structured layouts
+
+Typography:
+
+- Condensed industrial headings
+- Technical mono metadata
+- Engineering-document feel
+- Large strategic headlines
+
+Visual mood:
+
+Mission control.
+Satellite operations center.
+Aerospace engineering briefing room.
+
+Components to showcase:
+
+- Mission dashboard
+- Satellite telemetry panels
+- Flight status cards
+- Sensor monitoring screens
+- Fleet overview
+- Aerospace product catalog
+- Research projects section
+- Engineering metrics
+- Mission timeline
+- Technical specifications tables
+- Security status indicators
+- System health monitoring
+- Live operations panels
+
+Interaction style:
+
+- Precision-focused
+- Minimal animations
+- Technical transitions
+- Instrument-panel feeling
+
+Keywords:
+
+aerospace
+satellite
+robotics
+defense
+engineering
+mission control
+advanced systems
+infrastructure
+operations
+telemetry
+
+The final result should feel like a control room responsible for something extremely expensive and extremely important.
+
+Someone viewing the page should immediately think:
+
+"We cannot afford mistakes."
+
+
+
+Pulse
+
+Create a complete single-file HTML showcase called "Pulse".
+
+A modern AI startup, agent platform, and intelligent SaaS design system.
+
+This is NOT corporate consulting.
+This is NOT cyberpunk.
+This is NOT generic SaaS.
+
+The visual language must communicate:
+
+intelligence
+speed
+clarity
+productivity
+trust
+technical elegance
+human-machine collaboration
+
+Visual inspiration:
+
+OpenAI
+Anthropic
+Perplexity
+Linear
+Notion AI
+Vercel
+Raycast
+Cursor
+Lovable
+LangChain
+
+Aesthetic direction:
+
+* Clean light-first interface
+* Optional dark-mode sections
+* Soft off-white surfaces
+* Deep charcoal typography
+* Subtle violet, indigo, blue, and mint accents
+* Gentle gradients only when useful
+* Rounded but precise components
+* Lots of white space
+* No neon overload
+* No cartoonish elements
+* No fake 3D mascots
+
+Typography:
+
+* Modern sans-serif
+* Clean product headlines
+* Highly readable body text
+* Mono text for prompts, model calls, logs, traces, and API-like metadata
+
+Visual mood:
+
+AI product launch.
+Agent workspace.
+Modern developer/productivity tool.
+Calm but powerful.
+
+Components to showcase:
+
+* Hero section for an AI agent product
+* Chat assistant interface
+* Agent workflow builder
+* Prompt/version management cards
+* Model selection dropdown
+* RAG knowledge base panel
+* Tool/function calling timeline
+* Eval results dashboard
+* Trace/log viewer
+* Usage and latency metrics
+* Team collaboration panel
+* API key/settings card
+* Pricing cards
+* Customer quote section
+* Product feature grid
+* Security and governance panel
+* Integration logos/cards
+* Documentation/code snippet block
+* Call-to-action section
+
+Interaction style:
+
+* Smooth but restrained microinteractions
+* Hover states with soft elevation
+* Focus states that feel accessible and professional
+* Subtle loading states
+* Clean modals, dropdowns, tabs, filters, badges, empty states, and toasts
+
+Keywords:
+
+AI startup
+agent platform
+LLM ops
+copilot
+productivity
+developer tools
+RAG
+evals
+traces
+workflow automation
+modern SaaS
+clean interface
+trustworthy AI
+
+The final result should feel like a serious AI product used by technical teams and product teams, not a toy demo.
+
+Someone viewing the page should immediately think:
+
+"This is a modern AI platform people could actually use at work."
+
+
+
+
+
+
+Newsroom
+
+
+Create a complete single-file HTML showcase called "Newsroom".
+
+A premium editorial, journalism, publishing, and long-form content design system.
+
+This is NOT a blog template.
+This is NOT a content marketing page.
+This is NOT a generic news portal.
+
+The visual language must communicate:
+
+credibility
+authority
+journalism
+editorial excellence
+clarity
+depth
+intellectual weight
+
+Visual inspiration:
+
+Bloomberg
+The Economist
+Financial Times
+Reuters
+The New York Times
+The Atlantic
+Wired
+The Information
+
+Aesthetic direction:
+
+* Light-first design
+* Warm paper-like backgrounds
+* Deep charcoal typography
+* Muted editorial accent colors
+* Thin dividers
+* Elegant spacing
+* Dense information presented cleanly
+* Minimal decorative effects
+* Print-inspired layout principles
+
+Typography:
+
+* Strong editorial serif headlines
+* Refined sans-serif interface elements
+* Beautiful article hierarchy
+* Long-form reading optimized
+* Pull quotes
+* Bylines
+* Section labels
+
+Visual mood:
+
+A modern newsroom.
+An investigative publication.
+A serious magazine.
+A publication trusted by decision makers.
+
+Components to showcase:
+
+* Breaking news banner
+* Hero story
+* Multi-column homepage layout
+* Featured investigations section
+* Trending topics panel
+* Author profiles
+* Editorial team cards
+* Article cards
+* Long-form article layout
+* Pull quotes
+* Reading progress indicator
+* Newsletter signup
+* Podcast section
+* Video report section
+* Market/news ticker
+* Opinion column layout
+* Category navigation
+* Search interface
+* Archive explorer
+* Premium subscriber panel
+
+Interaction style:
+
+* Subtle and elegant
+* Reading-focused
+* No flashy animations
+* Print-like confidence
+* Smooth transitions
+* Clean hover states
+
+Keywords:
+
+editorial
+journalism
+investigation
+analysis
+publication
+magazine
+newsroom
+research
+intelligence
+media
+
+The final result should feel like an organization whose primary asset is trustworthy information.
+
+Someone viewing the page should immediately think:
+
+"These people investigate, analyze, and publish information that matters."
+
+
+
+
+
+
+
+
+MedCore
+
+
+Create a complete single-file HTML showcase called "MedCore".
+
+A premium healthcare, telemedicine, hospital, and health-tech design system.
+
+This is NOT a startup landing page.
+This is NOT a pharmaceutical advertisement.
+This is NOT a generic corporate website.
+
+The visual language must communicate:
+
+trust
+care
+precision
+clinical excellence
+human wellbeing
+reliability
+professional competence
+
+Visual inspiration:
+
+Mayo Clinic
+Cleveland Clinic
+Philips Healthcare
+Epic Systems
+Cerner
+Johns Hopkins
+Stanford Health
+Modern telemedicine platforms
+
+Aesthetic direction:
+
+* Bright, clean interface
+* White and soft-gray surfaces
+* Medical blues
+* Teal accents
+* Small amounts of green for positive health indicators
+* Generous whitespace
+* High accessibility
+* Calm visual rhythm
+* Soft shadows
+* Clean cards
+
+Typography:
+
+* Modern sans-serif
+* Excellent readability
+* Strong information hierarchy
+* Friendly but professional
+* Clear labels and navigation
+
+Visual mood:
+
+A world-class hospital.
+A trusted healthcare network.
+A telemedicine platform used by millions.
+A clinical operations center.
+
+Components to showcase:
+
+* Hospital landing hero
+* Appointment booking interface
+* Doctor directory
+* Physician profile cards
+* Telemedicine video consultation layout
+* Patient dashboard
+* Electronic medical record overview
+* Health metrics cards
+* Laboratory results panel
+* Medical timeline
+* Prescription management section
+* Insurance verification interface
+* Clinical scheduling system
+* Hospital department explorer
+* Emergency status indicators
+* Patient messaging center
+* Medical forms
+* Healthcare analytics dashboard
+* Accessibility settings panel
+
+Interaction style:
+
+* Calm
+* Predictable
+* Reassuring
+* Accessible
+* Fast but not flashy
+* Subtle transitions only
+
+Keywords:
+
+healthcare
+telemedicine
+hospital
+clinical
+medical
+patient
+doctor
+wellness
+care
+health-tech
+
+The final result should feel like a platform trusted with critical patient information and healthcare decisions.
+
+Someone viewing the page should immediately think:
+
+"I would trust this organization with my health."
