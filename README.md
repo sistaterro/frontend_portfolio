@@ -1,8 +1,8 @@
 # Frontend Portfolio Aesthetic Store
 
-Una carpeta portable para guardar y mostrar esteticas frontend listas para reutilizar en otros proyectos. Cada tarjeta referencia una captura PNG en `assets/` con el mismo nombre base que su archivo HTML.
+A portable folder for storing and presenting reusable frontend aesthetics. Each card references a PNG preview in `assets/` using the same base name as its HTML file.
 
-Cuando prepares las imagenes, guardalas asi:
+When you prepare the preview images, save them with these names:
 
 ```text
 assets/
@@ -20,11 +20,11 @@ assets/
 
 ![HR Component aesthetic preview](assets/hrcomponent.png)
 
-**Archivo:** `hrcomponent.html`  
-**Tipo:** SaaS / HR platform component system  
-**Sensacion:** limpia, profesional, amable, densa sin sentirse pesada  
-**Ideal para:** dashboards, herramientas internas, RRHH, CRM, admin panels, product SaaS  
-**Firma visual:** superficies claras, periwinkle blue, sage, lavender, radios suaves, componentes compactos, tablas, toasts, modals, tabs, filtros y estados de carga.
+**File:** `hrcomponent.html`  
+**Type:** SaaS / HR platform component system  
+**Feel:** clean, professional, friendly, information-dense without feeling heavy  
+**Best for:** dashboards, internal tools, HR, CRM, admin panels, SaaS products  
+**Visual signature:** light surfaces, periwinkle blue, sage, lavender, soft radii, compact components, tables, toasts, modals, tabs, filters, and loading states.
 
 ---
 
@@ -34,11 +34,11 @@ assets/
 
 ![Lumex aesthetic preview](assets/lumex.png)
 
-**Archivo:** `lumex.html`  
-**Tipo:** Neon futurism / solar tech  
-**Sensacion:** electrica, nocturna, energetica, premium tech  
-**Ideal para:** energia, AI dashboards, crypto/fintech visual, launches futuristas, productos con movimiento  
-**Firma visual:** fondo oscuro, neon purple/cyan, glow intenso, canvas de particulas, marquee, dashboards luminosos y tipografia Exo 2.
+**File:** `lumex.html`  
+**Type:** Neon futurism / solar tech  
+**Feel:** electric, nocturnal, energetic, premium tech  
+**Best for:** energy, AI dashboards, crypto/fintech visuals, futuristic launches, motion-forward products  
+**Visual signature:** dark background, neon purple/cyan, intense glow, particle canvas, marquee, luminous dashboards, and Exo 2 typography.
 
 ---
 
@@ -46,11 +46,11 @@ assets/
 
 ![NexusGrid aesthetic preview](assets/nexusgrid.png)
 
-**Archivo:** `nexusgrid.html`  
-**Tipo:** Cyberpunk / high-tech infrastructure  
-**Sensacion:** clasificada, tecnica, militarizada, sistema vivo  
-**Ideal para:** ciberseguridad, infra cloud, AI ops, devtools, plataformas enterprise edge  
-**Firma visual:** azules/cian, scanlines, glitch text, hologramas, terminales, telemetria y lenguaje visual de red distribuida.
+**File:** `nexusgrid.html`  
+**Type:** Cyberpunk / high-tech infrastructure  
+**Feel:** classified, technical, militarized, alive as a system  
+**Best for:** cybersecurity, cloud infrastructure, AI ops, devtools, enterprise edge platforms  
+**Visual signature:** blue/cyan palette, scanlines, glitch text, holograms, terminals, telemetry, and distributed-network visual language.
 
 ---
 
@@ -58,11 +58,11 @@ assets/
 
 ![SolTech aesthetic preview](assets/soltech_english.png)
 
-**Archivo:** `soltech_english.html`  
-**Tipo:** Solar tech / clean industry  
-**Sensacion:** calida, optimista, comercial, energetica  
-**Ideal para:** energia renovable, climatetech, hardware solar, landing B2B/B2C  
-**Firma visual:** paleta solar naranja/amarillo, layouts comerciales, bloques de producto, indicadores de rendimiento y CTAs claros.
+**File:** `soltech_english.html`  
+**Type:** Solar tech / clean industry  
+**Feel:** warm, optimistic, commercial, energetic  
+**Best for:** renewable energy, climatetech, solar hardware, B2B/B2C landing pages  
+**Visual signature:** orange/yellow solar palette, commercial layouts, product blocks, performance indicators, and clear CTAs.
 
 ---
 
@@ -70,11 +70,11 @@ assets/
 
 ![TalkingDutch aesthetic preview](assets/talkingdutch.png)
 
-**Archivo:** `talkingdutch.html`  
-**Tipo:** Institutional learning / Dutch language school  
-**Sensacion:** sobria, directa, educativa, local  
-**Ideal para:** educacion, tutors, academias online, servicios profesionales personales  
-**Firma visual:** dark institutional, acentos naranja, bandera neerlandesa, mock de videollamada, tarjetas simples y jerarquia editorial clara.
+**File:** `talkingdutch.html`  
+**Type:** Institutional learning / Dutch language school  
+**Feel:** sober, direct, educational, local  
+**Best for:** education, tutors, online academies, personal professional services  
+**Visual signature:** institutional dark theme, orange accents, Dutch flag motifs, video-call mockup, simple cards, and clear editorial hierarchy.
 
 ---
 
@@ -82,16 +82,16 @@ assets/
 
 ![Verdant aesthetic preview](assets/verdant.png)
 
-**Archivo:** `verdant.html`  
-**Tipo:** Organic sustainability / solar product  
-**Sensacion:** natural, ligera, confiable, premium soft  
-**Ideal para:** sostenibilidad, energia limpia, wellness tech, productos eco, B Corps  
-**Firma visual:** verdes, menta, paper surfaces, blobs organicos, particulas hoja, dashboard eco y tipografia DM Sans/Playfair.
+**File:** `verdant.html`  
+**Type:** Organic sustainability / solar product  
+**Feel:** natural, lightweight, trustworthy, soft premium  
+**Best for:** sustainability, clean energy, wellness tech, eco products, B Corps  
+**Visual signature:** greens, mint, paper-like surfaces, organic blobs, leaf particles, eco dashboard, and DM Sans/Playfair typography.
 
 ---
 
 ## Usage Notes
 
-- Este directorio esta pensado para moverse completo a otros proyectos.
-- Los HTML son demos completos; las imagenes en `assets/` funcionan como escaparate rapido.
-- Si agregas nuevas esteticas, manten el mismo patron: `nombre.html` + `assets/nombre.png` + una tarjeta en este README.
+- This directory is meant to be moved as a complete package into other projects.
+- The HTML files are full demos; the images in `assets/` act as a quick visual storefront.
+- When adding new aesthetics, keep the same pattern: `name.html` + `assets/name.png` + one catalog card in this README.
