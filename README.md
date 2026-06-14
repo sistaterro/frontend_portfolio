@@ -9,6 +9,7 @@ When you prepare the preview images, save them with these names:
 ```text
 assets/
   hrcomponent.png
+  atlas.png
   blackstone.png
   forum.png
   lumex.png
@@ -33,6 +34,18 @@ assets/
 ---
 
 ## Aesthetic Catalog
+
+### Atlas
+
+![Atlas aesthetic preview](assets/atlas.png)
+
+**File:** `atlas.html`  
+**Type:** Aerospace / robotics / defense / mission-control design system  
+**Feel:** precise, mission-critical, engineered, operational, high-stakes  
+**Best for:** aerospace platforms, satellite operations, robotics dashboards, defense systems, advanced engineering products  
+**Visual signature:** deep navy surfaces, titanium-gray panels, technical status colors, blueprint-inspired grids, mono telemetry, mission dashboards, system health cards, fleet views, and instrument-panel interactions.
+
+---
 
 ### Blackstone
 

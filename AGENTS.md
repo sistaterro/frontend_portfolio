@@ -32,6 +32,9 @@ assets/forum.png
 
 blackstone.html
 assets/blackstone.png
+
+atlas.html
+assets/atlas.png
 ```
 
 ## Maintenance Rules
@@ -73,6 +76,7 @@ When a user asks for a new aesthetic:
 ## Current Aesthetics
 
 - `hrcomponent.html` - SaaS / HR platform component system. Clean, professional, compact, dashboard-ready.
+- `atlas.html` - Aerospace / robotics / defense mission-control design system. Deep navy, technical telemetry, precise and high-stakes.
 - `blackstone.html` - Premium executive finance / investment design system. Charcoal, ivory, muted gold, formal and high-trust.
 - `forum.html` - Forum / community media platform component system. Dark, loud, orange, condensed, social.
 - `lumex.html` - Neon futurism / solar tech. Dark, glowing, particle-driven, premium tech.
