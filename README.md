@@ -14,6 +14,7 @@ assets/
   forum.png
   lumex.png
   nexusgrid.png
+  pulse.png
   soltech_english.png
   talkingdutch.png
   verdant.png
@@ -92,6 +93,18 @@ assets/
 **Feel:** classified, technical, militarized, alive as a system  
 **Best for:** cybersecurity, cloud infrastructure, AI ops, devtools, enterprise edge platforms  
 **Visual signature:** blue/cyan palette, scanlines, glitch text, holograms, terminals, telemetry, and distributed-network visual language.
+
+---
+
+### Pulse
+
+![Pulse aesthetic preview](assets/pulse.png)
+
+**File:** `pulse.html`  
+**Type:** AI startup / agent platform / intelligent SaaS design system  
+**Feel:** modern, crisp, intelligent, product-led, quietly technical  
+**Best for:** AI agents, automation platforms, SaaS dashboards, workflow builders, model operations tools  
+**Visual signature:** warm light surfaces, Geist typography, violet and mint accents, rounded product cards, agent status badges, dark log/code panels, workflow controls, and clean operational metrics.
 
 ---
 
