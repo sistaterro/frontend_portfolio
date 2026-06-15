@@ -1,0 +1,4493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsroom — Editorial Design System</title>
+
+<!-- ===================================================== -->
+<!-- CSS START -->
+<!-- ===================================================== -->
+
+<style>
+/* ─── DESIGN TOKENS ─────────────────────────────────────── */
+:root {
+  --paper:        #FAFAF7;
+  --paper-warm:   #F5F0E8;
+  --paper-deep:   #EDE8DE;
+  --ink:          #1A1A1A;
+  --ink-mid:      #3D3D3D;
+  --ink-light:    #6B6B6B;
+  --ink-faint:    #9A9A9A;
+  --rule:         #D8D3C8;
+  --rule-light:   #EDEAE4;
+  --red:          #C8102E;
+  --red-dim:      #8C0B1F;
+  --amber:        #8B6914;
+  --amber-light:  #B8891E;
+  --blue:         #1D4E8F;
+  --blue-dim:     #163968;
+  --green:        #1A6B3A;
+  --white:        #FFFFFF;
+  --serif:        Georgia, 'Times New Roman', Times, serif;
+  --sans:         'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+  --mono:         'Courier New', Courier, monospace;
+  --track-tight:  -0.02em;
+  --track-wide:   0.08em;
+  --track-xwide:  0.15em;
+}
+
+/* ─── RESET & BASE ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+input, textarea, select { font: inherit; }
+
+/* ─── TYPOGRAPHY SCALE ──────────────────────────────────── */
+.t-label {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: var(--track-xwide);
+  text-transform: uppercase;
+  color: var(--ink-light);
+}
+
+.t-label--red { color: var(--red); }
+.t-label--amber { color: var(--amber); }
+.t-label--blue { color: var(--blue); }
+.t-label--green { color: var(--green); }
+
+.t-kicker {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.t-headline-xl {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: var(--track-tight);
+}
+
+.t-headline-lg {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: var(--track-tight);
+}
+
+.t-headline-md {
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+}
+
+.t-headline-sm {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.t-body {
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.72;
+  color: var(--ink-mid);
+}
+
+.t-body-sm {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink-light);
+}
+
+.t-byline {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-light);
+}
+
+.t-byline strong { color: var(--ink-mid); font-weight: 600; }
+
+.t-number {
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── LAYOUT UTILITIES ──────────────────────────────────── */
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.container--narrow { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+.container--wide   { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+.rule { border: none; border-top: 1px solid var(--rule); }
+.rule--heavy { border-top: 2px solid var(--ink); }
+.rule--red   { border-top: 3px solid var(--red); }
+.rule--amber { border-top: 2px solid var(--amber); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.grid-broadsheet { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; }
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-top: 2px solid var(--ink);
+  padding-top: 10px;
+}
+
+.section-header__more {
+  margin-left: auto;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.section-header__more:hover { color: var(--red); }
+
+.showcase-section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.showcase-section + .showcase-section {}
+
+.section-meta {
+  margin-bottom: 48px;
+}
+
+/* ─── GLOBAL TOP BAR ────────────────────────────────────── */
+#global-topbar {
+  background: var(--ink);
+  color: var(--paper-warm);
+  padding: 6px 0;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.topbar-inner .t-label { color: var(--paper-warm); opacity: 0.6; }
+
+#ticker-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+#ticker-track {
+  display: flex;
+  gap: 48px;
+  white-space: nowrap;
+  animation: ticker 40s linear infinite;
+}
+
+#ticker-track:hover { animation-play-state: paused; }
+
+.ticker-item { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 8px;
+  color: var(--paper-warm);
+  opacity: 0.85;
+}
+
+.ticker-item .change-up   { color: #4EBB6E; }
+.ticker-item .change-down { color: #FF6B6B; }
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  color: var(--paper-warm);
+  opacity: 0.75;
+}
+
+/* ─── MASTHEAD ──────────────────────────────────────────── */
+#masthead {
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  padding: 20px 0 0;
+}
+
+.masthead-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.masthead-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1240px;
+  padding: 0 24px 16px;
+}
+
+.masthead-left { font-size: 0.8rem; color: var(--ink-light); }
+.masthead-left span { display: block; }
+
+.publication-title {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  line-height: 1;
+  text-align: center;
+}
+
+.publication-title em {
+  font-style: italic;
+  color: var(--red);
+}
+
+.masthead-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.masthead-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-light);
+  cursor: pointer;
+  background: var(--paper);
+}
+
+.masthead-search:hover { border-color: var(--ink); color: var(--ink); }
+
+.btn-subscribe {
+  padding: 7px 16px;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.btn-subscribe:hover { background: var(--red); }
+
+/* ─── NAV ───────────────────────────────────────────────── */
+#main-nav {
+  width: 100%;
+  border-top: 1px solid var(--rule-light);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.nav-link {
+  padding: 10px 14px;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink-mid);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.nav-link:hover  { color: var(--ink); border-bottom-color: var(--ink); }
+.nav-link.active { color: var(--red); border-bottom-color: var(--red); }
+
+/* ─── NEWSROOM DEMO ─────────────────────────────────────── */
+#newsroom-demo {
+  background: var(--ink);
+  color: var(--paper-warm);
+  padding: 48px 0;
+}
+
+.demo-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.demo-title-block {}
+.demo-eyebrow {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: var(--track-xwide);
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 6px;
+}
+
+.demo-title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--paper-warm);
+}
+
+.demo-subtitle {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: rgba(250,240,232,0.55);
+  margin-top: 4px;
+}
+
+/* Live indicator */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--red);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: white;
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: white;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* Demo metrics bar */
+.demo-metrics {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.08);
+  margin-bottom: 28px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.metric-cell {
+  background: rgba(15,15,15,0.6);
+  padding: 16px 20px;
+}
+
+.metric-cell__value {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--paper-warm);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-cell__label {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  color: rgba(250,240,232,0.45);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric-cell__delta {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: #4EBB6E;
+  margin-top: 2px;
+}
+
+/* Demo grid */
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 16px;
+}
+
+.demo-panel {
+  background: rgba(15,15,15,0.55);
+  border: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.demo-panel__title {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250,240,232,0.5);
+}
+
+.demo-panel__badge {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.demo-panel__body { padding: 14px 16px; flex: 1; overflow: hidden; }
+
+/* Breaking news feed */
+.breaking-feed { display: flex; flex-direction: column; gap: 0; }
+
+.breaking-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  align-items: flex-start;
+  animation: fade-in-down 0.4s ease;
+}
+
+.breaking-item:last-child { border-bottom: none; }
+
+.breaking-item__time {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--red);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.breaking-item__text {
+  font-family: var(--serif);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: rgba(250,240,232,0.88);
+}
+
+.breaking-item--new .breaking-item__text {
+  color: var(--paper-warm);
+}
+
+/* Activity log */
+.activity-feed { display: flex; flex-direction: column; gap: 0; }
+
+.activity-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  align-items: flex-start;
+  animation: fade-in-down 0.4s ease;
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.activity-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.activity-dot--publish { background: #4EBB6E; }
+.activity-dot--edit    { background: var(--amber-light); }
+.activity-dot--fact    { background: var(--blue); }
+.activity-dot--submit  { background: rgba(255,255,255,0.35); }
+.activity-dot--trend   { background: var(--red); }
+
+.activity-item__text {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: rgba(250,240,232,0.7);
+  line-height: 1.4;
+}
+
+.activity-item__time {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: rgba(250,240,232,0.3);
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-top: 1px;
+}
+
+/* Story status tracker */
+.status-list { display: flex; flex-direction: column; gap: 10px; }
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.status-item__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.status-item__name {
+  font-family: var(--serif);
+  font-size: 0.8125rem;
+  color: rgba(250,240,232,0.85);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-badge {
+  font-family: var(--sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+}
+
+.status-badge--draft     { background: rgba(255,255,255,0.08); color: rgba(250,240,232,0.45); }
+.status-badge--fact      { background: rgba(29,78,143,0.3);   color: #7BAFD4; }
+.status-badge--approved  { background: rgba(78,187,110,0.2);  color: #4EBB6E; }
+.status-badge--published { background: rgba(200,16,46,0.25);  color: #FF5C73; }
+.status-badge--writing   { background: rgba(184,137,30,0.2);  color: var(--amber-light); }
+
+.status-item__progress {
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.status-item__bar {
+  height: 100%;
+  background: var(--amber-light);
+  transition: width 0.6s ease;
+}
+
+/* Trending topics */
+.trending-list { display: flex; flex-direction: column; gap: 0; }
+
+.trending-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.trending-item:last-child { border-bottom: none; }
+
+.trending-item:hover { opacity: 0.8; }
+
+.trending-rank {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(250,240,232,0.18);
+  width: 20px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.trending-topic {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(250,240,232,0.8);
+  flex: 1;
+}
+
+.trending-count {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: rgba(250,240,232,0.35);
+}
+
+.trending-spark {
+  font-size: 0.75rem;
+}
+
+/* Publication queue */
+.queue-list { display: flex; flex-direction: column; gap: 8px; }
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.04);
+  border-left: 2px solid transparent;
+  animation: fade-in-down 0.4s ease;
+}
+
+.queue-item--pending  { border-left-color: var(--amber-light); }
+.queue-item--live     { border-left-color: #4EBB6E; }
+.queue-item--schedule { border-left-color: rgba(255,255,255,0.2); }
+
+.queue-item__title {
+  font-family: var(--serif);
+  font-size: 0.8125rem;
+  color: rgba(250,240,232,0.8);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-item__time {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: rgba(250,240,232,0.3);
+  flex-shrink: 0;
+}
+
+/* Reporter activity */
+.reporter-list { display: flex; flex-direction: column; gap: 8px; }
+
+.reporter-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.reporter-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.reporter-info { flex: 1; }
+.reporter-name {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(250,240,232,0.85);
+}
+
+.reporter-status {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  color: rgba(250,240,232,0.4);
+}
+
+.reporter-indicator {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.reporter-indicator--active { background: #4EBB6E; }
+.reporter-indicator--idle   { background: rgba(255,255,255,0.2); }
+.reporter-indicator--filing { background: var(--amber-light); animation: pulse-dot 1.4s infinite; }
+
+/* Demo controls */
+.demo-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.demo-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.demo-search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--paper-warm);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.demo-search input::placeholder { color: rgba(250,240,232,0.3); }
+
+.demo-search svg { opacity: 0.35; flex-shrink: 0; }
+
+.demo-filters {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-chip {
+  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: rgba(250,240,232,0.55);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.filter-chip:hover,
+.filter-chip.active {
+  background: rgba(255,255,255,0.1);
+  color: var(--paper-warm);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.btn-publish {
+  padding: 8px 20px;
+  background: var(--red);
+  color: white;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-publish:hover { background: #a00d24; }
+
+.btn-publish svg { opacity: 0.9; }
+
+/* Demo spanning layout */
+.demo-panel--span2 { grid-column: span 2; }
+.demo-panel--span3 { grid-column: span 3; }
+
+@keyframes fade-in-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── BREAKING NEWS BANNER ──────────────────────────────── */
+#breaking-banner {
+  background: var(--red);
+  color: white;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.breaking-label {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  background: white;
+  color: var(--red);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.breaking-text {
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.breaking-time {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* ─── HERO STORY ────────────────────────────────────────── */
+#hero-story {
+  padding: 0 0 56px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 48px;
+  align-items: start;
+  padding-top: 40px;
+}
+
+.hero-kicker {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--red);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 2px;
+}
+
+.hero-headline {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4.5vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+
+.hero-dek {
+  font-family: var(--serif);
+  font-size: 1.175rem;
+  line-height: 1.6;
+  color: var(--ink-mid);
+  margin-bottom: 20px;
+  max-width: 560px;
+}
+
+.hero-byline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--paper-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-mid);
+}
+
+.avatar--lg { width: 52px; height: 52px; font-size: 1rem; }
+
+.hero-sidebar {}
+
+.hero-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: var(--paper-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.img-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-faint);
+}
+
+.img-placeholder svg { opacity: 0.3; }
+
+.img-caption {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
+.hero-sidebar-stories {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 24px;
+}
+
+.sidebar-story {
+  padding: 14px 0;
+  border-top: 1px solid var(--rule-light);
+  cursor: pointer;
+}
+
+.sidebar-story:hover .sidebar-story__headline { text-decoration: underline; }
+
+.sidebar-story__headline {
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+/* Reading progress */
+#reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--red);
+  width: 0%;
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+/* ─── HOMEPAGE MULTI-COLUMN ─────────────────────────────── */
+#homepage-layout {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.homepage-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.homepage-main {}
+.homepage-sidebar {}
+
+/* Article card */
+.article-card {
+  padding: 20px 0;
+  border-top: 1px solid var(--rule-light);
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 16px;
+  align-items: start;
+}
+
+.article-card:first-child { border-top: none; padding-top: 0; }
+.article-card:hover .article-card__headline { text-decoration: underline; }
+
+.article-card--no-img { grid-template-columns: 1fr; }
+
+.article-card__content {}
+.article-card__headline {
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--ink);
+  margin: 6px 0 8px;
+}
+
+.article-card__excerpt {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-light);
+}
+
+.article-card__thumb {
+  width: 120px;
+  height: 80px;
+  background: var(--paper-deep);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.article-card__thumb svg { opacity: 0.2; }
+
+.article-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.dot-sep { color: var(--ink-faint); font-size: 0.75rem; }
+
+/* Opinion box */
+.opinion-box {
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.opinion-box__leader {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 10px 0;
+}
+
+/* ─── FEATURED INVESTIGATIONS ───────────────────────────── */
+#featured-investigations {
+  background: var(--ink);
+  padding: 56px 0;
+}
+
+.investigations-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.investigations-title {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(250,240,232,0.9);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.investigations-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+.inv-card {
+  background: var(--ink);
+  padding: 28px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.inv-card:hover { background: #262626; }
+
+.inv-card__label {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 12px;
+}
+
+.inv-card__headline {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: rgba(250,240,232,0.9);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.inv-card--sm .inv-card__headline { font-size: 1rem; }
+
+.inv-card__dek {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(250,240,232,0.45);
+}
+
+.inv-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.inv-card__author {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: rgba(250,240,232,0.4);
+}
+
+.inv-card__author strong { color: rgba(250,240,232,0.65); }
+
+.inv-card__part {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  padding: 2px 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(250,240,232,0.35);
+  margin-left: auto;
+}
+
+/* ─── TRENDING PANEL ────────────────────────────────────── */
+.trending-section {
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  padding: 20px;
+}
+
+.trending-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule-light);
+  cursor: pointer;
+}
+
+.trending-row:last-child { border-bottom: none; }
+.trending-row:hover .trending-row__title { text-decoration: underline; }
+
+.trending-row__num {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--rule);
+  min-width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.trending-row__content {}
+.trending-row__category {
+  font-family: var(--sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2px;
+}
+
+.trending-row__title {
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+/* ─── EDITORIAL TEAM ────────────────────────────────────── */
+#editorial-team {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.team-card {
+  border: 1px solid var(--rule);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--paper);
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+
+.team-card:hover { border-color: var(--ink); }
+
+.team-card__avatar {
+  width: 56px; height: 56px;
+  background: var(--paper-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink-mid);
+  border-radius: 50%;
+}
+
+.team-card__name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.team-card__role {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+}
+
+.team-card__bio {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--ink-light);
+}
+
+.team-card__beat {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.beat-tag {
+  padding: 2px 8px;
+  border: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  color: var(--ink-light);
+  letter-spacing: 0.04em;
+}
+
+/* ─── LONG-FORM ARTICLE ─────────────────────────────────── */
+#longform-layout {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.longform-grid {
+  display: grid;
+  grid-template-columns: 1fr 680px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.longform-left {
+  padding-top: 8px;
+  position: sticky;
+  top: 80px;
+}
+
+.share-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.share-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-light);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.share-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+.longform-body {}
+
+.article-header { margin-bottom: 32px; }
+
+.article-section-label {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.article-section-label::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--ink-faint);
+}
+
+.article-title {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.article-dek {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: var(--ink-mid);
+  margin-bottom: 20px;
+}
+
+.article-meta-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 32px;
+}
+
+.article-meta-bar .avatar { width: 32px; height: 32px; font-size: 0.7rem; }
+
+.read-time {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+  margin-left: auto;
+}
+
+.article-body p {
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--ink-mid);
+  margin-bottom: 1.5em;
+}
+
+.article-body p:first-child::first-letter {
+  font-size: 3.5em;
+  line-height: 0.8;
+  float: left;
+  padding-right: 8px;
+  padding-top: 4px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.article-body h2 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 2em 0 0.75em;
+  letter-spacing: -0.01em;
+}
+
+/* Pull quote */
+.pull-quote {
+  border-left: 3px solid var(--red);
+  margin: 2.5em 0;
+  padding: 4px 28px;
+}
+
+.pull-quote__text {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.pull-quote__attr {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-light);
+}
+
+.pull-quote__attr strong { color: var(--ink-mid); font-weight: 600; }
+
+/* Longform TOC sidebar */
+.longform-right {
+  position: sticky;
+  top: 80px;
+}
+
+.toc-box {
+  border: 1px solid var(--rule);
+  padding: 18px;
+  margin-bottom: 24px;
+}
+
+.toc-box__title {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 14px;
+}
+
+.toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+}
+
+.toc-list li a {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-mid);
+  display: block;
+  padding: 5px 0;
+  border-left: 2px solid transparent;
+  padding-left: 10px;
+  transition: all 0.15s;
+}
+
+.toc-list li a:hover,
+.toc-list li a.active {
+  color: var(--ink);
+  border-left-color: var(--red);
+}
+
+.related-box { border: 1px solid var(--rule); }
+
+.related-box__header {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.related-item {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--rule-light);
+  cursor: pointer;
+}
+
+.related-item:last-child { border-bottom: none; }
+.related-item:hover .related-item__headline { text-decoration: underline; }
+
+.related-item__headline {
+  font-family: var(--serif);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 3px 0 5px;
+}
+
+/* ─── SUBSCRIBER EXPERIENCE ─────────────────────────────── */
+#subscriber-experience {
+  background: var(--paper-warm);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 56px 0;
+}
+
+.subscriber-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.subscriber-pitch {}
+
+.subscriber-pitch__eyebrow {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+
+.subscriber-pitch__headline {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.subscriber-pitch__body {
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-mid);
+  margin-bottom: 24px;
+}
+
+.subscriber-benefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.subscriber-benefits li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--ink-mid);
+}
+
+.benefit-check {
+  color: var(--green);
+  font-size: 0.75rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.subscriber-form {}
+
+.form-field { margin-bottom: 14px; }
+
+.form-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-mid);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus { border-color: var(--ink); }
+
+.form-input--select { appearance: none; cursor: pointer; }
+
+.form-hint {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* ─── BUTTONS ───────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+}
+
+.btn--primary {
+  background: var(--ink);
+  color: white;
+}
+
+.btn--primary:hover { background: #333; }
+
+.btn--red {
+  background: var(--red);
+  color: white;
+}
+
+.btn--red:hover { background: var(--red-dim); }
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.btn--outline:hover { background: var(--ink); color: white; }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink-mid);
+  padding: 10px 0;
+}
+
+.btn--ghost:hover { color: var(--ink); }
+
+.btn--sm { padding: 6px 14px; font-size: 0.8rem; }
+.btn--lg { padding: 14px 28px; font-size: 1rem; }
+
+.btn-group { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+/* ─── INPUTS / SEARCH ───────────────────────────────────── */
+.input-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  transition: border-color 0.15s;
+}
+
+.input-group:focus-within { border-color: var(--ink); }
+
+.input-group__icon {
+  padding: 0 12px;
+  color: var(--ink-faint);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.input-group__field {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  outline: none;
+}
+
+.input-group__field::placeholder { color: var(--ink-faint); }
+
+.input-group__btn {
+  padding: 10px 16px;
+  background: var(--ink);
+  color: white;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+
+.input-group__btn:hover { background: #333; }
+
+/* Search interface */
+.search-box {
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  padding: 0;
+}
+
+.search-box__inner {
+  display: flex;
+  align-items: center;
+}
+
+.search-box__input {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  color: var(--ink);
+  outline: none;
+}
+
+.search-box__input::placeholder { color: var(--ink-faint); font-style: italic; }
+
+.search-box__submit {
+  padding: 14px 24px;
+  background: var(--ink);
+  color: white;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+}
+
+.search-suggestions {
+  border-top: 1px solid var(--rule);
+  padding: 10px 20px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-tag {
+  padding: 4px 10px;
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.search-tag:hover { background: var(--paper-deep); border-color: var(--ink); }
+
+/* ─── FILTERS ───────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink-light);
+  background: var(--paper);
+  border-right: 1px solid var(--rule);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filter-btn:last-child { border-right: none; }
+.filter-btn:hover  { background: var(--paper-warm); color: var(--ink); }
+.filter-btn.active { background: var(--ink); color: white; }
+
+.filter-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chip:hover  { border-color: var(--ink); color: var(--ink); }
+.chip.active { background: var(--ink); border-color: var(--ink); color: white; }
+
+.chip__x { opacity: 0.5; }
+
+/* ─── TABS ──────────────────────────────────────────────── */
+.tabs {
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  gap: 0;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink-light);
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover  { color: var(--ink); }
+.tab-btn.active { color: var(--ink); border-bottom-color: var(--red); }
+
+.tab-panel { padding: 24px 0; display: none; }
+.tab-panel.active { display: block; }
+
+/* ─── PAGINATION ────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.page-btn {
+  width: 36px; height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--ink-mid);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.page-btn:hover  { border-color: var(--ink); color: var(--ink); }
+.page-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+.page-btn--arrow { font-size: 1rem; }
+
+/* ─── EMPTY STATES ──────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 64px 24px;
+  text-align: center;
+  border: 1px solid var(--rule);
+  background: var(--paper-warm);
+}
+
+.empty-state__icon {
+  color: var(--ink-faint);
+  margin-bottom: 4px;
+}
+
+.empty-state__title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.empty-state__body {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--ink-light);
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+/* ─── LOADING STATES ────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--paper-deep) 25%, var(--rule) 50%, var(--paper-deep) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 0;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-text { height: 14px; margin-bottom: 8px; }
+.skeleton-text--sm { height: 10px; }
+.skeleton-text--lg { height: 20px; }
+
+.skeleton-card {
+  border: 1px solid var(--rule);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ─── MODALS ────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,10,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--paper);
+  max-width: 540px;
+  width: calc(100% - 48px);
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  transform: translateY(12px);
+  transition: transform 0.2s;
+}
+
+.modal-overlay.open .modal { transform: translateY(0); }
+
+.modal__header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal__title {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.modal__close {
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-light);
+  cursor: pointer;
+  font-size: 1.2rem;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+
+.modal__close:hover { border-color: var(--rule); color: var(--ink); }
+
+.modal__body { padding: 24px; }
+
+.modal__footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ─── NOTIFICATIONS ─────────────────────────────────────── */
+.notifications-stack {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.notification {
+  background: var(--ink);
+  color: var(--paper-warm);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 340px;
+  pointer-events: all;
+  animation: slide-in-right 0.3s ease;
+  border-left: 3px solid var(--red);
+}
+
+.notification--success { border-left-color: #4EBB6E; }
+.notification--info    { border-left-color: var(--blue); }
+.notification--warn    { border-left-color: var(--amber-light); }
+
+.notification__icon { font-size: 0.875rem; flex-shrink: 0; }
+.notification__text {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.notification__text strong { font-weight: 700; display: block; }
+
+.notification__close {
+  color: rgba(250,240,232,0.4);
+  cursor: pointer;
+  font-size: 1rem;
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  line-height: 1;
+}
+
+.notification__close:hover { color: var(--paper-warm); }
+
+.notification--fade-out {
+  animation: fade-out 0.3s ease forwards;
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-out {
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+/* ─── NEWSLETTER ────────────────────────────────────────── */
+.newsletter-band {
+  background: var(--paper-warm);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding: 40px 0;
+}
+
+.newsletter-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.newsletter-copy__label {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+
+.newsletter-copy__title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.newsletter-copy__body {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  color: var(--ink-mid);
+  line-height: 1.55;
+}
+
+.newsletter-form { display: flex; gap: 0; }
+
+.newsletter-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--ink);
+  border-right: none;
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--ink);
+  outline: none;
+}
+
+.newsletter-input::placeholder { color: var(--ink-faint); }
+
+.newsletter-submit {
+  padding: 12px 24px;
+  background: var(--ink);
+  color: white;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.newsletter-submit:hover { background: var(--red); border-color: var(--red); }
+
+/* ─── PODCAST & VIDEO ───────────────────────────────────── */
+.podcast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.podcast-card {
+  display: flex;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  background: var(--paper);
+  transition: border-color 0.2s;
+}
+
+.podcast-card:hover { border-color: var(--ink); }
+
+.podcast-art {
+  width: 72px;
+  height: 72px;
+  background: var(--ink);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.podcast-info {}
+.podcast-series {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 4px;
+}
+
+.podcast-title {
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.podcast-meta {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.video-card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.video-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: var(--paper-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.play-btn {
+  width: 52px; height: 52px;
+  background: rgba(26,26,26,0.85);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.2s;
+}
+
+.video-card:hover .play-btn {
+  background: var(--red);
+  transform: scale(1.08);
+}
+
+.video-duration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.75);
+  color: white;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 2px 6px;
+}
+
+.video-info {
+  padding: 14px 0;
+}
+
+.video-series {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+
+.video-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+/* ─── OPINION COLUMN ────────────────────────────────────── */
+.opinion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.opinion-col {
+  background: var(--paper);
+  padding: 24px;
+}
+
+.opinion-col__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule-light);
+}
+
+.opinion-col__name {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.opinion-col__title-s {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.opinion-col__headline {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.28;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.opinion-col__body {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--ink-mid);
+}
+
+/* ─── ARCHIVE EXPLORER ──────────────────────────────────── */
+.archive-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.archive-sidebar {}
+
+.archive-years { list-style: none; }
+
+.archive-year {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule-light);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--ink-mid);
+  transition: color 0.15s;
+}
+
+.archive-year:hover,
+.archive-year.active { color: var(--ink); }
+.archive-year.active { font-weight: 700; }
+
+.archive-year__count {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.archive-results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.archive-card {
+  border-top: 2px solid var(--rule-light);
+  padding-top: 14px;
+  cursor: pointer;
+}
+
+.archive-card:hover .archive-card__headline { text-decoration: underline; }
+
+.archive-card__date {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--ink-faint);
+  margin-bottom: 5px;
+}
+
+.archive-card__headline {
+  font-family: var(--serif);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+/* ─── CATEGORY NAV ──────────────────────────────────────── */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.category-cell {
+  background: var(--paper);
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-align: center;
+}
+
+.category-cell:hover { background: var(--paper-warm); }
+
+.category-cell__icon {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+.category-cell__name {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.category-cell__count {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--ink-faint);
+}
+
+/* ─── FOOTER ────────────────────────────────────────────── */
+#site-footer {
+  background: var(--ink);
+  color: rgba(250,240,232,0.6);
+  padding: 48px 0 24px;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 24px;
+}
+
+.footer-brand {}
+
+.footer-logo {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--paper-warm);
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.footer-tagline {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  max-width: 240px;
+}
+
+.footer-col__title {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250,240,232,0.35);
+  margin-bottom: 14px;
+}
+
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+.footer-links a {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: rgba(250,240,232,0.55);
+  transition: color 0.15s;
+}
+
+.footer-links a:hover { color: var(--paper-warm); }
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-legal {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+}
+
+.footer-social { display: flex; gap: 12px; }
+
+.social-link {
+  width: 30px; height: 30px;
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(250,240,232,0.4);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--sans);
+}
+
+.social-link:hover { border-color: rgba(255,255,255,0.4); color: var(--paper-warm); }
+
+/* ─── SHOWCASE WRAPPER ──────────────────────────────────── */
+.showcase-wrapper {
+  padding-top: 0;
+}
+
+.showcase-section-title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.showcase-section-desc {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--ink-light);
+  margin-bottom: 40px;
+}
+
+.component-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.component-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+/* Component label */
+.comp-label {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 10px;
+}
+
+/* Market/News ticker */
+.market-ticker {
+  background: var(--paper-warm);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 0;
+  overflow: hidden;
+}
+
+.market-inner {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+}
+
+.market-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+}
+
+.market-item__name { font-size: 0.8125rem; font-weight: 700; color: var(--ink); }
+.market-item__val  { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-mid); }
+.market-item__chg  { font-family: var(--mono); font-size: 0.75rem; font-weight: 600; }
+.market-item__chg--up   { color: var(--green); }
+.market-item__chg--down { color: var(--red); }
+
+/* Author profile card */
+.author-profile {
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+
+.author-profile__header {
+  background: var(--paper-warm);
+  padding: 24px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.author-profile__info {}
+
+.author-profile__name {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.author-profile__title {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--ink-light);
+  margin-bottom: 10px;
+}
+
+.author-profile__bio {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--ink-mid);
+}
+
+.author-profile__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--rule);
+}
+
+.author-stat {
+  padding: 14px;
+  text-align: center;
+  border-right: 1px solid var(--rule);
+}
+
+.author-stat:last-child { border-right: none; }
+
+.author-stat__val {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+}
+
+.author-stat__label {
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+</style>
+
+<!-- ===================================================== -->
+<!-- CSS END -->
+<!-- ===================================================== -->
+
+<!-- ===================================================== -->
+<!-- HTML START -->
+<!-- ===================================================== -->
+
+</head>
+<body>
+
+<!-- Reading progress indicator -->
+<div id="reading-progress"></div>
+
+<!-- Notifications stack -->
+<div class="notifications-stack" id="notifications-stack"></div>
+
+<!-- Modal overlay -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal__header">
+      <h2 class="modal__title">Story Filed: Investigation Ready</h2>
+      <button class="modal__close" onclick="closeModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal__body">
+      <p class="t-body" style="margin-bottom:16px;">The investigation has passed fact-checking and is queued for editorial review. The editor-in-chief has been notified.</p>
+      <div style="background:var(--paper-warm);border:1px solid var(--rule);padding:16px;margin-bottom:16px;">
+        <div class="t-label" style="margin-bottom:8px;">Story Details</div>
+        <div style="font-family:var(--serif);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:4px;" id="modal-story-title">Central Bank Digital Currency Investigation</div>
+        <div class="t-byline"><strong>Sarah Chen</strong> · Investigation · 4,200 words</div>
+      </div>
+      <div class="comp-label">Publication Checklist</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+        <label style="display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:0.875rem;color:var(--ink-mid);cursor:pointer;">
+          <input type="checkbox" checked> Fact-checked by editorial team
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:0.875rem;color:var(--ink-mid);cursor:pointer;">
+          <input type="checkbox" checked> Legal review completed
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:0.875rem;color:var(--ink-mid);cursor:pointer;">
+          <input type="checkbox"> Source confirmation received
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:0.875rem;color:var(--ink-mid);cursor:pointer;">
+          <input type="checkbox"> Copy-editing pass done
+        </label>
+      </div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--outline btn--sm" onclick="closeModal()">Save Draft</button>
+      <button class="btn btn--red btn--sm" onclick="publishFromModal()">Publish Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOP BAR ──────────────────────────────────────────── -->
+<div id="global-topbar">
+  <div class="topbar-inner">
+    <span class="t-label">MARKETS</span>
+    <div id="ticker-wrap">
+      <div id="ticker-track">
+        <span class="ticker-item">S&amp;P 500 <span class="t-number">5,841.47</span> <span class="change-up">+0.42%</span></span>
+        <span class="ticker-item">EUR/USD <span class="t-number">1.0834</span> <span class="change-down">−0.18%</span></span>
+        <span class="ticker-item">Brent Crude <span class="t-number">$82.14</span> <span class="change-up">+1.23%</span></span>
+        <span class="ticker-item">10Y Treasury <span class="t-number">4.61%</span> <span class="change-down">−0.05</span></span>
+        <span class="ticker-item">Gold <span class="t-number">$2,341</span> <span class="change-up">+0.87%</span></span>
+        <span class="ticker-item">Bitcoin <span class="t-number">$67,420</span> <span class="change-up">+2.14%</span></span>
+        <span class="ticker-item">FTSE 100 <span class="t-number">8,234.16</span> <span class="change-down">−0.31%</span></span>
+        <span class="ticker-item">Nikkei <span class="t-number">38,914</span> <span class="change-up">+0.66%</span></span>
+        <!-- duplicated for continuous loop -->
+        <span class="ticker-item">S&amp;P 500 <span class="t-number">5,841.47</span> <span class="change-up">+0.42%</span></span>
+        <span class="ticker-item">EUR/USD <span class="t-number">1.0834</span> <span class="change-down">−0.18%</span></span>
+        <span class="ticker-item">Brent Crude <span class="t-number">$82.14</span> <span class="change-up">+1.23%</span></span>
+        <span class="ticker-item">10Y Treasury <span class="t-number">4.61%</span> <span class="change-down">−0.05</span></span>
+        <span class="ticker-item">Gold <span class="t-number">$2,341</span> <span class="change-up">+0.87%</span></span>
+        <span class="ticker-item">Bitcoin <span class="t-number">$67,420</span> <span class="change-up">+2.14%</span></span>
+        <span class="ticker-item">FTSE 100 <span class="t-number">8,234.16</span> <span class="change-down">−0.31%</span></span>
+        <span class="ticker-item">Nikkei <span class="t-number">38,914</span> <span class="change-up">+0.66%</span></span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span>Monday, 15 June 2026</span>
+      <span>|</span>
+      <span>Eindhoven, NL</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MASTHEAD ─────────────────────────────────────────── -->
+<header id="masthead">
+  <div class="masthead-top">
+    <div class="masthead-left">
+      <span class="t-kicker" style="color:var(--ink-light);">SINCE 1991</span>
+    </div>
+    <div class="publication-title">The <em>Field</em> Report</div>
+    <div class="masthead-right">
+      <button class="masthead-search" onclick="document.getElementById('search-section').scrollIntoView({behavior:'smooth'})">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Search
+      </button>
+      <button class="btn-subscribe">Subscribe</button>
+    </div>
+  </div>
+  <nav id="main-nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-link active">Home</a>
+      <a href="#featured-investigations" class="nav-link">Investigations</a>
+      <a href="#homepage-layout" class="nav-link">World</a>
+      <a href="#homepage-layout" class="nav-link">Politics</a>
+      <a href="#homepage-layout" class="nav-link">Economy</a>
+      <a href="#homepage-layout" class="nav-link">Technology</a>
+      <a href="#editorial-team" class="nav-link">Opinion</a>
+      <a href="#longform-layout" class="nav-link">Long Read</a>
+      <a href="#homepage-layout" class="nav-link">Science</a>
+      <a href="#homepage-layout" class="nav-link">Culture</a>
+      <a href="#subscriber-experience" class="nav-link">Subscribe</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ─── BREAKING NEWS BANNER ─────────────────────────────── -->
+<div id="breaking-banner" class="container--wide" style="display:flex;padding:10px 24px;max-width:100%;">
+  <span class="breaking-label">Breaking</span>
+  <span class="breaking-text" id="main-breaking-text" style="margin-left:16px;">G7 finance ministers reach emergency accord on global minimum tax enforcement framework — details to be announced within the hour</span>
+  <span class="breaking-time" id="main-breaking-time">14:32 UTC</span>
+</div>
+
+<!-- ===================================================== -->
+<!-- NEWSROOM DEMO -->
+<!-- ===================================================== -->
+
+<section id="newsroom-demo">
+  <div class="container">
+
+    <div class="demo-header">
+      <div class="demo-title-block">
+        <div class="demo-eyebrow">Live System</div>
+        <div class="demo-title">Newsroom Command</div>
+        <div class="demo-subtitle">Real-time editorial dashboard — Field Report Global HQ</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+        <span style="font-family:var(--mono);font-size:0.875rem;color:rgba(250,240,232,0.5);" id="demo-clock">14:32:07</span>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="demo-metrics">
+      <div class="metric-cell">
+        <div class="metric-cell__value t-number" id="metric-published">47</div>
+        <div class="metric-cell__label">Published Today</div>
+        <div class="metric-cell__delta" id="metric-published-delta">+3 this hour</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell__value t-number" id="metric-reporters">18</div>
+        <div class="metric-cell__label">Active Reporters</div>
+        <div class="metric-cell__delta">Across 9 countries</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell__value t-number" id="metric-investigations">6</div>
+        <div class="metric-cell__label">Investigations Open</div>
+        <div class="metric-cell__delta" style="color:var(--amber-light);">2 near publication</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell__value t-number" id="metric-subscribers">124.8k</div>
+        <div class="metric-cell__label">Subscribers</div>
+        <div class="metric-cell__delta">+214 today</div>
+      </div>
+      <div class="metric-cell">
+        <div class="metric-cell__value t-number" id="metric-trending">94</div>
+        <div class="metric-cell__label">Trending Score</div>
+        <div class="metric-cell__delta">Top story viral</div>
+      </div>
+    </div>
+
+    <!-- Main panel grid -->
+    <div class="demo-grid">
+
+      <!-- Breaking news feed -->
+      <div class="demo-panel">
+        <div class="demo-panel__header">
+          <span class="demo-panel__title">Breaking Feed</span>
+          <span class="demo-panel__badge" id="breaking-count">3 LIVE</span>
+        </div>
+        <div class="demo-panel__body">
+          <div class="breaking-feed" id="breaking-feed">
+            <div class="breaking-item">
+              <span class="breaking-item__time">14:31</span>
+              <span class="breaking-item__text">G7 finance ministers reach emergency tax framework accord</span>
+            </div>
+            <div class="breaking-item">
+              <span class="breaking-item__time">13:58</span>
+              <span class="breaking-item__text">European Central Bank signals third consecutive rate hold</span>
+            </div>
+            <div class="breaking-item">
+              <span class="breaking-item__time">13:22</span>
+              <span class="breaking-item__text">Taiwan semiconductor exports surpass $40B for first time</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trending topics -->
+      <div class="demo-panel">
+        <div class="demo-panel__header">
+          <span class="demo-panel__title">Trending Topics</span>
+          <span class="demo-panel__badge">UPDATED</span>
+        </div>
+        <div class="demo-panel__body">
+          <div class="trending-list" id="trending-list">
+            <div class="trending-item">
+              <span class="trending-rank">1</span>
+              <span class="trending-topic">G7 Tax Accord</span>
+              <span class="trending-count">24.1k</span>
+              <span class="trending-spark">↑</span>
+            </div>
+            <div class="trending-item">
+              <span class="trending-rank">2</span>
+              <span class="trending-topic">ECB Rate Decision</span>
+              <span class="trending-count">18.7k</span>
+              <span class="trending-spark">→</span>
+            </div>
+            <div class="trending-item">
+              <span class="trending-rank">3</span>
+              <span class="trending-topic">Taiwan Chips</span>
+              <span class="trending-count">15.2k</span>
+              <span class="trending-spark">↑</span>
+            </div>
+            <div class="trending-item">
+              <span class="trending-rank">4</span>
+              <span class="trending-topic">AI Governance</span>
+              <span class="trending-count">12.4k</span>
+              <span class="trending-spark">↑</span>
+            </div>
+            <div class="trending-item">
+              <span class="trending-rank">5</span>
+              <span class="trending-topic">Arctic Shipping</span>
+              <span class="trending-count">9.8k</span>
+              <span class="trending-spark">↓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reporter activity -->
+      <div class="demo-panel">
+        <div class="demo-panel__header">
+          <span class="demo-panel__title">Reporter Activity</span>
+          <span class="demo-panel__badge" id="active-reporter-count">12 ACTIVE</span>
+        </div>
+        <div class="demo-panel__body">
+          <div class="reporter-list" id="reporter-list">
+            <div class="reporter-item">
+              <div class="reporter-avatar" style="background:rgba(200,16,46,0.2);color:#FF5C73;">SC</div>
+              <div class="reporter-info">
+                <div class="reporter-name">Sarah Chen</div>
+                <div class="reporter-status">Filing: CBDC investigation</div>
+              </div>
+              <div class="reporter-indicator reporter-indicator--filing"></div>
+            </div>
+            <div class="reporter-item">
+              <div class="reporter-avatar" style="background:rgba(29,78,143,0.2);color:#7BAFD4;">MR</div>
+              <div class="reporter-info">
+                <div class="reporter-name">Marcus Reid</div>
+                <div class="reporter-status">In field — Brussels</div>
+              </div>
+              <div class="reporter-indicator reporter-indicator--active"></div>
+            </div>
+            <div class="reporter-item">
+              <div class="reporter-avatar" style="background:rgba(78,187,110,0.15);color:#4EBB6E;">AL</div>
+              <div class="reporter-info">
+                <div class="reporter-name">Amara Levi</div>
+                <div class="reporter-status">Editing: ECB analysis</div>
+              </div>
+              <div class="reporter-indicator reporter-indicator--active"></div>
+            </div>
+            <div class="reporter-item">
+              <div class="reporter-avatar" style="background:rgba(184,137,30,0.2);color:var(--amber-light);">DK</div>
+              <div class="reporter-info">
+                <div class="reporter-name">David Kim</div>
+                <div class="reporter-status">Source call — Singapore</div>
+              </div>
+              <div class="reporter-indicator reporter-indicator--filing"></div>
+            </div>
+            <div class="reporter-item">
+              <div class="reporter-avatar" style="background:rgba(255,255,255,0.07);color:rgba(250,240,232,0.4);">NP</div>
+              <div class="reporter-info">
+                <div class="reporter-name">Nadia Petrov</div>
+                <div class="reporter-status">Off duty</div>
+              </div>
+              <div class="reporter-indicator reporter-indicator--idle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Story status tracker -->
+      <div class="demo-panel demo-panel--span2">
+        <div class="demo-panel__header">
+          <span class="demo-panel__title">Story Status Tracker</span>
+          <span class="demo-panel__badge">8 STORIES</span>
+        </div>
+        <div class="demo-panel__body">
+          <div class="status-list" id="status-list">
+            <div class="status-item">
+              <div class="status-item__top">
+                <span class="status-item__name">CBDC: The Invisible Ledger</span>
+                <span class="status-badge status-badge--fact">FACT CHECK</span>
+              </div>
+              <div class="status-item__progress"><div class="status-item__bar" style="width:75%;background:#7BAFD4;"></div></div>
+            </div>
+            <div class="status-item">
+              <div class="status-item__top">
+                <span class="status-item__name">G7 Tax Framework — Analysis</span>
+                <span class="status-badge status-badge--approved">APPROVED</span>
+              </div>
+              <div class="status-item__progress"><div class="status-item__bar" style="width:92%;background:#4EBB6E;"></div></div>
+            </div>
+            <div class="status-item">
+              <div class="status-item__top">
+                <span class="status-item__name">Arctic Shipping Routes Investigation</span>
+                <span class="status-badge status-badge--writing">WRITING</span>
+              </div>
+              <div class="status-item__progress"><div class="status-item__bar" style="width:45%;"></div></div>
+            </div>
+            <div class="status-item">
+              <div class="status-item__top">
+                <span class="status-item__name">Taiwan Semiconductor Export Report</span>
+                <span class="status-badge status-badge--published">PUBLISHED</span>
+              </div>
+              <div class="status-item__progress"><div class="status-item__bar" style="width:100%;background:#FF5C73;"></div></div>
+            </div>
+            <div class="status-item">
+              <div class="status-item__top">
+                <span class="status-item__name">ECB Policy: What Nobody Is Saying</span>
+                <span class="status-badge status-badge--draft">DRAFT</span>
+              </div>
+              <div class="status-item__progress"><div class="status-item__bar" style="width:20%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Publication queue -->
+      <div class="demo-panel">
+        <div class="demo-panel__header">
+          <span class="demo-panel__title">Publication Queue</span>
+          <span class="demo-panel__badge" id="queue-count">3 PENDING</span>
+        </div>
+        <div class="demo-panel__body">
+          <div class="queue-list" id="pub-queue">
+            <div class="queue-item queue-item--live">
+              <span class="queue-item__title">Taiwan Chip Exports Hit Record</span>
+              <span class="queue-item__time">LIVE</span>
+            </div>
+            <div class="queue-item queue-item--pending">
+              <span class="queue-item__title">G7 Tax Framework Analysis</span>
+              <span class="queue-item__time">15:00</span>
+            </div>
+            <div class="queue-item queue-item--pending">
+              <span class="queue-item__title">The ECB's Quiet Pivot</span>
+              <span class="queue-item__time">16:30</span>
+            </div>
+            <div class="queue-item queue-item--schedule">
+              <span class="queue-item__title">Arctic Routes: A New Cold War</span>
+              <span class="queue-item__time">Tomorrow</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity log -->
+      <div class="demo-panel demo-panel--span3">
+        <div class="demo-panel__header">
+          <span class="demo-panel__title">Editorial Activity Log</span>
+          <span class="demo-panel__badge">REAL-TIME</span>
+        </div>
+        <div class="demo-panel__body" style="padding:0 16px;">
+          <div class="activity-feed" id="activity-feed" style="display:flex;flex-direction:row;flex-wrap:wrap;gap:0;">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Controls -->
+    <div class="demo-controls">
+      <div class="demo-search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search stories, reporters, topics…">
+      </div>
+      <div class="demo-filters">
+        <button class="filter-chip active" onclick="toggleFilter(this)">All</button>
+        <button class="filter-chip" onclick="toggleFilter(this)">Breaking</button>
+        <button class="filter-chip" onclick="toggleFilter(this)">Investigations</button>
+        <button class="filter-chip" onclick="toggleFilter(this)">Opinion</button>
+        <button class="filter-chip" onclick="toggleFilter(this)">Markets</button>
+      </div>
+      <button class="btn-publish" onclick="publishStory()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Publish Story
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- HERO STORY -->
+<!-- ===================================================== -->
+
+<section id="hero-story">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-main">
+        <span class="hero-kicker">Exclusive Investigation</span>
+        <h1 class="hero-headline">The Shadow Ledger: How Central Banks Are Building a New Kind of Money — And What They're Not Telling You</h1>
+        <p class="hero-dek">A year-long investigation spanning twelve countries reveals a coordinated push toward programmable digital currencies that could give governments unprecedented control over how citizens spend their money.</p>
+        <div class="hero-byline">
+          <div class="avatar">SC</div>
+          <div>
+            <div class="t-byline"><strong>Sarah Chen</strong> · Senior Investigative Correspondent</div>
+            <div class="t-byline" style="margin-top:2px;">June 15, 2026 · 14 min read</div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:10px;">
+            <button class="share-btn" title="Share" style="display:inline-flex;align-items:center;justify-content:center;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+            </button>
+            <button class="share-btn" title="Save">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="hero-sidebar">
+        <div class="hero-img">
+          <div class="img-placeholder">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18"/><path d="M3 9l4-4 4 4 4-6 4 6"/><circle cx="8" cy="14" r="2"/></svg>
+            <span style="font-family:var(--sans);font-size:0.75rem;">Cover photograph</span>
+          </div>
+        </div>
+        <p class="img-caption">Central bank digital currency testing facility, Frankfurt. Photo: Marcus Reid / The Field Report</p>
+
+        <div class="hero-sidebar-stories">
+          <div style="font-family:var(--sans);font-size:0.6875rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px;padding-top:16px;border-top:2px solid var(--ink);">Also in Investigations</div>
+          <div class="sidebar-story">
+            <div class="t-kicker" style="color:var(--amber);font-size:0.625rem;">Series · Part 3</div>
+            <div class="sidebar-story__headline">The Arctic Corridor: How Climate Change Rewrote Geopolitics</div>
+            <div class="t-byline">David Kim · 11 min read</div>
+          </div>
+          <div class="sidebar-story">
+            <div class="t-kicker" style="color:var(--amber);font-size:0.625rem;">Data Investigation</div>
+            <div class="sidebar-story__headline">Tax Haven Traffic: The Numbers Behind the Numbers</div>
+            <div class="t-byline">Nadia Petrov · 9 min read</div>
+          </div>
+          <div class="sidebar-story">
+            <div class="t-kicker" style="color:var(--blue);font-size:0.625rem;">Analysis</div>
+            <div class="sidebar-story__headline">G7's Tax Deal: Who Actually Won?</div>
+            <div class="t-byline">Amara Levi · 7 min read</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- MULTI-COLUMN HOMEPAGE LAYOUT -->
+<!-- ===================================================== -->
+
+<section id="homepage-layout">
+  <div class="container">
+    <div class="homepage-grid">
+      <!-- Main column -->
+      <div class="homepage-main">
+        <div class="section-header">
+          <span class="t-label t-label--red">Latest</span>
+          <a class="section-header__more">See all stories →</a>
+        </div>
+
+        <div class="article-card">
+          <div class="article-card__content">
+            <div class="t-kicker" style="color:var(--blue);font-size:0.625rem;">Economy</div>
+            <h3 class="article-card__headline">The ECB's Quiet Pivot: Why the Language Matters More Than the Rate</h3>
+            <p class="article-card__excerpt">A close reading of Thursday's policy statement reveals three subtle shifts that tell us everything about where rates are heading through year-end.</p>
+            <div class="article-card__meta">
+              <span class="t-byline"><strong>Amara Levi</strong></span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">7 min read</span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">2 hours ago</span>
+            </div>
+          </div>
+          <div class="article-card__thumb">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18"/></svg>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-card__content">
+            <div class="t-kicker" style="color:var(--amber);font-size:0.625rem;">Technology</div>
+            <h3 class="article-card__headline">AI's Governance Gap: The Treaties No One Wants to Sign</h3>
+            <p class="article-card__excerpt">As artificial intelligence reshapes every sector of the global economy, the frameworks meant to govern it remain caught between national interest and urgent necessity.</p>
+            <div class="article-card__meta">
+              <span class="t-byline"><strong>James Whitfield</strong></span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">12 min read</span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">4 hours ago</span>
+            </div>
+          </div>
+          <div class="article-card__thumb">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18"/></svg>
+          </div>
+        </div>
+
+        <div class="article-card article-card--no-img">
+          <div class="article-card__content">
+            <div class="t-kicker" style="color:var(--red);font-size:0.625rem;">World</div>
+            <h3 class="article-card__headline">Brussels Rewrites the Rulebook on Big Tech — Again</h3>
+            <div class="article-card__meta">
+              <span class="t-byline"><strong>Marcus Reid</strong></span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">5 min read</span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">6 hours ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card article-card--no-img">
+          <div class="article-card__content">
+            <div class="t-kicker" style="color:var(--green);font-size:0.625rem;">Science</div>
+            <h3 class="article-card__headline">The Ocean Carbon Puzzle: New Data, Uncomfortable Conclusions</h3>
+            <div class="article-card__meta">
+              <span class="t-byline"><strong>Dr. Elena Vasquez</strong></span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">9 min read</span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">Yesterday</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card article-card--no-img">
+          <div class="article-card__content">
+            <div class="t-kicker" style="color:var(--ink-light);font-size:0.625rem;">Markets</div>
+            <h3 class="article-card__headline">Private Equity's Reckoning: The Portfolio Companies That Won't Recover</h3>
+            <div class="article-card__meta">
+              <span class="t-byline"><strong>Rachel Morgenstern</strong></span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">8 min read</span>
+              <span class="dot-sep">·</span>
+              <span class="t-byline">Yesterday</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right sidebar -->
+      <div class="homepage-sidebar">
+
+        <!-- Opinion box -->
+        <div class="opinion-box">
+          <div class="t-kicker" style="color:var(--amber);font-size:0.625rem;margin-bottom:8px;">Editorial</div>
+          <p class="opinion-box__leader">The G7 accord is not a solution. It is a truce in an argument that hasn't started yet.</p>
+          <div class="t-byline" style="margin-top:8px;">The Editors · Today's position</div>
+        </div>
+
+        <!-- Trending topics panel (light version) -->
+        <div class="trending-section">
+          <div class="section-header" style="margin-bottom:10px;">
+            <span class="t-label">Most Read</span>
+          </div>
+          <div class="trending-row">
+            <span class="trending-row__num">1</span>
+            <div class="trending-row__content">
+              <div class="trending-row__category">Investigation</div>
+              <div class="trending-row__title">The Shadow Ledger: Central Banks' Hidden Agenda</div>
+            </div>
+          </div>
+          <div class="trending-row">
+            <span class="trending-row__num">2</span>
+            <div class="trending-row__content">
+              <div class="trending-row__category">Economy</div>
+              <div class="trending-row__title">ECB's Quiet Pivot and What It Means for You</div>
+            </div>
+          </div>
+          <div class="trending-row">
+            <span class="trending-row__num">3</span>
+            <div class="trending-row__content">
+              <div class="trending-row__category">Technology</div>
+              <div class="trending-row__title">AI Governance Gap: Treaties Nobody Wants</div>
+            </div>
+          </div>
+          <div class="trending-row">
+            <span class="trending-row__num">4</span>
+            <div class="trending-row__content">
+              <div class="trending-row__category">World</div>
+              <div class="trending-row__title">Brussels and Big Tech: The New Rules</div>
+            </div>
+          </div>
+          <div class="trending-row">
+            <span class="trending-row__num">5</span>
+            <div class="trending-row__content">
+              <div class="trending-row__category">Science</div>
+              <div class="trending-row__title">Ocean Carbon: Uncomfortable Findings</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Market ticker (panel) -->
+        <div style="border:1px solid var(--rule);padding:16px;margin-top:20px;background:var(--paper-warm);">
+          <div class="t-label" style="margin-bottom:12px;">Markets Snapshot</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span class="market-item__name" style="font-size:0.8rem;">S&amp;P 500</span>
+              <span class="market-item__val" style="font-size:0.8rem;">5,841.47</span>
+              <span class="market-item__chg market-item__chg--up" style="font-size:0.75rem;">+0.42%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span class="market-item__name" style="font-size:0.8rem;">Brent Crude</span>
+              <span class="market-item__val" style="font-size:0.8rem;">$82.14</span>
+              <span class="market-item__chg market-item__chg--up" style="font-size:0.75rem;">+1.23%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span class="market-item__name" style="font-size:0.8rem;">EUR/USD</span>
+              <span class="market-item__val" style="font-size:0.8rem;">1.0834</span>
+              <span class="market-item__chg market-item__chg--down" style="font-size:0.75rem;">−0.18%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span class="market-item__name" style="font-size:0.8rem;">10Y Treasury</span>
+              <span class="market-item__val" style="font-size:0.8rem;">4.61%</span>
+              <span class="market-item__chg market-item__chg--down" style="font-size:0.75rem;">−0.05</span>
+            </div>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--rule);">
+            <a href="#" style="font-family:var(--sans);font-size:0.75rem;color:var(--ink-light);text-decoration:underline;">Full markets data →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- FEATURED INVESTIGATIONS -->
+<!-- ===================================================== -->
+
+<section id="featured-investigations">
+  <div class="container">
+    <div class="investigations-header">
+      <span class="investigations-title">Investigations</span>
+      <a href="#" style="font-family:var(--sans);font-size:0.8rem;color:rgba(250,240,232,0.4);text-decoration:underline;">All investigations →</a>
+    </div>
+    <div class="investigations-grid">
+      <div class="inv-card">
+        <div class="inv-card__label">Exclusive · 3-Part Series</div>
+        <h3 class="inv-card__headline">The Shadow Ledger: How Central Banks Are Building a New Kind of Money</h3>
+        <p class="inv-card__dek">A year-long investigation spanning twelve countries exposes the architecture of a financial system designed to give governments programmable control over individual spending.</p>
+        <div class="inv-card__meta">
+          <div class="inv-card__author"><strong>Sarah Chen</strong> · Senior Investigative Correspondent</div>
+          <span class="inv-card__part">Part 1 of 3</span>
+        </div>
+      </div>
+      <div class="inv-card inv-card--sm">
+        <div class="inv-card__label">Data Investigation</div>
+        <h3 class="inv-card__headline">The Arctic Corridor: Climate Change Rewrote Geopolitics</h3>
+        <p class="inv-card__dek">New shipping data shows who is quietly winning the race for the north.</p>
+        <div class="inv-card__meta">
+          <div class="inv-card__author"><strong>David Kim</strong></div>
+          <span class="inv-card__part">Part 3 of 4</span>
+        </div>
+      </div>
+      <div class="inv-card inv-card--sm">
+        <div class="inv-card__label">Finance</div>
+        <h3 class="inv-card__headline">Tax Haven Traffic: The Numbers Behind the Numbers</h3>
+        <p class="inv-card__dek">Corporate tax flows that don't match the official story of reform.</p>
+        <div class="inv-card__meta">
+          <div class="inv-card__author"><strong>Nadia Petrov</strong></div>
+          <span class="inv-card__part">Ongoing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- EDITORIAL TEAM -->
+<!-- ===================================================== -->
+
+<section id="editorial-team">
+  <div class="container">
+    <div class="section-header">
+      <span class="t-label">Editorial Team</span>
+      <a class="section-header__more">Full team →</a>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-card__avatar">SC</div>
+        <div>
+          <div class="team-card__name">Sarah Chen</div>
+          <div class="team-card__role">Sr. Investigative</div>
+        </div>
+        <div class="team-card__bio">Covers financial crime, digital currency, and the intersection of policy and technology. Previously WSJ, FT.</div>
+        <div class="team-card__beat">
+          <span class="beat-tag">Finance</span>
+          <span class="beat-tag">CBDC</span>
+          <span class="beat-tag">Policy</span>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card__avatar">MR</div>
+        <div>
+          <div class="team-card__name">Marcus Reid</div>
+          <div class="team-card__role">Europe Correspondent</div>
+        </div>
+        <div class="team-card__bio">Based in Brussels. Covers EU institutions, regulation, and the geopolitics of European integration.</div>
+        <div class="team-card__beat">
+          <span class="beat-tag">EU</span>
+          <span class="beat-tag">Regulation</span>
+          <span class="beat-tag">Tech</span>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card__avatar">AL</div>
+        <div>
+          <div class="team-card__name">Amara Levi</div>
+          <div class="team-card__role">Economics Editor</div>
+        </div>
+        <div class="team-card__bio">Former senior economist at the IMF. Writes on monetary policy, central banking, and global capital flows.</div>
+        <div class="team-card__beat">
+          <span class="beat-tag">ECB</span>
+          <span class="beat-tag">Macro</span>
+          <span class="beat-tag">IMF</span>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-card__avatar">DK</div>
+        <div>
+          <div class="team-card__name">David Kim</div>
+          <div class="team-card__role">Asia-Pacific</div>
+        </div>
+        <div class="team-card__bio">Singapore-based. Covers semiconductor geopolitics, supply chain intelligence, and the tech cold war.</div>
+        <div class="team-card__beat">
+          <span class="beat-tag">Chips</span>
+          <span class="beat-tag">Asia</span>
+          <span class="beat-tag">Trade</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author profile full -->
+    <div style="margin-top:48px;">
+      <div class="comp-label" style="margin-bottom:16px;">Author Profile Card</div>
+      <div class="author-profile" style="max-width:560px;">
+        <div class="author-profile__header">
+          <div class="avatar avatar--lg">SC</div>
+          <div class="author-profile__info">
+            <div class="author-profile__name">Sarah Chen</div>
+            <div class="author-profile__title">Senior Investigative Correspondent · The Field Report</div>
+            <p class="author-profile__bio">Pulitzer finalist. Covers the intersection of financial systems, digital currency, and state power. Author of <em>The Ledger War</em> (2024).</p>
+          </div>
+        </div>
+        <div class="author-profile__stats">
+          <div class="author-stat">
+            <span class="author-stat__val t-number">214</span>
+            <span class="author-stat__label">Stories</span>
+          </div>
+          <div class="author-stat">
+            <span class="author-stat__val t-number">8.4M</span>
+            <span class="author-stat__label">Readers</span>
+          </div>
+          <div class="author-stat">
+            <span class="author-stat__val t-number">11yr</span>
+            <span class="author-stat__label">At TFR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- LONG-FORM ARTICLE LAYOUT -->
+<!-- ===================================================== -->
+
+<section id="longform-layout">
+  <div class="container--wide">
+    <div style="padding:40px 0 20px;border-bottom:1px solid var(--rule);margin-bottom:40px;">
+      <div class="t-label" style="margin-bottom:8px;">Long-form Layout</div>
+      <div class="t-headline-sm" style="color:var(--ink-mid);">Reading-optimized, three-column article layout with sticky sidebar, TOC, pull quotes, and drop cap.</div>
+    </div>
+    <div class="longform-grid">
+      <!-- Share sidebar -->
+      <div class="longform-left">
+        <div class="share-stack">
+          <div class="t-label" style="margin-bottom:8px;writing-mode:vertical-rl;transform:rotate(180deg);">Share</div>
+          <button class="share-btn" title="Twitter/X">𝕏</button>
+          <button class="share-btn" title="LinkedIn">in</button>
+          <button class="share-btn" title="Copy link">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </button>
+          <button class="share-btn" title="Save">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+          <button class="share-btn" title="Print">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Article body -->
+      <div class="longform-body">
+        <div class="article-header">
+          <div class="article-section-label">Investigation · Part 1 of 3</div>
+          <h1 class="article-title">The Shadow Ledger: How Central Banks Are Building a New Kind of Money</h1>
+          <p class="article-dek">A year-long investigation spanning twelve countries reveals a coordinated push toward programmable digital currencies that could give governments unprecedented control over how citizens spend their money.</p>
+          <div class="article-meta-bar">
+            <div class="avatar">SC</div>
+            <div>
+              <div class="t-byline"><strong>Sarah Chen</strong> · Senior Investigative Correspondent</div>
+              <div class="t-byline" style="margin-top:1px;">June 15, 2026 · Updated 14:30 UTC</div>
+            </div>
+            <div class="read-time">14 min read</div>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <p>In a glass-and-steel tower on the western edge of Frankfurt, a team of software engineers is building what their employer calls "the future of money." They work in silence, behind biometric doors, on a system that can track every transaction, freeze an account in milliseconds, and, if their designs are implemented in full, tell a citizen precisely where and how their money can be spent.</p>
+
+          <p>Their employer is not a fintech startup. It is the European Central Bank. And what these engineers are building is a Central Bank Digital Currency — a CBDC — that could, within the decade, replace the cash in your wallet with a digital token that exists only on a government ledger.</p>
+
+          <h2>The Race Nobody Announced</h2>
+
+          <p>Over the past three years, The Field Report conducted over 200 interviews across twelve countries, reviewed thousands of pages of internal documents obtained through freedom of information requests, and spoke with current and former central bank officials who asked not to be named for fear of professional reprisal. What we found is not a future scenario. It is a present reality, unfolding quietly behind the language of financial inclusion and monetary modernization.</p>
+
+          <div class="pull-quote">
+            <p class="pull-quote__text">"We are not building a surveillance tool. But the architecture we are building could very easily become one, if the political will were there."</p>
+            <p class="pull-quote__attr">— <strong>Senior ECB official</strong>, speaking on condition of anonymity</p>
+          </div>
+
+          <p>The term "programmable money" appears in technical documents from sixteen central banks. In most cases, the term is framed as a feature: money that could automatically distribute welfare payments, expire if unused, or be restricted to approved categories of goods. In none of the public communications does the word "control" appear.</p>
+
+          <h2>What the Documents Show</h2>
+
+          <p>The Field Report has reviewed a series of internal working papers from the Bank for International Settlements — the central bank of central banks — that were not intended for public circulation. These documents, dated between 2023 and 2025, describe with unusual candor the capabilities that CBDC systems could enable, including transaction monitoring at a level no commercial bank has ever been legally permitted to conduct.</p>
+        </div>
+      </div>
+
+      <!-- TOC + Related sidebar -->
+      <div class="longform-right">
+        <div class="toc-box">
+          <div class="toc-box__title">In This Article</div>
+          <ul class="toc-list">
+            <li><a href="#" class="active">The Race Nobody Announced</a></li>
+            <li><a href="#">What the Documents Show</a></li>
+            <li><a href="#">The Architecture of Control</a></li>
+            <li><a href="#">Who Benefits, Who Pays</a></li>
+            <li><a href="#">The Democratic Deficit</a></li>
+          </ul>
+        </div>
+        <div class="related-box">
+          <div class="related-box__header">Related</div>
+          <div class="related-item">
+            <div class="t-kicker" style="color:var(--amber);font-size:0.625rem;">Series · Part 2</div>
+            <div class="related-item__headline">Inside the BIS: The Global Playbook for Digital Currency</div>
+            <div class="t-byline" style="margin-top:4px;"><strong>Sarah Chen</strong> · 12 min</div>
+          </div>
+          <div class="related-item">
+            <div class="t-kicker" style="color:var(--blue);font-size:0.625rem;">Analysis</div>
+            <div class="related-item__headline">What China's Digital Yuan Tells Us About Everyone Else's Plans</div>
+            <div class="t-byline" style="margin-top:4px;"><strong>David Kim</strong> · 9 min</div>
+          </div>
+          <div class="related-item">
+            <div class="t-kicker" style="color:var(--ink-light);font-size:0.625rem;">Opinion</div>
+            <div class="related-item__headline">The Case Against Programmable Money</div>
+            <div class="t-byline" style="margin-top:4px;"><strong>The Editors</strong> · 5 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- SUBSCRIBER EXPERIENCE -->
+<!-- ===================================================== -->
+
+<section id="subscriber-experience">
+  <div class="container">
+    <div class="subscriber-grid">
+      <div class="subscriber-pitch">
+        <div class="subscriber-pitch__eyebrow">Premium Access</div>
+        <h2 class="subscriber-pitch__headline">Journalism That Earns Its Place in Your Morning</h2>
+        <p class="subscriber-pitch__body">The Field Report is independent, reader-funded, and accountable to no advertiser. Our investigations take months. Our analysis doesn't follow the news cycle — it leads it.</p>
+        <ul class="subscriber-benefits">
+          <li><span class="benefit-check">✓</span> Unlimited access to all investigations and long reads</li>
+          <li><span class="benefit-check">✓</span> Daily briefing at 6 AM your time</li>
+          <li><span class="benefit-check">✓</span> Podcast: The Field Report Weekly</li>
+          <li><span class="benefit-check">✓</span> Source documents and data used in our reporting</li>
+          <li><span class="benefit-check">✓</span> Early access to investigative series</li>
+          <li><span class="benefit-check">✓</span> Direct access to reporters via subscriber Q&amp;A</li>
+        </ul>
+        <div class="btn-group">
+          <button class="btn btn--primary btn--lg">Subscribe — €14/month</button>
+          <button class="btn btn--ghost">Annual (2 months free)</button>
+        </div>
+      </div>
+      <div class="subscriber-form">
+        <div style="border:1px solid var(--rule);background:var(--paper);padding:28px;">
+          <div class="t-headline-sm" style="margin-bottom:4px;">Create your account</div>
+          <div class="t-body-sm" style="margin-bottom:24px;">Start your 30-day free trial. No commitment.</div>
+          <div class="form-field">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" placeholder="Your name">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" placeholder="your@email.com">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Region</label>
+            <select class="form-input form-input--select">
+              <option>Europe</option>
+              <option>North America</option>
+              <option>Asia-Pacific</option>
+              <option>Rest of World</option>
+            </select>
+            <span class="form-hint">Pricing may vary by region</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" placeholder="Min. 8 characters">
+          </div>
+          <button class="btn btn--red" style="width:100%;justify-content:center;margin-top:8px;">Start Free Trial</button>
+          <div style="margin-top:12px;font-family:var(--sans);font-size:0.75rem;color:var(--ink-faint);text-align:center;">No credit card required for trial. Cancel anytime.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== -->
+<!-- NEWSLETTER -->
+<!-- ===================================================== -->
+
+<div class="newsletter-band">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-copy">
+        <div class="newsletter-copy__label">Daily Briefing</div>
+        <div class="newsletter-copy__title">The Field Report — Morning Edition</div>
+        <p class="newsletter-copy__body">What decision-makers read at 6 AM. Investigations, market intelligence, and editorial analysis in under ten minutes. Free, always.</p>
+      </div>
+      <div>
+        <div class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="your@email.com">
+          <button class="newsletter-submit" onclick="showNotification('success','Subscribed','You\'ll receive your first briefing tomorrow at 6 AM.')">Subscribe</button>
+        </div>
+        <div style="font-family:var(--sans);font-size:0.75rem;color:var(--ink-faint);margin-top:8px;">No spam. One email per day. Unsubscribe in one click.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- COMPONENT SHOWCASE: BUTTONS, INPUTS, ETC. -->
+<!-- ===================================================== -->
+
+<div class="showcase-wrapper">
+
+  <!-- Category Nav -->
+  <section class="showcase-section">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Category Navigation</div>
+        <div class="showcase-section-desc">Section-level navigation with icon, label, and article count.</div>
+      </div>
+      <div class="category-grid">
+        <div class="category-cell">
+          <div class="category-cell__icon">🌍</div>
+          <span class="category-cell__name">World</span>
+          <span class="category-cell__count">1,240 stories</span>
+        </div>
+        <div class="category-cell">
+          <div class="category-cell__icon">📈</div>
+          <span class="category-cell__name">Economy</span>
+          <span class="category-cell__count">984 stories</span>
+        </div>
+        <div class="category-cell">
+          <div class="category-cell__icon">⚡</div>
+          <span class="category-cell__name">Technology</span>
+          <span class="category-cell__count">741 stories</span>
+        </div>
+        <div class="category-cell">
+          <div class="category-cell__icon">🔍</div>
+          <span class="category-cell__name">Investigations</span>
+          <span class="category-cell__count">183 series</span>
+        </div>
+        <div class="category-cell">
+          <div class="category-cell__icon">💬</div>
+          <span class="category-cell__name">Opinion</span>
+          <span class="category-cell__count">556 columns</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Market Ticker -->
+  <section class="showcase-section" style="padding:0;border:none;">
+    <div class="market-ticker">
+      <div class="market-inner">
+        <div class="market-item"><span class="market-item__name">S&amp;P 500</span><span class="market-item__val">5,841.47</span><span class="market-item__chg market-item__chg--up">▲ +0.42%</span></div>
+        <div class="market-item"><span class="market-item__name">EUR/USD</span><span class="market-item__val">1.0834</span><span class="market-item__chg market-item__chg--down">▼ −0.18%</span></div>
+        <div class="market-item"><span class="market-item__name">Brent</span><span class="market-item__val">$82.14</span><span class="market-item__chg market-item__chg--up">▲ +1.23%</span></div>
+        <div class="market-item"><span class="market-item__name">Gold</span><span class="market-item__val">$2,341</span><span class="market-item__chg market-item__chg--up">▲ +0.87%</span></div>
+        <div class="market-item"><span class="market-item__name">10Y UST</span><span class="market-item__val">4.61%</span><span class="market-item__chg market-item__chg--down">▼ −0.05</span></div>
+        <div class="market-item"><span class="market-item__name">Bitcoin</span><span class="market-item__val">$67,420</span><span class="market-item__chg market-item__chg--up">▲ +2.14%</span></div>
+        <div class="market-item"><span class="market-item__name">FTSE 100</span><span class="market-item__val">8,234.16</span><span class="market-item__chg market-item__chg--down">▼ −0.31%</span></div>
+        <div class="market-item"><span class="market-item__name">Nikkei</span><span class="market-item__val">38,914</span><span class="market-item__chg market-item__chg--up">▲ +0.66%</span></div>
+        <!-- duplicated -->
+        <div class="market-item"><span class="market-item__name">S&amp;P 500</span><span class="market-item__val">5,841.47</span><span class="market-item__chg market-item__chg--up">▲ +0.42%</span></div>
+        <div class="market-item"><span class="market-item__name">EUR/USD</span><span class="market-item__val">1.0834</span><span class="market-item__chg market-item__chg--down">▼ −0.18%</span></div>
+        <div class="market-item"><span class="market-item__name">Brent</span><span class="market-item__val">$82.14</span><span class="market-item__chg market-item__chg--up">▲ +1.23%</span></div>
+        <div class="market-item"><span class="market-item__name">Gold</span><span class="market-item__val">$2,341</span><span class="market-item__chg market-item__chg--up">▲ +0.87%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Podcast + Video -->
+  <section class="showcase-section">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Podcast &amp; Video</div>
+      </div>
+      <div class="section-header" style="margin-bottom:24px;">
+        <span class="t-label">Listen</span>
+        <a class="section-header__more">All episodes →</a>
+      </div>
+      <div class="podcast-grid" style="margin-bottom:48px;">
+        <div class="podcast-card">
+          <div class="podcast-art">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </div>
+          <div class="podcast-info">
+            <div class="podcast-series">The Field Report Weekly</div>
+            <div class="podcast-title">The CBDC Question: Who Controls Your Money?</div>
+            <div class="podcast-meta">Episode 214 · 38 min · June 14, 2026</div>
+          </div>
+        </div>
+        <div class="podcast-card">
+          <div class="podcast-art" style="background:var(--blue);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          </div>
+          <div class="podcast-info">
+            <div class="podcast-series">Deep Dive</div>
+            <div class="podcast-title">Inside the G7: What the Accord Actually Says</div>
+            <div class="podcast-meta">Episode 89 · 54 min · June 15, 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="section-header" style="margin-bottom:24px;">
+        <span class="t-label">Watch</span>
+        <a class="section-header__more">Video reports →</a>
+      </div>
+      <div class="grid-3">
+        <div class="video-card">
+          <div class="video-thumb">
+            <div class="play-btn">▶</div>
+            <span class="video-duration">12:44</span>
+          </div>
+          <div class="video-info">
+            <div class="video-series">Field Report TV</div>
+            <div class="video-title">The Frankfurt Visit: Inside the ECB's Digital Labs</div>
+            <div class="t-byline">Sarah Chen · June 12, 2026</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <div class="play-btn">▶</div>
+            <span class="video-duration">8:22</span>
+          </div>
+          <div class="video-info">
+            <div class="video-series">Explainer</div>
+            <div class="video-title">What Is a CBDC and Why Should You Care?</div>
+            <div class="t-byline">Editorial Desk · June 10, 2026</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <div class="play-btn">▶</div>
+            <span class="video-duration">21:08</span>
+          </div>
+          <div class="video-info">
+            <div class="video-series">Long Read Video</div>
+            <div class="video-title">Arctic Routes: The Geography of the Next War</div>
+            <div class="t-byline">David Kim · June 8, 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Opinion Columns -->
+  <section class="showcase-section" style="background:var(--paper-warm);">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Opinion</div>
+      </div>
+      <div class="section-header" style="margin-bottom:24px;">
+        <span class="t-label t-label--amber">Columnists</span>
+        <a class="section-header__more">All opinion →</a>
+      </div>
+      <div class="opinion-grid">
+        <div class="opinion-col">
+          <div class="opinion-col__author">
+            <div class="avatar">AL</div>
+            <div>
+              <div class="opinion-col__name">Amara Levi</div>
+              <div class="opinion-col__title-s">Economics Editor</div>
+            </div>
+          </div>
+          <h3 class="opinion-col__headline">The ECB Is Not Being Timid. It Is Being Strategic.</h3>
+          <p class="opinion-col__body">Markets read Thursday's hold as indecision. I read it as the most deliberate signal the bank has sent in two years. Here's what everyone is missing about the sequencing…</p>
+        </div>
+        <div class="opinion-col">
+          <div class="opinion-col__author">
+            <div class="avatar" style="background:var(--paper-deep);">JW</div>
+            <div>
+              <div class="opinion-col__name">James Whitfield</div>
+              <div class="opinion-col__title-s">Technology Columnist</div>
+            </div>
+          </div>
+          <h3 class="opinion-col__headline">The AI Safety Debate Is Happening in the Wrong Room</h3>
+          <p class="opinion-col__body">Politicians are arguing about catastrophic risk while the actual harms compound daily, unobserved and unreported. A note on what we are choosing not to see.</p>
+        </div>
+        <div class="opinion-col">
+          <div class="opinion-col__author">
+            <div class="avatar" style="background:var(--paper-deep);">NP</div>
+            <div>
+              <div class="opinion-col__name">Nadia Petrov</div>
+              <div class="opinion-col__title-s">Finance Correspondent</div>
+            </div>
+          </div>
+          <h3 class="opinion-col__headline">Tax Reform Without Enforcement Is Political Theater</h3>
+          <p class="opinion-col__body">The G7 accord looks impressive until you ask who will check compliance. The answer is the same institutions that failed to catch the last decade of avoidance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Interface -->
+  <section class="showcase-section" id="search-section">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Search Interface</div>
+        <div class="showcase-section-desc">Full-featured search with suggestions, filters, and results.</div>
+      </div>
+      <div class="search-box" style="max-width:680px;margin-bottom:32px;">
+        <div class="search-box__inner">
+          <input class="search-box__input" type="text" placeholder="Search investigations, reports, analysis…">
+          <button class="search-box__submit">Search</button>
+        </div>
+        <div class="search-suggestions">
+          <span class="t-label" style="margin-right:4px;">Recent:</span>
+          <span class="search-tag">CBDC investigation</span>
+          <span class="search-tag">ECB rate decision</span>
+          <span class="search-tag">G7 tax accord</span>
+          <span class="search-tag">Taiwan semiconductors</span>
+          <span class="search-tag">Arctic shipping</span>
+        </div>
+      </div>
+
+      <!-- Input group -->
+      <div class="comp-label">Input with icon and action</div>
+      <div class="input-group" style="max-width:400px;margin-bottom:24px;">
+        <span class="input-group__icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        </span>
+        <input class="input-group__field" type="text" placeholder="Filter by keyword…">
+        <button class="input-group__btn">Go</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Buttons -->
+  <section class="showcase-section" style="background:var(--paper-warm);">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Buttons &amp; Controls</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div>
+          <div class="comp-label">Primary actions</div>
+          <div class="btn-group" style="margin-top:10px;">
+            <button class="btn btn--primary">Read the investigation</button>
+            <button class="btn btn--red">Subscribe now</button>
+            <button class="btn btn--outline">Save story</button>
+            <button class="btn btn--ghost">Dismiss</button>
+          </div>
+        </div>
+        <div>
+          <div class="comp-label">Sizes</div>
+          <div class="btn-group" style="margin-top:10px;align-items:center;">
+            <button class="btn btn--primary btn--sm">Small</button>
+            <button class="btn btn--primary">Default</button>
+            <button class="btn btn--primary btn--lg">Large</button>
+          </div>
+        </div>
+        <div>
+          <div class="comp-label">Filter bar</div>
+          <div class="filter-bar" style="margin-top:10px;max-width:600px;">
+            <button class="filter-btn active" onclick="setFilter(this)">All</button>
+            <button class="filter-btn" onclick="setFilter(this)">Investigations</button>
+            <button class="filter-btn" onclick="setFilter(this)">Analysis</button>
+            <button class="filter-btn" onclick="setFilter(this)">Opinion</button>
+            <button class="filter-btn" onclick="setFilter(this)">Data</button>
+            <button class="filter-btn" onclick="setFilter(this)">Video</button>
+          </div>
+        </div>
+        <div>
+          <div class="comp-label">Chips</div>
+          <div class="filter-chips" style="margin-top:10px;">
+            <span class="chip active">Economy <span class="chip__x">×</span></span>
+            <span class="chip">Technology</span>
+            <span class="chip">World</span>
+            <span class="chip">Opinion</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <section class="showcase-section">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Tabs</div>
+      </div>
+      <div class="tabs" style="max-width:700px;">
+        <button class="tab-btn active" onclick="switchTab(this,'tab-latest')">Latest</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-investigations')">Investigations</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-opinion')">Opinion</button>
+        <button class="tab-btn" onclick="switchTab(this,'tab-archive')">Archive</button>
+      </div>
+      <div id="tab-latest" class="tab-panel active" style="max-width:700px;">
+        <div class="article-card article-card--no-img"><div class="article-card__content"><div class="t-kicker" style="color:var(--red);font-size:0.625rem;">Breaking</div><h3 class="article-card__headline">G7 Finance Ministers Reach Emergency Tax Accord</h3><div class="article-card__meta"><span class="t-byline"><strong>Amara Levi</strong></span><span class="dot-sep">·</span><span class="t-byline">1 hour ago</span></div></div></div>
+        <div class="article-card article-card--no-img"><div class="article-card__content"><div class="t-kicker" style="color:var(--blue);font-size:0.625rem;">Economy</div><h3 class="article-card__headline">ECB Holds Rates for Third Consecutive Meeting</h3><div class="article-card__meta"><span class="t-byline"><strong>Amara Levi</strong></span><span class="dot-sep">·</span><span class="t-byline">3 hours ago</span></div></div></div>
+      </div>
+      <div id="tab-investigations" class="tab-panel" style="max-width:700px;">
+        <div class="article-card article-card--no-img"><div class="article-card__content"><div class="t-kicker" style="color:var(--amber);font-size:0.625rem;">Investigation · Series</div><h3 class="article-card__headline">The Shadow Ledger: Part 1 of 3</h3><div class="article-card__meta"><span class="t-byline"><strong>Sarah Chen</strong></span><span class="dot-sep">·</span><span class="t-byline">Today</span></div></div></div>
+      </div>
+      <div id="tab-opinion" class="tab-panel" style="max-width:700px;">
+        <div class="article-card article-card--no-img"><div class="article-card__content"><div class="t-kicker" style="color:var(--amber);font-size:0.625rem;">Opinion</div><h3 class="article-card__headline">The ECB Is Not Being Timid. It Is Being Strategic.</h3><div class="article-card__meta"><span class="t-byline"><strong>Amara Levi</strong></span><span class="dot-sep">·</span><span class="t-byline">Today</span></div></div></div>
+      </div>
+      <div id="tab-archive" class="tab-panel" style="max-width:700px;">
+        <p class="t-body-sm">Browse 8,400+ stories from 1991 to present.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pagination -->
+  <section class="showcase-section" style="background:var(--paper-warm);">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Pagination</div>
+      </div>
+      <div class="pagination">
+        <button class="page-btn page-btn--arrow">‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <span style="padding:0 8px;color:var(--ink-faint);font-family:var(--sans);font-size:0.875rem;">…</span>
+        <button class="page-btn">24</button>
+        <button class="page-btn page-btn--arrow">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Archive Explorer -->
+  <section class="showcase-section">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Archive Explorer</div>
+        <div class="showcase-section-desc">Navigate 35 years of journalism by year and category.</div>
+      </div>
+      <div class="archive-grid">
+        <div class="archive-sidebar">
+          <div class="comp-label" style="margin-bottom:12px;">By Year</div>
+          <ul class="archive-years">
+            <li class="archive-year active">2026 <span class="archive-year__count">312</span></li>
+            <li class="archive-year">2025 <span class="archive-year__count">1,847</span></li>
+            <li class="archive-year">2024 <span class="archive-year__count">1,792</span></li>
+            <li class="archive-year">2023 <span class="archive-year__count">1,680</span></li>
+            <li class="archive-year">2022 <span class="archive-year__count">1,541</span></li>
+            <li class="archive-year">2021 <span class="archive-year__count">1,498</span></li>
+          </ul>
+        </div>
+        <div class="archive-results">
+          <div class="archive-card"><div class="archive-card__date">Jun 15, 2026</div><div class="archive-card__headline">The Shadow Ledger: Central Banks' Hidden Agenda</div></div>
+          <div class="archive-card"><div class="archive-card__date">Jun 14, 2026</div><div class="archive-card__headline">ECB's Third Hold and What It Signals</div></div>
+          <div class="archive-card"><div class="archive-card__date">Jun 12, 2026</div><div class="archive-card__headline">G7 Tax Talks: The Inside Story</div></div>
+          <div class="archive-card"><div class="archive-card__date">Jun 10, 2026</div><div class="archive-card__headline">Taiwan Chip Exports Hit Record High</div></div>
+          <div class="archive-card"><div class="archive-card__date">Jun 8, 2026</div><div class="archive-card__headline">Arctic Shipping Routes: New Cold War</div></div>
+          <div class="archive-card"><div class="archive-card__date">Jun 5, 2026</div><div class="archive-card__headline">AI Governance: The Missing Signatures</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Empty States + Loading States -->
+  <section class="showcase-section" style="background:var(--paper-warm);">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Empty States &amp; Loading</div>
+      </div>
+      <div class="component-pair">
+        <div>
+          <div class="comp-label" style="margin-bottom:16px;">Empty state — no results</div>
+          <div class="empty-state">
+            <div class="empty-state__icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <div class="empty-state__title">No results for "quantum finance"</div>
+            <p class="empty-state__body">Try different keywords, or browse our category navigation to find related coverage.</p>
+            <button class="btn btn--outline btn--sm">Browse categories</button>
+          </div>
+        </div>
+        <div>
+          <div class="comp-label" style="margin-bottom:16px;">Loading state — skeleton</div>
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-text skeleton-text--sm" style="width:30%;"></div>
+            <div class="skeleton skeleton-text skeleton-text--lg" style="width:90%;"></div>
+            <div class="skeleton skeleton-text skeleton-text--lg" style="width:70%;"></div>
+            <div class="skeleton skeleton-text" style="width:100%;"></div>
+            <div class="skeleton skeleton-text" style="width:85%;"></div>
+            <div style="display:flex;gap:12px;margin-top:6px;">
+              <div class="skeleton skeleton-text skeleton-text--sm" style="width:20%;"></div>
+              <div class="skeleton skeleton-text skeleton-text--sm" style="width:15%;"></div>
+            </div>
+          </div>
+          <div class="skeleton-card" style="margin-top:12px;">
+            <div class="skeleton skeleton-text skeleton-text--sm" style="width:25%;"></div>
+            <div class="skeleton skeleton-text skeleton-text--lg" style="width:80%;"></div>
+            <div class="skeleton skeleton-text" style="width:95%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notifications showcase -->
+  <section class="showcase-section">
+    <div class="container">
+      <div class="section-meta">
+        <div class="showcase-section-title">Notifications</div>
+        <div class="showcase-section-desc">Toast notifications for editorial events.</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn--primary" onclick="showNotification('default','Story published','The Shadow Ledger is now live.')">
+          Default
+        </button>
+        <button class="btn btn--primary" onclick="showNotification('success','Subscribed','You\'ll receive your first briefing tomorrow.')">
+          Success
+        </button>
+        <button class="btn btn--primary" onclick="showNotification('info','Story saved','Added to your reading list.')">
+          Info
+        </button>
+        <button class="btn btn--primary" onclick="showNotification('warn','Draft auto-saved','Your changes are saved. Review before publishing.')">
+          Warning
+        </button>
+        <button class="btn btn--outline" onclick="openModal()">
+          Open modal
+        </button>
+      </div>
+
+      <!-- Inline notification previews -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:32px;max-width:360px;">
+        <div class="notification" style="position:relative;animation:none;border-left-color:var(--red);">
+          <span class="notification__icon">📰</span>
+          <span class="notification__text"><strong>Story published</strong>The Shadow Ledger is now live.</span>
+        </div>
+        <div class="notification notification--success" style="position:relative;animation:none;">
+          <span class="notification__icon">✓</span>
+          <span class="notification__text"><strong>Subscribed</strong>You'll receive your first briefing tomorrow at 6 AM.</span>
+        </div>
+        <div class="notification notification--info" style="position:relative;animation:none;">
+          <span class="notification__icon">◐</span>
+          <span class="notification__text"><strong>Story saved</strong>Added to your reading list.</span>
+        </div>
+        <div class="notification notification--warn" style="position:relative;animation:none;">
+          <span class="notification__icon">⚠</span>
+          <span class="notification__text"><strong>Draft auto-saved</strong>Review changes before publishing.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ─── FOOTER ────────────────────────────────────────────── -->
+<footer id="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">The Field Report</div>
+        <p class="footer-tagline">Independent journalism for people who need to know. Reader-funded since 1991.</p>
+        <button class="btn btn--outline" style="color:rgba(250,240,232,0.6);border-color:rgba(255,255,255,0.2);font-size:0.8rem;padding:8px 16px;">Subscribe — €14/month</button>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col__title">Coverage</div>
+        <ul class="footer-links">
+          <li><a href="#">World</a></li>
+          <li><a href="#">Economy</a></li>
+          <li><a href="#">Technology</a></li>
+          <li><a href="#">Investigations</a></li>
+          <li><a href="#">Opinion</a></li>
+          <li><a href="#">Science</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col__title">Publication</div>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Editorial Team</a></li>
+          <li><a href="#">Standards &amp; Ethics</a></li>
+          <li><a href="#">Corrections</a></li>
+          <li><a href="#">Press Contacts</a></li>
+          <li><a href="#">Tip Line</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col__title">Subscriber</div>
+        <ul class="footer-links">
+          <li><a href="#">Sign In</a></li>
+          <li><a href="#">My Account</a></li>
+          <li><a href="#">Reading List</a></li>
+          <li><a href="#">Newsletters</a></li>
+          <li><a href="#">Podcast</a></li>
+          <li><a href="#">Gift a Subscription</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-legal">© 2026 The Field Report. All rights reserved. Independent media since 1991.</span>
+      <div class="footer-social">
+        <div class="social-link">𝕏</div>
+        <div class="social-link">in</div>
+        <div class="social-link">▶</div>
+        <div class="social-link">◉</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================================================== -->
+<!-- HTML END -->
+<!-- ===================================================== -->
+
+<!-- ===================================================== -->
+<!-- JAVASCRIPT START -->
+<!-- ===================================================== -->
+
+<script>
+/* ─── READING PROGRESS ──────────────────────────────────── */
+const progressBar = document.getElementById('reading-progress');
+
+window.addEventListener('scroll', () => {
+  const scrollTop    = window.scrollY;
+  const docHeight    = document.documentElement.scrollHeight - window.innerHeight;
+  const progress     = Math.min((scrollTop / docHeight) * 100, 100);
+  progressBar.style.width = progress + '%';
+});
+
+/* ─── CLOCK ─────────────────────────────────────────────── */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  const el = document.getElementById('demo-clock');
+  if (el) el.textContent = `${h}:${m}:${s}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ─── FILTER TOGGLE ─────────────────────────────────────── */
+function toggleFilter(btn) {
+  btn.closest('.demo-filters').querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setFilter(btn) {
+  btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* ─── TABS ──────────────────────────────────────────────── */
+function switchTab(btn, panelId) {
+  const tabsParent = btn.closest('.tabs');
+  tabsParent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Hide all panels in the next sibling section
+  const container = tabsParent.parentElement;
+  container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('active');
+}
+
+/* ─── NOTIFICATIONS ─────────────────────────────────────── */
+function showNotification(type, title, message) {
+  const stack = document.getElementById('notifications-stack');
+  const icons = { default: '📰', success: '✓', info: '◐', warn: '⚠' };
+  const classes = { default: '', success: 'notification--success', info: 'notification--info', warn: 'notification--warn' };
+
+  const el = document.createElement('div');
+  el.className = `notification ${classes[type] || ''}`;
+  el.innerHTML = `
+    <span class="notification__icon">${icons[type] || '◆'}</span>
+    <span class="notification__text"><strong>${title}</strong>${message}</span>
+    <button class="notification__close" onclick="dismissNotification(this.parentElement)">✕</button>
+  `;
+  stack.appendChild(el);
+
+  setTimeout(() => dismissNotification(el), 5000);
+}
+
+function dismissNotification(el) {
+  if (!el || !el.parentElement) return;
+  el.classList.add('notification--fade-out');
+  setTimeout(() => { if (el.parentElement) el.parentElement.removeChild(el); }, 300);
+}
+
+/* ─── MODAL ─────────────────────────────────────────────── */
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function publishFromModal() {
+  closeModal();
+  showNotification('success', 'Published', 'Story is now live in the breaking feed.');
+  addPublishedStory('CBDC: The Invisible Ledger');
+}
+
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+/* ─── NEWSROOM SIMULATION ───────────────────────────────── */
+const breakingStories = [
+  'G7 finance ministers reach emergency tax framework accord',
+  'European Central Bank signals third consecutive rate hold',
+  'Taiwan semiconductor exports surpass $40B for first time',
+  'Brussels moves against three major tech platforms simultaneously',
+  'Arctic passage opens six weeks early — shipping firms scramble',
+  'BIS releases restricted CBDC working papers to regulators',
+  'IMF revises global growth forecast upward for Q3',
+  'NATO defence ministers convene emergency session in Brussels',
+  'Renewable energy capacity surpasses fossil fuels in EU for first time',
+  'AI governance summit ends without binding agreement'
+];
+
+const activityEvents = [
+  { type: 'submit',  text: 'Reporter submitted investigation draft' },
+  { type: 'fact',   text: 'Fact-checking in progress: CBDC series Part 2' },
+  { type: 'fact',   text: 'Fact-checking completed: G7 Analysis' },
+  { type: 'edit',   text: 'Editor reviewing: Arctic Routes Part 3' },
+  { type: 'publish',text: 'Article published: Taiwan Chip Record' },
+  { type: 'trend',  text: 'Trending score updated: Shadow Ledger +41' },
+  { type: 'edit',   text: 'Editor approved for publication' },
+  { type: 'submit', text: 'Source confirmation received' },
+  { type: 'publish',text: 'Investigative series Part 1 live' },
+  { type: 'trend',  text: 'Social shares spike: CBDC investigation' },
+  { type: 'fact',   text: 'Legal review completed: Arctic Routes' },
+  { type: 'edit',   text: 'Copy-edit pass completed: ECB analysis' },
+];
+
+const queueTitles = [
+  'The ECB\'s Quiet Pivot',
+  'AI Governance: Who Decides?',
+  'Brussels Rewrites Big Tech Rules',
+  'Ocean Carbon: New Findings',
+  'Private Equity\'s Reckoning',
+  'G7 Winner: A Post-Mortem',
+  'Digital Yuan vs Digital Euro',
+  'Arctic Shipping: New Routes Map'
+];
+
+let publishedCount  = 47;
+let trendingScore   = 94;
+let queuePending    = 3;
+let activityColumns = [];
+
+function getTime() {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+}
+
+function addActivityItem(event) {
+  const feed = document.getElementById('activity-feed');
+  const dotClass = {
+    submit: 'activity-dot--submit',
+    fact:   'activity-dot--fact',
+    edit:   'activity-dot--edit',
+    publish:'activity-dot--publish',
+    trend:  'activity-dot--trend'
+  }[event.type] || 'activity-dot--submit';
+
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.style.cssText = 'width:33.33%;padding-right:12px;';
+  item.innerHTML = `
+    <div class="activity-dot ${dotClass}"></div>
+    <div class="activity-item__text">${event.text}</div>
+    <div class="activity-item__time">${getTime()}</div>
+  `;
+
+  feed.insertBefore(item, feed.firstChild);
+
+  // Keep max 9 items (3 rows of 3)
+  while (feed.children.length > 9) {
+    feed.removeChild(feed.lastChild);
+  }
+}
+
+function addBreakingItem(story) {
+  const feed = document.getElementById('breaking-feed');
+  const item = document.createElement('div');
+  item.className = 'breaking-item breaking-item--new';
+  item.innerHTML = `
+    <span class="breaking-item__time">${getTime()}</span>
+    <span class="breaking-item__text">${story}</span>
+  `;
+  feed.insertBefore(item, feed.firstChild);
+  while (feed.children.length > 4) feed.removeChild(feed.lastChild);
+
+  // Update breaking count badge
+  document.getElementById('breaking-count').textContent =
+    `${Math.min(feed.children.length, 5)} LIVE`;
+
+  // Update main breaking banner
+  document.getElementById('main-breaking-text').textContent = story;
+  document.getElementById('main-breaking-time').textContent = getTime() + ' UTC';
+}
+
+function addPublishedStory(title) {
+  // Increment metric
+  publishedCount++;
+  document.getElementById('metric-published').textContent = publishedCount;
+  document.getElementById('metric-published-delta').textContent = `+${Math.floor(Math.random()*3)+1} this hour`;
+
+  // Add to breaking feed
+  addBreakingItem(title || queueTitles[Math.floor(Math.random() * queueTitles.length)]);
+
+  // Add to pub queue
+  const queue = document.getElementById('pub-queue');
+  const item = document.createElement('div');
+  item.className = 'queue-item queue-item--live';
+  item.innerHTML = `
+    <span class="queue-item__title">${title || queueTitles[Math.floor(Math.random() * queueTitles.length)]}</span>
+    <span class="queue-item__time">LIVE</span>
+  `;
+  queue.insertBefore(item, queue.firstChild);
+  while (queue.children.length > 5) queue.removeChild(queue.lastChild);
+
+  // Update queue count
+  queuePending = Math.max(0, queuePending - 1);
+  document.getElementById('queue-count').textContent = `${queuePending + Math.floor(Math.random()*2)} PENDING`;
+
+  // Update trending score
+  trendingScore = Math.min(99, trendingScore + Math.floor(Math.random() * 5) + 1);
+  document.getElementById('metric-trending').textContent = trendingScore;
+
+  // Update trending list
+  updateTrending(title);
+
+  // Add activity events in sequence
+  setTimeout(() => addActivityItem({ type:'publish', text:`Article published: ${(title||'New Story').substring(0,40)}` }), 200);
+  setTimeout(() => addActivityItem({ type:'trend',   text:`Trending score updated: +${Math.floor(Math.random()*20)+5}` }), 800);
+
+  showNotification('success', 'Story published', `"${(title || 'New Story').substring(0,50)}" is now live.`);
+}
+
+function updateTrending(newTopic) {
+  if (!newTopic) return;
+  const list = document.getElementById('trending-list');
+  const items = list.querySelectorAll('.trending-item');
+  // Bump last item with new topic
+  if (items.length > 0) {
+    const last = items[items.length - 1];
+    last.querySelector('.trending-topic').textContent = newTopic.substring(0, 25) + (newTopic.length > 25 ? '…' : '');
+    last.querySelector('.trending-count').textContent = `${Math.floor(Math.random()*5+1)}.${Math.floor(Math.random()*9)}k`;
+    list.insertBefore(last, list.firstChild);
+    // Re-number
+    list.querySelectorAll('.trending-rank').forEach((el, i) => { el.textContent = i+1; });
+  }
+}
+
+/* Publish story button handler */
+function publishStory() {
+  const stories = [
+    'Shadow Ledger: The CBDC Endgame',
+    'ECB Hawks vs Doves: The Inside Fight',
+    'G7 Accord: What Was Left Out',
+    'Arctic Ice, Arctic Stakes',
+    'The AI Governance Vacuum'
+  ];
+  const story = stories[Math.floor(Math.random() * stories.length)];
+
+  // Show modal first
+  document.getElementById('modal-story-title').textContent = story;
+  openModal();
+}
+
+/* Seed initial activity feed */
+function seedActivity() {
+  const seed = [
+    { type: 'publish', text: 'Article published: Taiwan Chip Record' },
+    { type: 'fact',    text: 'Fact-checking completed: G7 Analysis' },
+    { type: 'edit',    text: 'Editor approved: ECB policy piece' },
+    { type: 'submit',  text: 'Reporter submitted investigation draft' },
+    { type: 'trend',   text: 'Trending score updated: Shadow Ledger +41' },
+    { type: 'fact',    text: 'Legal review completed: Arctic Routes' },
+  ];
+  seed.forEach((e, i) => setTimeout(() => addActivityItem(e), i * 60));
+}
+
+/* Auto-simulation loop */
+function autoSimulate() {
+  // Random activity
+  setInterval(() => {
+    const event = activityEvents[Math.floor(Math.random() * activityEvents.length)];
+    addActivityItem(event);
+  }, 6000 + Math.random() * 4000);
+
+  // Occasional breaking news (every ~30-45s)
+  setInterval(() => {
+    const story = breakingStories[Math.floor(Math.random() * breakingStories.length)];
+    addBreakingItem(story);
+  }, 30000 + Math.random() * 15000);
+
+  // Metric drift
+  setInterval(() => {
+    const sub = parseInt(document.getElementById('metric-subscribers').textContent) || 124800;
+    const newSub = (sub / 1000 + (Math.random() * 0.1)).toFixed(1);
+    document.getElementById('metric-subscribers').textContent = newSub + 'k';
+
+    // Active reporters fluctuate slightly
+    const active = 17 + Math.floor(Math.random() * 4);
+    document.getElementById('metric-reporters').textContent = active;
+    document.getElementById('active-reporter-count').textContent = `${active - 5} ACTIVE`;
+  }, 15000);
+}
+
+/* Init */
+document.addEventListener('DOMContentLoaded', () => {
+  seedActivity();
+  autoSimulate();
+});
+
+/* Chip click toggle */
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => chip.classList.toggle('active'));
+});
+
+/* Nav smooth highlight on scroll */
+const sections = document.querySelectorAll('section[id]');
+const navLinks  = document.querySelectorAll('.nav-link');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 100;
+    if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+  });
+});
+</script>
+
+<!-- ===================================================== -->
+<!-- JAVASCRIPT END -->
+<!-- ===================================================== -->
+
+</body>
+</html>

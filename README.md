@@ -13,6 +13,7 @@ assets/
   blackstone.png
   forum.png
   lumex.png
+  newsroom.png
   nexusgrid.png
   pulse.png
   soltech_english.png
@@ -93,6 +94,18 @@ assets/
 **Feel:** classified, technical, militarized, alive as a system  
 **Best for:** cybersecurity, cloud infrastructure, AI ops, devtools, enterprise edge platforms  
 **Visual signature:** blue/cyan palette, scanlines, glitch text, holograms, terminals, telemetry, and distributed-network visual language.
+
+---
+
+### Newsroom
+
+![Newsroom aesthetic preview](assets/newsroom.png)
+
+**File:** `newsroom.html`  
+**Type:** Editorial / journalism / publishing design system  
+**Feel:** credible, authoritative, investigative, refined, print-inspired  
+**Best for:** newsrooms, long-form publications, research media, editorial products, intelligence reports  
+**Visual signature:** warm paper surfaces, Georgia-style serif headlines, Helvetica-like UI text, thin editorial rules, red/amber/blue accent labels, multi-column story layouts, pull quotes, bylines, tickers, archives, and subscriber panels.
 
 ---
 

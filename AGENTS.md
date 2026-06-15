@@ -38,6 +38,9 @@ assets/atlas.png
 
 pulse.html
 assets/pulse.png
+
+newsroom.html
+assets/newsroom.png
 ```
 
 ## Maintenance Rules
@@ -83,6 +86,7 @@ When a user asks for a new aesthetic:
 - `blackstone.html` - Premium executive finance / investment design system. Charcoal, ivory, muted gold, formal and high-trust.
 - `forum.html` - Forum / community media platform component system. Dark, loud, orange, condensed, social.
 - `lumex.html` - Neon futurism / solar tech. Dark, glowing, particle-driven, premium tech.
+- `newsroom.html` - Editorial / journalism / publishing design system. Warm paper, serif hierarchy, thin rules, credible and print-inspired.
 - `nexusgrid.html` - Cyberpunk / high-tech infrastructure. Scanlines, glitch, telemetry, terminal visuals.
 - `pulse.html` - AI startup / agent platform design system. Warm light SaaS surfaces, violet/mint accents, logs and workflow UI.
 - `soltech_english.html` - Solar tech / clean industry. Warm, commercial, renewable-energy focused.
