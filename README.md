@@ -1,8 +1,36 @@
 # Frontend Portfolio Aesthetic Store
 
-A portable folder for storing and presenting reusable frontend aesthetics. Each card references a PNG preview in `assets/` using the same base name as its HTML file.
+A curated collection of reusable frontend aesthetics designed for both human developers and AI-assisted development workflows.
 
-For maintenance, handoff, and AI-agent guidance, see [`AGENTS.md`](AGENTS.md).
+This repository is not simply a gallery of HTML templates. Each aesthetic acts as a fully executable visual reference that can be reused, analyzed, remixed, and extended by modern AI coding assistants such as Claude, GPT, Gemini, Qwen, Cursor, Windsurf, Continue, Cline, or other agentic development systems.
+
+The goal is to provide high-quality frontend archetypes that serve as design anchors during generation. Instead of describing a visual style through long prompts, an AI can inspect one of these examples and immediately understand the intended visual language, component hierarchy, interaction patterns, spacing system, typography choices, and overall product personality.
+
+Each HTML file is intentionally self-contained and includes:
+
+* A complete visual identity
+* Reusable UI patterns
+* Interactive demonstrations
+* Component showcases
+* Production-inspired layouts
+* Clear HTML, CSS, and JavaScript separation
+* Portable architecture with no build process required
+
+The collection spans multiple product categories and visual identities, including SaaS platforms, AI products, editorial publications, financial systems, community platforms, educational services, sustainability products, cybersecurity dashboards, aerospace operations, and industrial technology.
+
+These examples can be used as:
+
+* Design references
+* Prompting references for AI systems
+* Frontend inspiration libraries
+* Rapid prototyping starting points
+* Component extraction sources
+* Visual benchmarking material
+* Training examples for agentic development workflows
+
+Each card in this repository references a PNG preview stored in `assets/` using the same base filename as its corresponding HTML file.
+
+For maintenance procedures, repository conventions, and AI-agent handoff documentation, see [`AGENTS.md`](AGENTS.md).
 
 When you prepare the preview images, save them with these names:
 
