@@ -41,6 +41,7 @@ assets/
   blackstone.png
   forum.png
   lumex.png
+  medcore.png
   newsroom.png
   nexusgrid.png
   pulse.png
@@ -110,6 +111,18 @@ assets/
 **Feel:** electric, nocturnal, energetic, premium tech  
 **Best for:** energy, AI dashboards, crypto/fintech visuals, futuristic launches, motion-forward products  
 **Visual signature:** dark background, neon purple/cyan, intense glow, particle canvas, marquee, luminous dashboards, and Exo 2 typography.
+
+---
+
+### MedCore
+
+![MedCore aesthetic preview](assets/medcore.png)
+
+**File:** `medcore.html`  
+**Type:** Healthcare / telemedicine / hospital operations design system  
+**Feel:** trusted, clinical, calm, accessible, professional  
+**Best for:** healthcare platforms, telemedicine products, hospital dashboards, patient portals, medical operations tools  
+**Visual signature:** bright white and soft-gray surfaces, medical blues, teal accents, green health indicators, accessible spacing, appointment booking UI, doctor directories, patient dashboards, lab results, clinical timelines, and healthcare analytics.
 
 ---
 

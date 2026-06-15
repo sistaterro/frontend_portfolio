@@ -41,6 +41,9 @@ assets/pulse.png
 
 newsroom.html
 assets/newsroom.png
+
+medcore.html
+assets/medcore.png
 ```
 
 ## Maintenance Rules
@@ -86,6 +89,7 @@ When a user asks for a new aesthetic:
 - `blackstone.html` - Premium executive finance / investment design system. Charcoal, ivory, muted gold, formal and high-trust.
 - `forum.html` - Forum / community media platform component system. Dark, loud, orange, condensed, social.
 - `lumex.html` - Neon futurism / solar tech. Dark, glowing, particle-driven, premium tech.
+- `medcore.html` - Healthcare / telemedicine / hospital operations design system. Clean medical blues, teal accents, accessible and calm.
 - `newsroom.html` - Editorial / journalism / publishing design system. Warm paper, serif hierarchy, thin rules, credible and print-inspired.
 - `nexusgrid.html` - Cyberpunk / high-tech infrastructure. Scanlines, glitch, telemetry, terminal visuals.
 - `pulse.html` - AI startup / agent platform design system. Warm light SaaS surfaces, violet/mint accents, logs and workflow UI.
