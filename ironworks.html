@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IronWorks — Manufacturing Execution System</title>
+
+<!-- ===================================================== -->
+<!-- CSS START -->
+<!-- ===================================================== -->
+<style>
+/* ── DESIGN TOKENS ──────────────────────────────────────── */
+:root{
+  /* backgrounds */
+  --bg-0:#0F1318;
+  --bg-1:#151B22;
+  --bg-2:#1C242D;
+  /* panels */
+  --panel-1:#222C37;
+  --panel-2:#2A3643;
+  --panel-border:#34414F;
+  --panel-border-soft:#2B3744;
+  /* text */
+  --text-0:#F2F4F7;
+  --text-1:#C8D0D8;
+  --text-2:#7F8A96;
+  --text-3:#5B6570;
+  /* signal colors */
+  --safety-yellow:#F2B705;
+  --safety-yellow-dim:#7A5C04;
+  --machine-orange:#E67E22;
+  --machine-orange-dim:#6E3E10;
+  --success-green:#2ECC71;
+  --success-green-dim:#155C32;
+  --alert-red:#E74C3C;
+  --alert-red-dim:#6B231D;
+  --electric-blue:#4FA3FF;
+  --electric-blue-dim:#1E4A7A;
+  /* fonts */
+  --font-sans:'IBM Plex Sans','Inter',system-ui,-apple-system,sans-serif;
+  --font-mono:'IBM Plex Mono','SF Mono','Courier New',monospace;
+  /* spacing scale */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px;
+  --sp-6:24px; --sp-7:32px; --sp-8:40px; --sp-9:48px; --sp-10:64px;
+  /* radii */
+  --r-sm:4px; --r-md:6px; --r-lg:10px; --r-xl:14px;
+  /* shadows */
+  --shadow-1:0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 4px 16px rgba(0,0,0,.45);
+  --shadow-3:0 12px 40px rgba(0,0,0,.5);
+  --shadow-glow-yellow:0 0 0 1px rgba(242,183,5,.25),0 0 20px rgba(242,183,5,.08);
+  --shadow-glow-blue:0 0 0 1px rgba(79,163,255,.25),0 0 20px rgba(79,163,255,.08);
+}
+
+/* ── RESET ──────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg-0);
+  color:var(--text-0);
+  font-family:var(--font-sans);
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input,select,textarea{font-family:inherit;color:inherit;}
+ul{list-style:none;}
+table{border-collapse:collapse;width:100%;}
+svg{display:block;}
+:focus-visible{outline:2px solid var(--electric-blue);outline-offset:2px;}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+}
+
+/* ── TYPE SCALE ─────────────────────────────────────────── */
+.t-display{font-size:28px;font-weight:700;letter-spacing:-.01em;line-height:1.15;}
+.t-h1{font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.2;}
+.t-h2{font-size:18px;font-weight:700;letter-spacing:-.005em;line-height:1.25;}
+.t-h3{font-size:15px;font-weight:600;line-height:1.3;}
+.t-body{font-size:14px;font-weight:400;line-height:1.55;}
+.t-small{font-size:12.5px;font-weight:400;line-height:1.45;}
+.t-micro{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;line-height:1.3;}
+.t-mono{font-family:var(--font-mono);}
+.t-mono-lg{font-family:var(--font-mono);font-size:26px;font-weight:600;letter-spacing:-.01em;}
+.t-mono-md{font-family:var(--font-mono);font-size:15px;font-weight:600;}
+.t-mono-sm{font-family:var(--font-mono);font-size:12px;}
+.t-num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+
+.c-text-0{color:var(--text-0);} .c-text-1{color:var(--text-1);} .c-text-2{color:var(--text-2);} .c-text-3{color:var(--text-3);}
+.c-yellow{color:var(--safety-yellow);} .c-orange{color:var(--machine-orange);}
+.c-green{color:var(--success-green);} .c-red{color:var(--alert-red);} .c-blue{color:var(--electric-blue);}
+
+/* ── LAYOUT UTILITIES ───────────────────────────────────── */
+.shell{max-width:1480px;margin:0 auto;padding:0 var(--sp-6);}
+.flex{display:flex;}
+.flex-col{display:flex;flex-direction:column;}
+.items-center{align-items:center;}
+.justify-between{justify-content:space-between;}
+.gap-1{gap:var(--sp-1);} .gap-2{gap:var(--sp-2);} .gap-3{gap:var(--sp-3);}
+.gap-4{gap:var(--sp-4);} .gap-5{gap:var(--sp-5);} .gap-6{gap:var(--sp-6);}
+.grid{display:grid;}
+.w-full{width:100%;}
+
+/* ── SCROLLBAR ──────────────────────────────────────────── */
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:var(--bg-1);}
+::-webkit-scrollbar-thumb{background:var(--panel-2);border-radius:6px;border:2px solid var(--bg-1);}
+::-webkit-scrollbar-thumb:hover{background:var(--text-3);}
+
+/* ── TOP STATUS BAR ─────────────────────────────────────── */
+#top-status-bar{
+  background:var(--bg-1);
+  border-bottom:1px solid var(--panel-border-soft);
+  padding:6px 0;
+  font-family:var(--font-mono);
+  font-size:11.5px;
+}
+.status-bar-inner{
+  display:flex;align-items:center;gap:var(--sp-6);
+  max-width:1480px;margin:0 auto;padding:0 var(--sp-6);
+}
+.status-chip{display:flex;align-items:center;gap:6px;color:var(--text-2);}
+.status-chip strong{color:var(--text-1);font-weight:600;}
+.status-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.status-dot--green{background:var(--success-green);box-shadow:0 0 6px rgba(46,204,113,.7);animation:dot-pulse 2s infinite;}
+.status-dot--yellow{background:var(--safety-yellow);box-shadow:0 0 6px rgba(242,183,5,.6);}
+.status-dot--red{background:var(--alert-red);box-shadow:0 0 6px rgba(231,76,60,.7);animation:dot-pulse 1.2s infinite;}
+@keyframes dot-pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.status-sep{color:var(--text-3);}
+.status-bar-right{margin-left:auto;display:flex;align-items:center;gap:var(--sp-5);}
+
+/* ── PRIMARY NAV ────────────────────────────────────────── */
+#primary-nav{
+  background:var(--bg-1);
+  border-bottom:1px solid var(--panel-border-soft);
+  position:sticky;top:0;z-index:400;
+}
+.nav-inner{
+  display:flex;align-items:center;height:56px;gap:0;
+  max-width:1480px;margin:0 auto;padding:0 var(--sp-6);
+}
+.nav-brand{display:flex;align-items:center;gap:10px;margin-right:var(--sp-7);flex-shrink:0;}
+.nav-brand__mark{
+  width:30px;height:30px;background:var(--safety-yellow);border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--bg-0);font-weight:800;font-size:15px;font-family:var(--font-mono);
+  clip-path:polygon(15% 0,85% 0,100% 50%,85% 100%,15% 100%,0 50%);
+}
+.nav-brand__name{font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--text-0);}
+.nav-brand__name span{color:var(--safety-yellow);}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;overflow-x:auto;}
+.nav-link{
+  padding:8px 13px;font-size:13px;font-weight:500;color:var(--text-2);
+  border-radius:var(--r-sm);white-space:nowrap;transition:.15s;
+}
+.nav-link:hover{color:var(--text-0);background:var(--panel-1);}
+.nav-link.active{color:var(--bg-0);background:var(--safety-yellow);font-weight:600;}
+.nav-right{display:flex;align-items:center;gap:var(--sp-3);margin-left:auto;flex-shrink:0;}
+.nav-kbd{
+  display:flex;align-items:center;gap:6px;padding:6px 10px;
+  background:var(--bg-2);border:1px solid var(--panel-border);border-radius:var(--r-sm);
+  color:var(--text-2);font-size:12px;cursor:pointer;transition:.15s;
+}
+.nav-kbd:hover{border-color:var(--text-3);color:var(--text-1);}
+.nav-kbd kbd{font-family:var(--font-mono);background:var(--panel-2);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--text-1);}
+.nav-icon-btn{
+  width:34px;height:34px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);border:1px solid var(--panel-border);background:var(--bg-2);position:relative;transition:.15s;
+}
+.nav-icon-btn:hover{color:var(--text-0);border-color:var(--text-3);}
+.nav-icon-btn__dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--alert-red);border:2px solid var(--bg-1);}
+.nav-avatar{
+  width:32px;height:32px;border-radius:var(--r-sm);background:var(--panel-2);border:1px solid var(--panel-border);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-1);font-family:var(--font-mono);
+  cursor:pointer;
+}
+
+/* ── HERO: FACTORY COMMAND CENTER ───────────────────────── */
+#factory-command-center{
+  background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-0) 100%);
+  padding:var(--sp-6) 0 var(--sp-8);
+  border-bottom:1px solid var(--panel-border-soft);
+}
+.fcc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--sp-5);flex-wrap:wrap;gap:var(--sp-4);}
+.fcc-title-block{}
+.fcc-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.fcc-eyebrow .t-micro{color:var(--safety-yellow);}
+.fcc-title{font-size:21px;font-weight:700;color:var(--text-0);letter-spacing:-.01em;}
+.fcc-subtitle{font-size:12.5px;color:var(--text-2);margin-top:3px;font-family:var(--font-mono);}
+.fcc-header-right{display:flex;align-items:center;gap:var(--sp-3);}
+
+.live-pill{
+  display:inline-flex;align-items:center;gap:7px;padding:5px 12px;
+  background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);border-radius:var(--r-md);
+  font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--success-green);
+}
+.live-pill__dot{width:6px;height:6px;border-radius:50%;background:var(--success-green);animation:dot-pulse 1.4s infinite;}
+
+.shift-pill{
+  display:inline-flex;align-items:center;gap:7px;padding:5px 12px;
+  background:var(--panel-1);border:1px solid var(--panel-border);border-radius:var(--r-md);
+  font-family:var(--font-mono);font-size:11.5px;color:var(--text-1);
+}
+
+/* KPI row */
+.kpi-row{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:1px;
+  background:var(--panel-border-soft);border:1px solid var(--panel-border-soft);
+  border-radius:var(--r-lg);overflow:hidden;margin-bottom:var(--sp-5);
+}
+.kpi-cell{background:var(--bg-1);padding:14px 16px;position:relative;transition:.15s;}
+.kpi-cell:hover{background:var(--panel-1);}
+.kpi-cell__label{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);margin-bottom:8px;}
+.kpi-cell__value{font-family:var(--font-mono);font-size:24px;font-weight:600;line-height:1;color:var(--text-0);margin-bottom:4px;}
+.kpi-cell__value sup{font-size:13px;font-weight:500;color:var(--text-2);margin-left:2px;}
+.kpi-cell__delta{font-size:11px;font-family:var(--font-mono);display:flex;align-items:center;gap:4px;}
+.kpi-cell__delta--up{color:var(--success-green);}
+.kpi-cell__delta--down{color:var(--alert-red);}
+.kpi-cell__delta--flat{color:var(--text-2);}
+.kpi-cell__bar{position:absolute;bottom:0;left:0;height:2px;background:var(--safety-yellow);}
+
+/* Main hero grid */
+.fcc-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:var(--sp-4);}
+.fcc-panel{
+  background:var(--bg-1);border:1px solid var(--panel-border-soft);border-radius:var(--r-lg);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.fcc-panel--span2{grid-column:span 2;}
+.fcc-panel__head{
+  display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
+  border-bottom:1px solid var(--panel-border-soft);
+}
+.fcc-panel__title{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);}
+.fcc-panel__badge{font-family:var(--font-mono);font-size:10.5px;font-weight:700;color:var(--electric-blue);}
+.fcc-panel__body{padding:12px 14px;flex:1;}
+
+/* Production lines */
+.line-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--panel-border-soft);}
+.line-row:last-child{border-bottom:none;}
+.line-id{font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--text-1);width:48px;flex-shrink:0;}
+.line-bar-wrap{flex:1;height:8px;background:var(--bg-2);border-radius:4px;overflow:hidden;position:relative;}
+.line-bar{height:100%;border-radius:4px;transition:width .6s ease;}
+.line-bar--running{background:var(--success-green);}
+.line-bar--maint{background:var(--machine-orange);}
+.line-bar--idle{background:var(--text-3);}
+.line-pct{font-family:var(--font-mono);font-size:12px;font-weight:700;width:42px;text-align:right;flex-shrink:0;}
+.line-status-tag{
+  font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:2px 7px;border-radius:3px;flex-shrink:0;width:64px;text-align:center;
+}
+.line-status-tag--running{background:rgba(46,204,113,.12);color:var(--success-green);}
+.line-status-tag--maint{background:rgba(230,126,34,.12);color:var(--machine-orange);}
+.line-status-tag--idle{background:rgba(127,138,150,.12);color:var(--text-2);}
+
+/* Machine status dot grid */
+.machine-dot-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:10px;}
+.machine-dot{
+  aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:8px;font-weight:700;position:relative;
+}
+.machine-dot--run{background:rgba(46,204,113,.15);color:var(--success-green);}
+.machine-dot--run::after{content:'';position:absolute;inset:0;border-radius:3px;border:1px solid rgba(46,204,113,.4);animation:machine-blink 2.4s infinite;}
+.machine-dot--warn{background:rgba(242,183,5,.15);color:var(--safety-yellow);}
+.machine-dot--idle{background:var(--bg-2);color:var(--text-3);}
+.machine-dot--err{background:rgba(231,76,60,.18);color:var(--alert-red);animation:machine-err-pulse 1s infinite;}
+@keyframes machine-blink{0%,100%{opacity:.3;}50%{opacity:1;}}
+@keyframes machine-err-pulse{0%,100%{box-shadow:0 0 0 0 rgba(231,76,60,.5);}50%{box-shadow:0 0 0 3px rgba(231,76,60,0);}}
+
+/* Digital twin mini-map */
+.twin-map{
+  position:relative;background:var(--bg-2);border:1px solid var(--panel-border-soft);border-radius:var(--r-md);
+  height:148px;overflow:hidden;
+}
+.twin-zone{
+  position:absolute;border-radius:3px;border:1px solid;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:8.5px;font-weight:700;
+}
+.twin-zone--run{background:rgba(46,204,113,.1);border-color:rgba(46,204,113,.35);color:var(--success-green);}
+.twin-zone--maint{background:rgba(230,126,34,.1);border-color:rgba(230,126,34,.35);color:var(--machine-orange);}
+.twin-zone--idle{background:rgba(127,138,150,.08);border-color:var(--panel-border);color:var(--text-3);}
+.twin-conveyor{position:absolute;background:repeating-linear-gradient(90deg,var(--electric-blue) 0 6px,transparent 6px 12px);height:2px;opacity:.5;}
+.twin-dot-moving{
+  position:absolute;width:4px;height:4px;border-radius:50%;background:var(--electric-blue);
+  box-shadow:0 0 4px var(--electric-blue);animation:twin-move 4s linear infinite;
+}
+@keyframes twin-move{0%{left:2%;}100%{left:96%;}}
+
+/* Manufacturing timeline (horizontal) */
+.mfg-timeline{display:flex;align-items:flex-start;justify-content:space-between;position:relative;padding:6px 0;}
+.mfg-timeline::before{
+  content:'';position:absolute;top:15px;left:5%;right:5%;height:2px;background:var(--panel-border);
+}
+.mfg-step{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;flex:1;}
+.mfg-step__dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--panel-border);background:var(--bg-1);}
+.mfg-step--done .mfg-step__dot{background:var(--success-green);border-color:var(--success-green);}
+.mfg-step--active .mfg-step__dot{background:var(--electric-blue);border-color:var(--electric-blue);box-shadow:0 0 0 3px rgba(79,163,255,.2);}
+.mfg-step__label{font-size:9.5px;font-weight:600;color:var(--text-2);text-align:center;letter-spacing:.02em;}
+.mfg-step--done .mfg-step__label,.mfg-step--active .mfg-step__label{color:var(--text-1);}
+
+/* Warehouse zone grid */
+.wh-zone-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.wh-zone{
+  background:var(--bg-2);border-radius:var(--r-sm);padding:8px 6px;text-align:center;
+  border:1px solid var(--panel-border-soft);
+}
+.wh-zone__name{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--text-1);margin-bottom:5px;}
+.wh-zone__bar{height:4px;background:var(--bg-0);border-radius:2px;overflow:hidden;margin-bottom:4px;}
+.wh-zone__bar-fill{height:100%;border-radius:2px;}
+.wh-zone__pct{font-family:var(--font-mono);font-size:10px;color:var(--text-2);}
+
+/* feed lists (maintenance/procurement) */
+.feed-list{display:flex;flex-direction:column;gap:0;}
+.feed-item{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--panel-border-soft);align-items:flex-start;}
+.feed-item:last-child{border-bottom:none;}
+.feed-dot{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.feed-dot--blue{background:var(--electric-blue);}
+.feed-dot--orange{background:var(--machine-orange);}
+.feed-dot--green{background:var(--success-green);}
+.feed-dot--yellow{background:var(--safety-yellow);}
+.feed-text{font-size:11.5px;color:var(--text-1);line-height:1.4;flex:1;}
+.feed-text strong{color:var(--text-0);font-weight:600;}
+.feed-time{font-family:var(--font-mono);font-size:10px;color:var(--text-3);flex-shrink:0;margin-top:1px;}
+
+/* Sparkline */
+.spark-row{display:flex;align-items:center;gap:8px;}
+.spark-svg{flex-shrink:0;}
+.spark-label{font-size:10.5px;color:var(--text-2);}
+.spark-value{font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--text-0);margin-left:auto;}
+
+/* ── SHOWCASE SECTION WRAPPER ───────────────────────────── */
+.showcase-section{padding:var(--sp-8) 0;border-bottom:1px solid var(--panel-border-soft);}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:var(--sp-6);flex-wrap:wrap;gap:var(--sp-3);}
+.section-head__left{}
+.section-eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--electric-blue);margin-bottom:6px;}
+.section-title{font-size:21px;font-weight:700;color:var(--text-0);letter-spacing:-.01em;}
+.section-desc{font-size:13px;color:var(--text-2);margin-top:4px;max-width:560px;}
+.comp-label{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;}
+
+/* ── CARD ────────────────────────────────────────────────── */
+.card{background:var(--bg-1);border:1px solid var(--panel-border-soft);border-radius:var(--r-lg);overflow:hidden;}
+.card--raised{background:var(--panel-1);}
+.card__head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--panel-border-soft);gap:10px;}
+.card__title{font-size:13.5px;font-weight:700;color:var(--text-0);}
+.card__subtitle{font-size:11.5px;color:var(--text-2);margin-top:2px;}
+.card__body{padding:16px;}
+.card__body--tight{padding:10px 14px;}
+.card__footer{padding:10px 16px;border-top:1px solid var(--panel-border-soft);background:var(--bg-2);}
+
+/* ── BUTTONS ─────────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:var(--r-md);
+  font-size:13px;font-weight:600;transition:.15s;border:1px solid transparent;white-space:nowrap;
+}
+.btn--primary{background:var(--safety-yellow);color:#1a1505;}
+.btn--primary:hover{background:#ffc721;}
+.btn--blue{background:var(--electric-blue);color:#06182c;}
+.btn--blue:hover{background:#6cb4ff;}
+.btn--outline{background:transparent;border-color:var(--panel-border);color:var(--text-1);}
+.btn--outline:hover{border-color:var(--text-2);color:var(--text-0);}
+.btn--ghost{background:transparent;color:var(--text-2);}
+.btn--ghost:hover{color:var(--text-0);background:var(--panel-1);}
+.btn--danger{background:var(--alert-red);color:#fff;}
+.btn--danger:hover{background:#f25b4c;}
+.btn--success{background:var(--success-green);color:#06281a;}
+.btn--success:hover{background:#45dd87;}
+.btn--sm{padding:5px 11px;font-size:12px;border-radius:var(--r-sm);}
+.btn--lg{padding:11px 22px;font-size:14px;}
+.btn--icon{padding:8px;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.icon-btn{
+  width:32px;height:32px;border-radius:var(--r-sm);display:inline-flex;align-items:center;justify-content:center;
+  color:var(--text-2);border:1px solid var(--panel-border);background:var(--bg-2);transition:.15s;
+}
+.icon-btn:hover{color:var(--text-0);border-color:var(--text-3);}
+.icon-btn--sm{width:26px;height:26px;}
+
+/* ── BADGES / STATUS PILLS ──────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.02em;}
+.badge--green{background:rgba(46,204,113,.12);color:var(--success-green);}
+.badge--orange{background:rgba(230,126,34,.12);color:var(--machine-orange);}
+.badge--red{background:rgba(231,76,60,.12);color:var(--alert-red);}
+.badge--yellow{background:rgba(242,183,5,.12);color:var(--safety-yellow);}
+.badge--blue{background:rgba(79,163,255,.12);color:var(--electric-blue);}
+.badge--gray{background:var(--panel-2);color:var(--text-2);}
+.badge__dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.badge__dot--pulse{animation:dot-pulse 1.6s infinite;}
+
+.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:11.5px;font-weight:600;border:1px solid;}
+.pill--running{background:rgba(46,204,113,.08);border-color:rgba(46,204,113,.3);color:var(--success-green);}
+.pill--maint{background:rgba(230,126,34,.08);border-color:rgba(230,126,34,.3);color:var(--machine-orange);}
+.pill--idle{background:rgba(127,138,150,.08);border-color:var(--panel-border);color:var(--text-2);}
+.pill--critical{background:rgba(231,76,60,.08);border-color:rgba(231,76,60,.3);color:var(--alert-red);}
+
+/* priority levels */
+.priority{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:3px;}
+.priority--critical{background:rgba(231,76,60,.15);color:var(--alert-red);}
+.priority--high{background:rgba(230,126,34,.15);color:var(--machine-orange);}
+.priority--medium{background:rgba(242,183,5,.15);color:var(--safety-yellow);}
+.priority--low{background:rgba(127,138,150,.15);color:var(--text-2);}
+
+/* ── PROGRESS BARS ───────────────────────────────────────── */
+.progress{height:6px;background:var(--bg-2);border-radius:3px;overflow:hidden;}
+.progress__fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.progress__fill--green{background:var(--success-green);}
+.progress__fill--blue{background:var(--electric-blue);}
+.progress__fill--yellow{background:var(--safety-yellow);}
+.progress__fill--orange{background:var(--machine-orange);}
+.progress__fill--red{background:var(--alert-red);}
+.progress-row{display:flex;align-items:center;gap:10px;}
+.progress-row .progress{flex:1;}
+.progress-row__pct{font-family:var(--font-mono);font-size:11.5px;font-weight:700;width:38px;text-align:right;flex-shrink:0;}
+
+/* ── DATA TABLE ──────────────────────────────────────────── */
+.data-table{width:100%;font-size:12.5px;}
+.data-table thead th{
+  text-align:left;padding:9px 14px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--text-3);border-bottom:1px solid var(--panel-border);background:var(--bg-2);white-space:nowrap;
+}
+.data-table tbody td{padding:11px 14px;border-bottom:1px solid var(--panel-border-soft);color:var(--text-1);vertical-align:middle;}
+.data-table tbody tr:hover{background:var(--panel-1);}
+.data-table tbody tr:last-child td{border-bottom:none;}
+.data-table .mono-cell{font-family:var(--font-mono);font-size:12px;color:var(--text-1);}
+.table-wrap{overflow-x:auto;}
+.row-checkbox{width:15px;height:15px;accent-color:var(--safety-yellow);cursor:pointer;}
+
+/* avatar chip */
+.avatar-chip{display:flex;align-items:center;gap:8px;}
+.avatar-chip__circle{
+  width:24px;height:24px;border-radius:50%;background:var(--panel-2);border:1px solid var(--panel-border);
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-1);font-family:var(--font-mono);flex-shrink:0;
+}
+
+/* ── INPUTS / FORMS ──────────────────────────────────────── */
+.field{display:flex;flex-direction:column;gap:5px;}
+.field__label{font-size:11.5px;font-weight:600;color:var(--text-1);}
+.field__label--req::after{content:' *';color:var(--alert-red);}
+.input,.select,.textarea{
+  width:100%;padding:8px 12px;border-radius:var(--r-sm);border:1px solid var(--panel-border);
+  background:var(--bg-2);color:var(--text-0);font-size:13px;outline:none;transition:.15s;
+}
+.input::placeholder{color:var(--text-3);}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--electric-blue);box-shadow:0 0 0 3px rgba(79,163,255,.12);}
+.input--mono{font-family:var(--font-mono);}
+.field-hint{font-size:11px;color:var(--text-3);}
+.field-hint--error{color:var(--alert-red);}
+
+.search-input-wrap{position:relative;}
+.search-input-wrap .input{padding-left:34px;}
+.search-input-wrap__icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-3);}
+
+.checkbox-row,.radio-row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text-1);cursor:pointer;}
+.checkbox-row input,.radio-row input{width:15px;height:15px;accent-color:var(--safety-yellow);cursor:pointer;}
+
+/* toggle switch */
+.toggle{position:relative;width:38px;height:21px;flex-shrink:0;display:inline-block;}
+.toggle input{opacity:0;width:0;height:0;position:absolute;}
+.toggle__track{position:absolute;inset:0;background:var(--panel-2);border:1px solid var(--panel-border);border-radius:999px;cursor:pointer;transition:.2s;}
+.toggle input:checked + .toggle__track{background:rgba(242,183,5,.25);border-color:var(--safety-yellow);}
+.toggle__thumb{position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--text-2);transition:transform .2s, background .2s;}
+.toggle input:checked ~ .toggle__thumb{transform:translateX(17px);background:var(--safety-yellow);}
+
+/* ── FILTERS / SEGMENTED / DROPDOWNS ───────────────────── */
+.filter-bar{display:flex;gap:6px;flex-wrap:wrap;}
+.filter-btn{
+  padding:6px 13px;border-radius:999px;font-size:12px;font-weight:600;background:var(--bg-2);
+  border:1px solid var(--panel-border);color:var(--text-2);transition:.15s;
+}
+.filter-btn:hover{border-color:var(--text-3);color:var(--text-1);}
+.filter-btn.active{background:var(--safety-yellow);border-color:var(--safety-yellow);color:#1a1505;}
+
+.segmented{display:inline-flex;background:var(--bg-2);border:1px solid var(--panel-border);border-radius:var(--r-md);padding:2px;}
+.segmented__btn{padding:6px 14px;font-size:12.5px;font-weight:600;color:var(--text-2);border-radius:5px;transition:.15s;}
+.segmented__btn.active{background:var(--panel-2);color:var(--text-0);}
+
+.dropdown-trigger{
+  display:inline-flex;align-items:center;gap:8px;padding:7px 12px;background:var(--bg-2);
+  border:1px solid var(--panel-border);border-radius:var(--r-sm);font-size:12.5px;color:var(--text-1);cursor:pointer;transition:.15s;
+}
+.dropdown-trigger:hover{border-color:var(--text-3);}
+
+/* ── TABS ────────────────────────────────────────────────── */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--panel-border-soft);}
+.tab-btn{padding:9px 16px;font-size:13px;font-weight:600;color:var(--text-2);border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s;}
+.tab-btn:hover{color:var(--text-1);}
+.tab-btn.active{color:var(--text-0);border-bottom-color:var(--safety-yellow);}
+.tab-panel{display:none;padding-top:16px;}
+.tab-panel.active{display:block;}
+
+/* ── ACCORDION ───────────────────────────────────────────── */
+.accordion{border:1px solid var(--panel-border-soft);border-radius:var(--r-md);overflow:hidden;}
+.accordion-item{border-bottom:1px solid var(--panel-border-soft);}
+.accordion-item:last-child{border-bottom:none;}
+.accordion-trigger{
+  width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;
+  font-size:13px;font-weight:600;color:var(--text-1);background:var(--bg-1);transition:.15s;
+}
+.accordion-trigger:hover{background:var(--panel-1);color:var(--text-0);}
+.accordion-trigger__chevron{transition:transform .2s;color:var(--text-3);}
+.accordion-item.open .accordion-trigger__chevron{transform:rotate(180deg);}
+.accordion-panel{max-height:0;overflow:hidden;transition:max-height .25s ease;background:var(--bg-2);}
+.accordion-item.open .accordion-panel{max-height:400px;}
+.accordion-panel__inner{padding:14px 16px;font-size:12.5px;color:var(--text-2);line-height:1.6;}
+
+/* ── BREADCRUMBS ─────────────────────────────────────────── */
+.breadcrumbs{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);}
+.breadcrumbs a{color:var(--text-2);transition:.15s;}
+.breadcrumbs a:hover{color:var(--text-0);}
+.breadcrumbs__sep{color:var(--text-3);}
+.breadcrumbs__current{color:var(--text-0);font-weight:600;}
+
+/* ── PAGINATION ──────────────────────────────────────────── */
+.pagination{display:flex;align-items:center;gap:3px;}
+.page-btn{
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:var(--r-sm);
+  font-size:12.5px;color:var(--text-2);border:1px solid var(--panel-border);background:var(--bg-2);transition:.15s;
+}
+.page-btn:hover{border-color:var(--text-3);color:var(--text-0);}
+.page-btn.active{background:var(--safety-yellow);border-color:var(--safety-yellow);color:#1a1505;font-weight:700;}
+
+/* ── TIMELINE (vertical) ─────────────────────────────────── */
+.v-timeline{display:flex;flex-direction:column;}
+.v-timeline-item{display:flex;gap:14px;position:relative;padding-bottom:20px;}
+.v-timeline-item:last-child{padding-bottom:0;}
+.v-timeline-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:10px;}
+.v-timeline-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.v-timeline-line{width:2px;flex:1;background:var(--panel-border-soft);margin-top:4px;min-height:14px;}
+.v-timeline-item:last-child .v-timeline-line{display:none;}
+.v-timeline-time{font-family:var(--font-mono);font-size:10.5px;color:var(--text-3);margin-bottom:2px;}
+.v-timeline-title{font-size:13px;font-weight:600;color:var(--text-0);margin-bottom:2px;}
+.v-timeline-desc{font-size:12px;color:var(--text-2);line-height:1.5;}
+
+/* ── DRAWER ──────────────────────────────────────────────── */
+.drawer-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1900;opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:380px;max-width:90vw;background:var(--bg-1);
+  border-left:1px solid var(--panel-border);z-index:1901;transform:translateX(100%);transition:transform .25s ease;
+  display:flex;flex-direction:column;
+}
+.drawer-overlay.open .drawer{transform:translateX(0);}
+.drawer__head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--panel-border-soft);}
+.drawer__title{font-size:14.5px;font-weight:700;color:var(--text-0);}
+.drawer__body{flex:1;overflow-y:auto;padding:16px 18px;}
+
+/* ── MODAL ───────────────────────────────────────────────── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--bg-1);border:1px solid var(--panel-border);border-radius:var(--r-lg);width:480px;max-width:92vw;
+  max-height:85vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s;box-shadow:var(--shadow-3);
+}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal--sm{width:380px;}
+.modal__head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--panel-border-soft);}
+.modal__title{font-size:15px;font-weight:700;color:var(--text-0);}
+.modal__close{width:28px;height:28px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:.15s;}
+.modal__close:hover{background:var(--panel-1);color:var(--text-0);}
+.modal__body{padding:18px;}
+.modal__footer{padding:14px 18px;border-top:1px solid var(--panel-border-soft);display:flex;justify-content:flex-end;gap:9px;}
+
+/* ── TOASTS ──────────────────────────────────────────────── */
+.toast-stack{position:fixed;bottom:20px;right:20px;z-index:2200;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{
+  background:var(--bg-1);border:1px solid var(--panel-border);border-radius:var(--r-md);padding:12px 14px;
+  display:flex;align-items:flex-start;gap:10px;max-width:340px;pointer-events:all;box-shadow:var(--shadow-2);
+  border-left:3px solid; animation:toast-in .25s ease;
+}
+@keyframes toast-in{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+.toast--success{border-left-color:var(--success-green);}
+.toast--warn{border-left-color:var(--safety-yellow);}
+.toast--error{border-left-color:var(--alert-red);}
+.toast--info{border-left-color:var(--electric-blue);}
+.toast__icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.toast__title{font-size:12.5px;font-weight:700;color:var(--text-0);}
+.toast__desc{font-size:11.5px;color:var(--text-2);margin-top:2px;line-height:1.4;}
+.toast__close{color:var(--text-3);flex-shrink:0;font-size:13px;}
+.toast--out{animation:toast-out .2s ease forwards;}
+@keyframes toast-out{to{opacity:0;transform:translateX(14px);}}
+
+/* ── SKELETON / LOADING ──────────────────────────────────── */
+.skeleton{background:linear-gradient(90deg,var(--panel-1) 25%,var(--panel-2) 50%,var(--panel-1) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--r-sm);}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skel-text{height:11px;}
+.skel-lg{height:17px;}
+
+/* loading screen */
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:60px 20px;}
+.loading-ring{width:38px;height:38px;border:3px solid var(--panel-border);border-top-color:var(--safety-yellow);border-radius:50%;animation:spin 0.9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-family:var(--font-mono);font-size:12px;color:var(--text-2);letter-spacing:.03em;}
+
+/* ── EMPTY STATE ─────────────────────────────────────────── */
+.empty-state{display:flex;flex-direction:column;align-items:center;gap:9px;padding:48px 20px;text-align:center;background:var(--bg-2);border:1px dashed var(--panel-border);border-radius:var(--r-lg);}
+.empty-state__icon{font-size:28px;opacity:.4;margin-bottom:4px;}
+.empty-state__title{font-size:14px;font-weight:700;color:var(--text-0);}
+.empty-state__desc{font-size:12.5px;color:var(--text-2);max-width:280px;line-height:1.5;}
+
+/* ── COMMAND PALETTE ─────────────────────────────────────── */
+.cmdk-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:3000;display:flex;align-items:flex-start;justify-content:center;padding-top:14vh;opacity:0;pointer-events:none;transition:opacity .15s;}
+.cmdk-overlay.open{opacity:1;pointer-events:all;}
+.cmdk-box{background:var(--bg-1);border:1px solid var(--panel-border);border-radius:var(--r-lg);width:560px;max-width:90vw;box-shadow:var(--shadow-3);overflow:hidden;transform:translateY(-8px);transition:transform .15s;}
+.cmdk-overlay.open .cmdk-box{transform:translateY(0);}
+.cmdk-input-row{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--panel-border-soft);}
+.cmdk-input-row svg{color:var(--text-3);flex-shrink:0;}
+.cmdk-input{flex:1;background:none;border:none;outline:none;color:var(--text-0);font-size:14px;}
+.cmdk-input::placeholder{color:var(--text-3);}
+.cmdk-list{max-height:340px;overflow-y:auto;padding:6px;}
+.cmdk-group-label{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:8px 10px 4px;}
+.cmdk-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13px;color:var(--text-1);cursor:pointer;}
+.cmdk-item:hover,.cmdk-item.selected{background:var(--panel-1);color:var(--text-0);}
+.cmdk-item__icon{width:20px;text-align:center;color:var(--text-3);flex-shrink:0;}
+.cmdk-item__meta{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;color:var(--text-3);}
+
+/* ── PERMISSION MATRIX ───────────────────────────────────── */
+.perm-matrix{width:100%;font-size:12px;}
+.perm-matrix th,.perm-matrix td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--panel-border-soft);}
+.perm-matrix th{font-size:10.5px;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.perm-matrix td:first-child,.perm-matrix th:first-child{text-align:left;color:var(--text-1);font-weight:600;}
+.perm-check{width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;border-radius:3px;cursor:pointer;}
+.perm-check--on{background:rgba(46,204,113,.15);color:var(--success-green);}
+.perm-check--off{background:var(--panel-2);color:transparent;}
+
+/* ── ASSET LIFECYCLE ─────────────────────────────────────── */
+.lifecycle-track{display:flex;align-items:center;gap:0;}
+.lifecycle-stage{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;}
+.lifecycle-stage__bar{width:100%;height:6px;border-radius:3px;background:var(--panel-border);}
+.lifecycle-stage--done .lifecycle-stage__bar{background:var(--success-green);}
+.lifecycle-stage--current .lifecycle-stage__bar{background:var(--safety-yellow);}
+.lifecycle-stage__label{font-size:10px;color:var(--text-2);font-weight:600;}
+
+/* ── SIGNATURE BLOCK ─────────────────────────────────────── */
+.signature-block{border:1px solid var(--panel-border);border-radius:var(--r-md);padding:14px;background:var(--bg-2);}
+.signature-line{border-bottom:1.5px dashed var(--panel-border);height:34px;margin-bottom:6px;display:flex;align-items:flex-end;padding-bottom:4px;font-family:'Brush Script MT',cursive;font-size:18px;color:var(--electric-blue);}
+.signature-meta{font-size:10.5px;color:var(--text-3);font-family:var(--font-mono);}
+
+/* design guidelines */
+.token-swatch{display:flex;flex-direction:column;gap:6px;}
+.token-swatch__box{width:100%;height:48px;border-radius:var(--r-md);border:1px solid var(--panel-border-soft);}
+.token-swatch__name{font-size:11px;font-weight:600;color:var(--text-1);}
+.token-swatch__hex{font-family:var(--font-mono);font-size:10.5px;color:var(--text-3);}
+
+@media (max-width:1100px){
+  .fcc-grid{grid-template-columns:1fr 1fr;}
+  .fcc-panel--span2{grid-column:span 2;}
+  .kpi-row{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:720px){
+  .fcc-grid{grid-template-columns:1fr;}
+  .fcc-panel--span2{grid-column:span 1;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .nav-links{display:none;}
+  .wh-zone-grid{grid-template-columns:repeat(3,1fr);}
+}
+
+</style>
+<!-- ===================================================== -->
+<!-- CSS END (tokens/base — additional CSS modules follow) -->
+<!-- ===================================================== -->
+</head>
+
+<!-- ===================================================== -->
+<!-- HTML START -->
+<!-- ===================================================== -->
+<body>
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TOP STATUS BAR -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="top-status-bar">
+  <div class="status-bar-inner">
+    <span class="status-chip"><span class="status-dot status-dot--green"></span>PLANT <strong>RHEIN-MAAS</strong> OPERATIONAL</span>
+    <span class="status-sep">|</span>
+    <span class="status-chip">SHIFT <strong id="status-shift">B · 14:00–22:00</strong></span>
+    <span class="status-sep">|</span>
+    <span class="status-chip">SYS TIME <strong id="status-clock">14:32:07</strong> CET</span>
+    <div class="status-bar-right">
+      <span class="status-chip"><span class="status-dot status-dot--yellow"></span>2 OPEN ALERTS</span>
+      <span class="status-chip">NETWORK <strong class="c-green">STABLE</strong></span>
+      <span class="status-chip">BUILD <strong>v4.12.0</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PRIMARY NAV -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<nav id="primary-nav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-brand__mark">IW</div>
+      <span class="nav-brand__name">Iron<span>Works</span></span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" data-nav="factory-command-center">Command Center</button>
+      <button class="nav-link" data-nav="production-dashboard">Production</button>
+      <button class="nav-link" data-nav="work-orders">Work Orders</button>
+      <button class="nav-link" data-nav="maintenance-center">Maintenance</button>
+      <button class="nav-link" data-nav="inventory-management">Inventory</button>
+      <button class="nav-link" data-nav="procurement-portal">Procurement</button>
+      <button class="nav-link" data-nav="quality-assurance">Quality</button>
+      <button class="nav-link" data-nav="employee-operations">Workforce</button>
+      <button class="nav-link" data-nav="industrial-analytics">Analytics</button>
+      <button class="nav-link" data-nav="logistics">Logistics</button>
+    </div>
+    <div class="nav-right">
+      <button class="nav-kbd" id="open-command-palette-btn">Search machines, WOs, vendors… <kbd>Ctrl</kbd><kbd>K</kbd></button>
+      <button class="nav-icon-btn" id="open-notifications-drawer-btn" title="Notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="nav-icon-btn__dot"></span>
+      </button>
+      <div class="nav-avatar">EF</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- FACTORY COMMAND CENTER (HERO DEMO) -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="factory-command-center">
+  <div class="shell">
+
+    <div class="fcc-header">
+      <div class="fcc-title-block">
+        <div class="fcc-eyebrow"><span class="t-micro">Factory Command Center</span></div>
+        <div class="fcc-title">Plant Rhein-Maas — Manufacturing Execution Overview</div>
+        <div class="fcc-subtitle">FACILITY-ID: RM-001 · SECTOR: AUTOMOTIVE COMPONENTS · TIMEZONE: CET</div>
+      </div>
+      <div class="fcc-header-right">
+        <div class="shift-pill">SHIFT B — ELENA FISCHER, SHIFT LEAD</div>
+        <div class="live-pill"><span class="live-pill__dot"></span>LIVE TELEMETRY</div>
+      </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi-cell">
+        <div class="kpi-cell__label">Production Today</div>
+        <div class="kpi-cell__value t-num" id="kpi-production">14,820<sup>units</sup></div>
+        <div class="kpi-cell__delta kpi-cell__delta--up">▲ 4.2% vs. yesterday</div>
+        <div class="kpi-cell__bar" style="width:78%;background:var(--success-green);"></div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-cell__label">OEE</div>
+        <div class="kpi-cell__value t-num" id="kpi-oee">87.4<sup>%</sup></div>
+        <div class="kpi-cell__delta kpi-cell__delta--up">▲ 1.1pt this shift</div>
+        <div class="kpi-cell__bar" style="width:87%;background:var(--safety-yellow);"></div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-cell__label">Downtime</div>
+        <div class="kpi-cell__value t-num" id="kpi-downtime">22<sup>min</sup></div>
+        <div class="kpi-cell__delta kpi-cell__delta--down">▼ 8 min vs. avg</div>
+        <div class="kpi-cell__bar" style="width:18%;background:var(--machine-orange);"></div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-cell__label">Active Work Orders</div>
+        <div class="kpi-cell__value t-num" id="kpi-wo">38</div>
+        <div class="kpi-cell__delta kpi-cell__delta--flat">6 high priority</div>
+        <div class="kpi-cell__bar" style="width:64%;background:var(--electric-blue);"></div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-cell__label">Warehouse Capacity</div>
+        <div class="kpi-cell__value t-num" id="kpi-warehouse">71<sup>%</sup></div>
+        <div class="kpi-cell__delta kpi-cell__delta--flat">3,408 m² in use</div>
+        <div class="kpi-cell__bar" style="width:71%;background:var(--electric-blue);"></div>
+      </div>
+      <div class="kpi-cell">
+        <div class="kpi-cell__label">Safety Incidents</div>
+        <div class="kpi-cell__value t-num c-green">0</div>
+        <div class="kpi-cell__delta kpi-cell__delta--up">142 days incident-free</div>
+        <div class="kpi-cell__bar" style="width:100%;background:var(--success-green);"></div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="fcc-grid">
+
+      <!-- Production lines + machine status -->
+      <div class="fcc-panel">
+        <div class="fcc-panel__head">
+          <span class="fcc-panel__title">Live Production Lines</span>
+          <span class="fcc-panel__badge">4 LINES</span>
+        </div>
+        <div class="fcc-panel__body">
+          <div class="line-row">
+            <span class="line-id">A-17</span>
+            <div class="line-bar-wrap"><div class="line-bar line-bar--running" style="width:92%;"></div></div>
+            <span class="line-pct t-num">92%</span>
+            <span class="line-status-tag line-status-tag--running">Running</span>
+          </div>
+          <div class="line-row">
+            <span class="line-id">B-09</span>
+            <div class="line-bar-wrap"><div class="line-bar line-bar--running" style="width:87%;"></div></div>
+            <span class="line-pct t-num">87%</span>
+            <span class="line-status-tag line-status-tag--running">Running</span>
+          </div>
+          <div class="line-row">
+            <span class="line-id">C-22</span>
+            <div class="line-bar-wrap"><div class="line-bar line-bar--maint" style="width:34%;"></div></div>
+            <span class="line-pct t-num">34%</span>
+            <span class="line-status-tag line-status-tag--maint">Maint.</span>
+          </div>
+          <div class="line-row">
+            <span class="line-id">D-05</span>
+            <div class="line-bar-wrap"><div class="line-bar line-bar--idle" style="width:4%;"></div></div>
+            <span class="line-pct t-num">0%</span>
+            <span class="line-status-tag line-status-tag--idle">Idle</span>
+          </div>
+
+          <div class="machine-dot-grid" id="machine-dot-grid" title="Machine status grid — CNC-401…CNC-432">
+            <!-- populated partly by JS animation, base markup below -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Digital twin -->
+      <div class="fcc-panel">
+        <div class="fcc-panel__head">
+          <span class="fcc-panel__title">Factory Digital Twin</span>
+          <span class="fcc-panel__badge">FLOOR 1</span>
+        </div>
+        <div class="fcc-panel__body">
+          <div class="twin-map">
+            <div class="twin-zone twin-zone--run" style="left:4%;top:8%;width:30%;height:36%;">A-17</div>
+            <div class="twin-zone twin-zone--run" style="left:38%;top:8%;width:28%;height:36%;">B-09</div>
+            <div class="twin-zone twin-zone--maint" style="left:70%;top:8%;width:26%;height:36%;">C-22</div>
+            <div class="twin-zone twin-zone--idle" style="left:4%;top:50%;width:30%;height:30%;">D-05</div>
+            <div class="twin-zone twin-zone--run" style="left:38%;top:50%;width:58%;height:30%;">CX-12 CONVEYOR</div>
+            <div class="twin-conveyor" style="left:4%;top:84%;width:92%;"></div>
+            <div class="twin-dot-moving" style="top:83px;"></div>
+            <div class="twin-dot-moving" style="top:83px;animation-delay:-2s;"></div>
+          </div>
+          <div class="t-micro c-text-3" style="margin-top:8px;">Updated <span class="t-mono-sm" id="twin-updated">2s ago</span> · sensor mesh RM-001-FL1</div>
+        </div>
+      </div>
+
+      <!-- Warehouse + sparkline -->
+      <div class="fcc-panel">
+        <div class="fcc-panel__head">
+          <span class="fcc-panel__title">Warehouse Zones</span>
+          <span class="fcc-panel__badge">5 ZONES</span>
+        </div>
+        <div class="fcc-panel__body">
+          <div class="wh-zone-grid">
+            <div class="wh-zone"><div class="wh-zone__name">A1</div><div class="wh-zone__bar"><div class="wh-zone__bar-fill" style="width:82%;background:var(--machine-orange);"></div></div><div class="wh-zone__pct">82%</div></div>
+            <div class="wh-zone"><div class="wh-zone__name">A2</div><div class="wh-zone__bar"><div class="wh-zone__bar-fill" style="width:64%;background:var(--electric-blue);"></div></div><div class="wh-zone__pct">64%</div></div>
+            <div class="wh-zone"><div class="wh-zone__name">B1</div><div class="wh-zone__bar"><div class="wh-zone__bar-fill" style="width:91%;background:var(--alert-red);"></div></div><div class="wh-zone__pct">91%</div></div>
+            <div class="wh-zone"><div class="wh-zone__name">B2</div><div class="wh-zone__bar"><div class="wh-zone__bar-fill" style="width:48%;background:var(--success-green);"></div></div><div class="wh-zone__pct">48%</div></div>
+            <div class="wh-zone"><div class="wh-zone__name">C1</div><div class="wh-zone__bar"><div class="wh-zone__bar-fill" style="width:70%;background:var(--electric-blue);"></div></div><div class="wh-zone__pct">70%</div></div>
+          </div>
+
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+            <div class="spark-row">
+              <svg class="spark-svg" width="64" height="22" viewBox="0 0 64 22"><polyline points="0,18 8,14 16,16 24,9 32,11 40,6 48,8 56,3 64,5" fill="none" stroke="var(--success-green)" stroke-width="1.6"/></svg>
+              <span class="spark-label">Throughput</span>
+              <span class="spark-value">412/hr</span>
+            </div>
+            <div class="spark-row">
+              <svg class="spark-svg" width="64" height="22" viewBox="0 0 64 22"><polyline points="0,6 8,9 16,7 24,12 32,10 40,15 48,13 56,17 64,16" fill="none" stroke="var(--machine-orange)" stroke-width="1.6"/></svg>
+              <span class="spark-label">Scrap rate</span>
+              <span class="spark-value">1.8%</span>
+            </div>
+            <div class="spark-row">
+              <svg class="spark-svg" width="64" height="22" viewBox="0 0 64 22"><polyline points="0,12 8,11 16,13 24,10 32,12 40,9 48,11 56,8 64,10" fill="none" stroke="var(--electric-blue)" stroke-width="1.6"/></svg>
+              <span class="spark-label">Energy use</span>
+              <span class="spark-value">3.2 MWh</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manufacturing timeline -->
+      <div class="fcc-panel fcc-panel--span2">
+        <div class="fcc-panel__head">
+          <span class="fcc-panel__title">Manufacturing Timeline — Batch BX-2026-0619</span>
+          <span class="fcc-panel__badge">IN PROGRESS</span>
+        </div>
+        <div class="fcc-panel__body">
+          <div class="mfg-timeline">
+            <div class="mfg-step mfg-step--done"><div class="mfg-step__dot"></div><div class="mfg-step__label">Material<br>Received</div></div>
+            <div class="mfg-step mfg-step--done"><div class="mfg-step__dot"></div><div class="mfg-step__label">Assembly</div></div>
+            <div class="mfg-step mfg-step--active"><div class="mfg-step__dot"></div><div class="mfg-step__label">QA</div></div>
+            <div class="mfg-step"><div class="mfg-step__dot"></div><div class="mfg-step__label">Packaging</div></div>
+            <div class="mfg-step"><div class="mfg-step__dot"></div><div class="mfg-step__label">Shipping</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maintenance + procurement feeds -->
+      <div class="fcc-panel">
+        <div class="fcc-panel__head">
+          <span class="fcc-panel__title">Maintenance Feed</span>
+          <span class="fcc-panel__badge">LIVE</span>
+        </div>
+        <div class="fcc-panel__body">
+          <div class="feed-list" id="maintenance-feed">
+            <div class="feed-item"><span class="feed-dot feed-dot--orange"></span><span class="feed-text"><strong>CNC-404</strong> flagged for vibration anomaly — inspection scheduled</span><span class="feed-time">2m</span></div>
+            <div class="feed-item"><span class="feed-dot feed-dot--green"></span><span class="feed-text"><strong>Conveyor CX-12</strong> preventive maintenance completed</span><span class="feed-time">14m</span></div>
+            <div class="feed-item"><span class="feed-dot feed-dot--blue"></span><span class="feed-text">Technician <strong>Elena Fischer</strong> dispatched to Line C-22</span><span class="feed-time">19m</span></div>
+            <div class="feed-item"><span class="feed-dot feed-dot--orange"></span><span class="feed-text"><strong>WO-88421</strong> — bearing replacement in progress</span><span class="feed-time">31m</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fcc-panel">
+        <div class="fcc-panel__head">
+          <span class="fcc-panel__title">Procurement Feed</span>
+          <span class="fcc-panel__badge">LIVE</span>
+        </div>
+        <div class="fcc-panel__body">
+          <div class="feed-list" id="procurement-feed">
+            <div class="feed-item"><span class="feed-dot feed-dot--blue"></span><span class="feed-text">PO-55012 to <strong>Northline Steel</strong> approved — 12t coil stock</span><span class="feed-time">6m</span></div>
+            <div class="feed-item"><span class="feed-dot feed-dot--yellow"></span><span class="feed-text">RFQ-2241 awaiting vendor response — hydraulic seals</span><span class="feed-time">22m</span></div>
+            <div class="feed-item"><span class="feed-dot feed-dot--green"></span><span class="feed-text">Inbound shipment from <strong>Baltic Fasteners</strong> received at Dock 3</span><span class="feed-time">40m</span></div>
+            <div class="feed-item"><span class="feed-dot feed-dot--blue"></span><span class="feed-text">Contract renewal due — <strong>Northline Steel</strong> (90 days)</span><span class="feed-time">1h</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- BODY_CONTENT_PLACEHOLDER -->
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 1. PRODUCTION DASHBOARD -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="production-dashboard" class="showcase-section">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">01 · Production</div>
+        <div class="section-title">Production Dashboard</div>
+        <div class="section-desc">Shift-level OEE, throughput, and machine utilization for Plant Rhein-Maas.</div>
+      </div>
+      <div class="segmented">
+        <button class="segmented__btn active" onclick="setSegment(this)">Shift A</button>
+        <button class="segmented__btn" onclick="setSegment(this)">Shift B</button>
+        <button class="segmented__btn" onclick="setSegment(this)">Shift C</button>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+      <div class="card"><div class="card__body">
+        <div class="comp-label">Availability</div>
+        <div class="t-mono-lg c-text-0">94.2<span style="font-size:14px;color:var(--text-2);">%</span></div>
+        <div class="progress" style="margin-top:10px;"><div class="progress__fill progress__fill--green" style="width:94%;"></div></div>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <div class="comp-label">Performance</div>
+        <div class="t-mono-lg c-text-0">89.7<span style="font-size:14px;color:var(--text-2);">%</span></div>
+        <div class="progress" style="margin-top:10px;"><div class="progress__fill progress__fill--blue" style="width:90%;"></div></div>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <div class="comp-label">Quality Rate</div>
+        <div class="t-mono-lg c-text-0">98.1<span style="font-size:14px;color:var(--text-2);">%</span></div>
+        <div class="progress" style="margin-top:10px;"><div class="progress__fill progress__fill--green" style="width:98%;"></div></div>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <div class="comp-label">OEE Composite</div>
+        <div class="t-mono-lg c-yellow">87.4<span style="font-size:14px;color:var(--text-2);">%</span></div>
+        <div class="progress" style="margin-top:10px;"><div class="progress__fill progress__fill--yellow" style="width:87%;"></div></div>
+      </div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.4fr 1fr;gap:16px;">
+      <div class="card">
+        <div class="card__head">
+          <span class="card__title">Production Target Progress</span>
+          <span class="badge badge--blue">Target: 18,000 units</span>
+        </div>
+        <div class="card__body">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <div class="flex justify-between" style="margin-bottom:6px;"><span class="t-small c-text-1">Line A-17 — Door Hinges</span><span class="t-mono-sm c-text-1">5,120 / 5,600</span></div>
+              <div class="progress"><div class="progress__fill progress__fill--green" style="width:91%;"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between" style="margin-bottom:6px;"><span class="t-small c-text-1">Line B-09 — Bracket Assemblies</span><span class="t-mono-sm c-text-1">4,380 / 5,000</span></div>
+              <div class="progress"><div class="progress__fill progress__fill--blue" style="width:88%;"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between" style="margin-bottom:6px;"><span class="t-small c-text-1">Line C-22 — Stamped Panels</span><span class="t-mono-sm c-text-1">1,920 / 4,200</span></div>
+              <div class="progress"><div class="progress__fill progress__fill--orange" style="width:46%;"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between" style="margin-bottom:6px;"><span class="t-small c-text-1">Line D-05 — Custom Tooling</span><span class="t-mono-sm c-text-1">0 / 3,200</span></div>
+              <div class="progress"><div class="progress__fill" style="width:0%;background:var(--text-3);"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__head"><span class="card__title">Downtime Analysis — Today</span></div>
+        <div class="card__body">
+          <div class="v-timeline">
+            <div class="v-timeline-item">
+              <div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--alert-red);"></div><div class="v-timeline-line"></div></div>
+              <div><div class="v-timeline-time">08:12 — 08:24</div><div class="v-timeline-title">Unplanned · Line C-22</div><div class="v-timeline-desc">Hydraulic pressure fault on CNC-404. 12 min downtime.</div></div>
+            </div>
+            <div class="v-timeline-item">
+              <div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--machine-orange);"></div><div class="v-timeline-line"></div></div>
+              <div><div class="v-timeline-time">10:45 — 10:51</div><div class="v-timeline-title">Changeover · Line A-17</div><div class="v-timeline-desc">Tooling swap for batch BX-2026-0619. 6 min.</div></div>
+            </div>
+            <div class="v-timeline-item">
+              <div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--safety-yellow);"></div></div>
+              <div><div class="v-timeline-time">13:58 — 14:02</div><div class="v-timeline-title">Minor stop · Line B-09</div><div class="v-timeline-desc">Material starvation at infeed. 4 min.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Yield Metrics</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="progress-row"><span class="t-small c-text-1" style="width:120px;">First Pass Yield</span><div class="progress"><div class="progress__fill progress__fill--green" style="width:96%;"></div></div><span class="progress-row__pct t-num">96%</span></div>
+          <div class="progress-row"><span class="t-small c-text-1" style="width:120px;">Rework Rate</span><div class="progress"><div class="progress__fill progress__fill--orange" style="width:3%;"></div></div><span class="progress-row__pct t-num">3%</span></div>
+          <div class="progress-row"><span class="t-small c-text-1" style="width:120px;">Scrap Rate</span><div class="progress"><div class="progress__fill progress__fill--red" style="width:1.8%;"></div></div><span class="progress-row__pct t-num">1.8%</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Machine Utilization</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="progress-row"><span class="t-small c-text-1 t-mono-sm" style="width:90px;">CNC-401</span><div class="progress"><div class="progress__fill progress__fill--green" style="width:92%;"></div></div><span class="progress-row__pct t-num">92%</span></div>
+          <div class="progress-row"><span class="t-small c-text-1 t-mono-sm" style="width:90px;">CNC-404</span><div class="progress"><div class="progress__fill progress__fill--orange" style="width:34%;"></div></div><span class="progress-row__pct t-num">34%</span></div>
+          <div class="progress-row"><span class="t-small c-text-1 t-mono-sm" style="width:90px;">CX-12</span><div class="progress"><div class="progress__fill progress__fill--blue" style="width:81%;"></div></div><span class="progress-row__pct t-num">81%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 2. WORK ORDERS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="work-orders" class="showcase-section" style="background:var(--bg-1);">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">02 · Operations</div>
+        <div class="section-title">Work Orders</div>
+        <div class="section-desc">Active and scheduled work orders across all production lines and maintenance crews.</div>
+      </div>
+      <div class="flex gap-2">
+        <div class="filter-bar">
+          <button class="filter-btn active" onclick="setFilterBtn(this)">All (38)</button>
+          <button class="filter-btn" onclick="setFilterBtn(this)">Open</button>
+          <button class="filter-btn" onclick="setFilterBtn(this)">In Progress</button>
+          <button class="filter-btn" onclick="setFilterBtn(this)">Completed</button>
+        </div>
+        <button class="btn btn--primary btn--sm" onclick="openModal('modal-new-wo')">+ New Work Order</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" class="row-checkbox"></th>
+              <th>Work Order</th>
+              <th>Asset</th>
+              <th>Description</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Technician</th>
+              <th>Progress</th>
+              <th>Est. Completion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" class="row-checkbox"></td>
+              <td class="mono-cell">WO-88421</td>
+              <td class="mono-cell">CNC-404</td>
+              <td>Bearing replacement, spindle housing</td>
+              <td><span class="priority priority--high">High</span></td>
+              <td><span class="badge badge--orange"><span class="badge__dot badge__dot--pulse"></span>In Progress</span></td>
+              <td><div class="avatar-chip"><div class="avatar-chip__circle">EF</div>Elena Fischer</div></td>
+              <td style="width:120px;"><div class="progress-row"><div class="progress"><div class="progress__fill progress__fill--orange" style="width:62%;"></div></div><span class="progress-row__pct t-num">62%</span></div></td>
+              <td class="mono-cell">15:40 CET</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="row-checkbox"></td>
+              <td class="mono-cell">WO-88419</td>
+              <td class="mono-cell">CX-12</td>
+              <td>Preventive maintenance — belt tension</td>
+              <td><span class="priority priority--medium">Medium</span></td>
+              <td><span class="badge badge--green">Completed</span></td>
+              <td><div class="avatar-chip"><div class="avatar-chip__circle">MK</div>Markus Krüger</div></td>
+              <td style="width:120px;"><div class="progress-row"><div class="progress"><div class="progress__fill progress__fill--green" style="width:100%;"></div></div><span class="progress-row__pct t-num">100%</span></div></td>
+              <td class="mono-cell">11:05 CET</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="row-checkbox"></td>
+              <td class="mono-cell">WO-88423</td>
+              <td class="mono-cell">Line D-05</td>
+              <td>Custom tooling calibration before start-up</td>
+              <td><span class="priority priority--critical">Critical</span></td>
+              <td><span class="badge badge--red"><span class="badge__dot badge__dot--pulse"></span>Blocked</span></td>
+              <td><div class="avatar-chip"><div class="avatar-chip__circle">SV</div>Sofia Varga</div></td>
+              <td style="width:120px;"><div class="progress-row"><div class="progress"><div class="progress__fill progress__fill--red" style="width:15%;"></div></div><span class="progress-row__pct t-num">15%</span></div></td>
+              <td class="mono-cell">17:00 CET</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="row-checkbox"></td>
+              <td class="mono-cell">WO-88425</td>
+              <td class="mono-cell">CNC-411</td>
+              <td>Tool wear inspection, batch BX-2026-0619</td>
+              <td><span class="priority priority--low">Low</span></td>
+              <td><span class="badge badge--blue">Scheduled</span></td>
+              <td><div class="avatar-chip"><div class="avatar-chip__circle">EF</div>Elena Fischer</div></td>
+              <td style="width:120px;"><div class="progress-row"><div class="progress"><div class="progress__fill" style="width:0%;background:var(--text-3);"></div></div><span class="progress-row__pct t-num">0%</span></div></td>
+              <td class="mono-cell">Tomorrow</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" class="row-checkbox"></td>
+              <td class="mono-cell">WO-88408</td>
+              <td class="mono-cell">Conveyor CX-09</td>
+              <td>Roller alignment, sector 3</td>
+              <td><span class="priority priority--medium">Medium</span></td>
+              <td><span class="badge badge--orange"><span class="badge__dot badge__dot--pulse"></span>In Progress</span></td>
+              <td><div class="avatar-chip"><div class="avatar-chip__circle">MK</div>Markus Krüger</div></td>
+              <td style="width:120px;"><div class="progress-row"><div class="progress"><div class="progress__fill progress__fill--orange" style="width:40%;"></div></div><span class="progress-row__pct t-num">40%</span></div></td>
+              <td class="mono-cell">16:20 CET</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card__footer flex items-center justify-between">
+        <span class="t-small c-text-2">Showing 5 of 38 work orders</span>
+        <div class="pagination">
+          <button class="page-btn">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">8</button>
+          <button class="page-btn">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 3. MAINTENANCE CENTER -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="maintenance-center" class="showcase-section">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">03 · Maintenance</div>
+        <div class="section-title">Maintenance Center</div>
+        <div class="section-desc">Preventive and corrective maintenance, machine health, and failure prediction.</div>
+      </div>
+    </div>
+
+    <div class="tabs" id="maint-tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'maint-preventive')">Preventive</button>
+      <button class="tab-btn" onclick="switchTab(this,'maint-corrective')">Corrective</button>
+      <button class="tab-btn" onclick="switchTab(this,'maint-health')">Machine Health</button>
+      <button class="tab-btn" onclick="switchTab(this,'maint-prediction')">Failure Prediction</button>
+    </div>
+
+    <div id="maint-preventive" class="tab-panel active">
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:14px;">
+        <div class="card"><div class="card__body">
+          <div class="flex justify-between items-center" style="margin-bottom:8px;"><span class="t-h3">CX-12 Conveyor</span><span class="badge badge--green">On schedule</span></div>
+          <div class="t-small c-text-2">Belt tension &amp; roller inspection</div>
+          <div class="t-mono-sm c-text-3" style="margin-top:8px;">Next due: Jun 22, 2026 · every 30 days</div>
+        </div></div>
+        <div class="card"><div class="card__body">
+          <div class="flex justify-between items-center" style="margin-bottom:8px;"><span class="t-h3">CNC-401</span><span class="badge badge--green">On schedule</span></div>
+          <div class="t-small c-text-2">Spindle lubrication service</div>
+          <div class="t-mono-sm c-text-3" style="margin-top:8px;">Next due: Jun 25, 2026 · every 14 days</div>
+        </div></div>
+        <div class="card"><div class="card__body">
+          <div class="flex justify-between items-center" style="margin-bottom:8px;"><span class="t-h3">Line D-05 Robot Cell</span><span class="badge badge--yellow">Due soon</span></div>
+          <div class="t-small c-text-2">Calibration &amp; safety interlock check</div>
+          <div class="t-mono-sm c-text-3" style="margin-top:8px;">Next due: Jun 21, 2026 · every 60 days</div>
+        </div></div>
+      </div>
+    </div>
+
+    <div id="maint-corrective" class="tab-panel">
+      <div class="card">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Ticket</th><th>Asset</th><th>Issue</th><th>Reported By</th><th>Priority</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-cell">CM-3301</td><td class="mono-cell">CNC-404</td><td>Vibration anomaly on spindle axis</td><td>Elena Fischer</td><td><span class="priority priority--high">High</span></td><td><span class="badge badge--orange">In Progress</span></td></tr>
+              <tr><td class="mono-cell">CM-3298</td><td class="mono-cell">Conveyor CX-09</td><td>Roller misalignment causing jams</td><td>Markus Krüger</td><td><span class="priority priority--medium">Medium</span></td><td><span class="badge badge--orange">In Progress</span></td></tr>
+              <tr><td class="mono-cell">CM-3290</td><td class="mono-cell">CNC-411</td><td>Coolant leak at base plate</td><td>Sofia Varga</td><td><span class="priority priority--low">Low</span></td><td><span class="badge badge--green">Resolved</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="maint-health" class="tab-panel">
+      <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:14px;">
+        <div class="card"><div class="card__body">
+          <div class="t-mono-sm c-text-2">CNC-401</div>
+          <div class="t-mono-lg c-green" style="margin:6px 0;">98<span style="font-size:13px;">/100</span></div>
+          <div class="progress"><div class="progress__fill progress__fill--green" style="width:98%;"></div></div>
+        </div></div>
+        <div class="card"><div class="card__body">
+          <div class="t-mono-sm c-text-2">CNC-404</div>
+          <div class="t-mono-lg c-orange" style="margin:6px 0;">61<span style="font-size:13px;">/100</span></div>
+          <div class="progress"><div class="progress__fill progress__fill--orange" style="width:61%;"></div></div>
+        </div></div>
+        <div class="card"><div class="card__body">
+          <div class="t-mono-sm c-text-2">CX-12</div>
+          <div class="t-mono-lg c-green" style="margin:6px 0;">91<span style="font-size:13px;">/100</span></div>
+          <div class="progress"><div class="progress__fill progress__fill--green" style="width:91%;"></div></div>
+        </div></div>
+        <div class="card"><div class="card__body">
+          <div class="t-mono-sm c-text-2">Robot Cell D-05</div>
+          <div class="t-mono-lg c-red" style="margin:6px 0;">42<span style="font-size:13px;">/100</span></div>
+          <div class="progress"><div class="progress__fill progress__fill--red" style="width:42%;"></div></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div id="maint-prediction" class="tab-panel">
+      <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:14px;">
+        <div class="card" style="border-color:rgba(231,76,60,.3);">
+          <div class="card__body">
+            <div class="flex items-center gap-2" style="margin-bottom:8px;"><span class="badge badge--red">High risk</span><span class="t-mono-sm c-text-3">CNC-404</span></div>
+            <div class="t-body c-text-1">Bearing failure predicted within <strong class="c-text-0">5–8 days</strong> based on vibration spectral analysis. Recommend scheduling WO before Jun 27.</div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(242,183,5,.3);">
+          <div class="card__body">
+            <div class="flex items-center gap-2" style="margin-bottom:8px;"><span class="badge badge--yellow">Watch</span><span class="t-mono-sm c-text-3">Robot Cell D-05</span></div>
+            <div class="t-body c-text-1">Servo motor degradation trend detected. Estimated time to failure <strong class="c-text-0">21–30 days</strong>. Monitoring continues.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 4. INVENTORY MANAGEMENT -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="inventory-management" class="showcase-section" style="background:var(--bg-1);">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">04 · Warehouse</div>
+        <div class="section-title">Inventory Management</div>
+        <div class="section-desc">Stock levels, lot tracking, transfers, and reorder alerts across all warehouse zones.</div>
+      </div>
+      <button class="btn btn--outline btn--sm">+ New Transfer</button>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+      <div class="card"><div class="card__body"><div class="comp-label">Total SKUs</div><div class="t-mono-lg">4,128</div></div></div>
+      <div class="card"><div class="card__body"><div class="comp-label">Inventory Value</div><div class="t-mono-lg c-green">€8.42M</div></div></div>
+      <div class="card"><div class="card__body"><div class="comp-label">Reorder Alerts</div><div class="t-mono-lg c-orange">17</div></div></div>
+      <div class="card"><div class="card__body"><div class="comp-label">Capacity Used</div><div class="t-mono-lg c-blue">71%</div></div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.4fr 1fr;gap:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Warehouse Stock — Reorder Alerts</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>SKU</th><th>Description</th><th>Zone</th><th>Qty on Hand</th><th>Reorder Pt.</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-cell">RM-2240-S</td><td>Coil Steel, 2mm gauge</td><td class="mono-cell">A1</td><td class="mono-cell">1,240 kg</td><td class="mono-cell">1,500 kg</td><td><span class="badge badge--red">Reorder</span></td></tr>
+              <tr><td class="mono-cell">FX-1102-B</td><td>M8 Hex Bolts, zinc-plated</td><td class="mono-cell">B1</td><td class="mono-cell">8,200 pcs</td><td class="mono-cell">10,000 pcs</td><td><span class="badge badge--orange">Low</span></td></tr>
+              <tr><td class="mono-cell">HY-0091-S</td><td>Hydraulic seal kit, type C</td><td class="mono-cell">C1</td><td class="mono-cell">340 kits</td><td class="mono-cell">200 kits</td><td><span class="badge badge--green">Healthy</span></td></tr>
+              <tr><td class="mono-cell">PT-0044-A</td><td>Stamped panel, door hinge bracket</td><td class="mono-cell">A2</td><td class="mono-cell">12,800 pcs</td><td class="mono-cell">6,000 pcs</td><td><span class="badge badge--green">Healthy</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__head"><span class="card__title">Lot Tracking</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="flex justify-between items-center" style="padding-bottom:9px;border-bottom:1px solid var(--panel-border-soft);">
+            <div><div class="t-mono-md">BX-2026-0619</div><div class="t-small c-text-2">Stamped panel batch</div></div>
+            <span class="badge badge--blue">In Production</span>
+          </div>
+          <div class="flex justify-between items-center" style="padding-bottom:9px;border-bottom:1px solid var(--panel-border-soft);">
+            <div><div class="t-mono-md">BX-2026-0611</div><div class="t-small c-text-2">Bracket assembly batch</div></div>
+            <span class="badge badge--green">QA Passed</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <div><div class="t-mono-md">BX-2026-0598</div><div class="t-small c-text-2">Door hinge batch</div></div>
+            <span class="badge badge--gray">Shipped</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Active Transfers</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="progress-row"><span class="t-small" style="width:130px;">A1 → B2 (coil steel)</span><div class="progress"><div class="progress__fill progress__fill--blue" style="width:70%;"></div></div><span class="progress-row__pct t-num">70%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:130px;">C1 → A2 (seal kits)</span><div class="progress"><div class="progress__fill progress__fill--blue" style="width:35%;"></div></div><span class="progress-row__pct t-num">35%</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Valuation by Zone</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="flex justify-between"><span class="t-small c-text-1">Zone A1 — Raw Steel</span><span class="t-mono-sm">€2.1M</span></div>
+          <div class="flex justify-between"><span class="t-small c-text-1">Zone A2 — Finished Panels</span><span class="t-mono-sm">€1.8M</span></div>
+          <div class="flex justify-between"><span class="t-small c-text-1">Zone B1 — Fasteners</span><span class="t-mono-sm">€0.6M</span></div>
+          <div class="flex justify-between"><span class="t-small c-text-1">Zone B2 — WIP Components</span><span class="t-mono-sm">€2.4M</span></div>
+          <div class="flex justify-between"><span class="t-small c-text-1">Zone C1 — Spare Parts</span><span class="t-mono-sm">€1.5M</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 5. PROCUREMENT PORTAL -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="procurement-portal" class="showcase-section">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">05 · Sourcing</div>
+        <div class="section-title">Procurement Portal</div>
+        <div class="section-desc">Purchase orders, vendor relationships, RFQs, and contract management.</div>
+      </div>
+      <button class="btn btn--primary btn--sm">+ New Purchase Order</button>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;">
+      <div class="card">
+        <div class="card__body">
+          <div class="flex items-center gap-2" style="margin-bottom:10px;">
+            <div class="avatar-chip__circle" style="width:36px;height:36px;font-size:13px;">NS</div>
+            <div><div class="t-h3">Northline Steel</div><div class="t-small c-text-2">Raw materials · Tier 1</div></div>
+          </div>
+          <div class="flex justify-between t-small c-text-2" style="margin-bottom:4px;"><span>Open POs</span><span class="t-mono-sm c-text-1">3</span></div>
+          <div class="flex justify-between t-small c-text-2" style="margin-bottom:10px;"><span>Contract renews</span><span class="t-mono-sm c-text-1">90 days</span></div>
+          <span class="badge badge--green">Preferred Vendor</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__body">
+          <div class="flex items-center gap-2" style="margin-bottom:10px;">
+            <div class="avatar-chip__circle" style="width:36px;height:36px;font-size:13px;">BF</div>
+            <div><div class="t-h3">Baltic Fasteners</div><div class="t-small c-text-2">Hardware · Tier 2</div></div>
+          </div>
+          <div class="flex justify-between t-small c-text-2" style="margin-bottom:4px;"><span>Open POs</span><span class="t-mono-sm c-text-1">1</span></div>
+          <div class="flex justify-between t-small c-text-2" style="margin-bottom:10px;"><span>Contract renews</span><span class="t-mono-sm c-text-1">214 days</span></div>
+          <span class="badge badge--blue">Active</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__body">
+          <div class="flex items-center gap-2" style="margin-bottom:10px;">
+            <div class="avatar-chip__circle" style="width:36px;height:36px;font-size:13px;">VH</div>
+            <div><div class="t-h3">Veridian Hydraulics</div><div class="t-small c-text-2">Components · Tier 2</div></div>
+          </div>
+          <div class="flex justify-between t-small c-text-2" style="margin-bottom:4px;"><span>Open POs</span><span class="t-mono-sm c-text-1">0</span></div>
+          <div class="flex justify-between t-small c-text-2" style="margin-bottom:10px;"><span>RFQ pending</span><span class="t-mono-sm c-text-1">RFQ-2241</span></div>
+          <span class="badge badge--yellow">Awaiting RFQ</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.4fr 1fr;gap:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Purchase Orders</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>PO #</th><th>Vendor</th><th>Items</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-cell">PO-55012</td><td>Northline Steel</td><td>12t coil stock</td><td class="mono-cell">€48,200</td><td><span class="badge badge--green">Approved</span></td></tr>
+              <tr><td class="mono-cell">PO-55009</td><td>Baltic Fasteners</td><td>M8 bolts, 50,000 pcs</td><td class="mono-cell">€6,750</td><td><span class="badge badge--blue">Shipped</span></td></tr>
+              <tr><td class="mono-cell">PO-55005</td><td>Northline Steel</td><td>Sheet metal, gauge 1.5mm</td><td class="mono-cell">€31,400</td><td><span class="badge badge--gray">Received</span></td></tr>
+              <tr><td class="mono-cell">PO-55001</td><td>Veridian Hydraulics</td><td>Seal kits, type C</td><td class="mono-cell">€9,120</td><td><span class="badge badge--yellow">Pending Approval</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Approval Workflow — PO-55001</span></div>
+        <div class="card__body">
+          <div class="v-timeline">
+            <div class="v-timeline-item">
+              <div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--success-green);"></div><div class="v-timeline-line"></div></div>
+              <div><div class="v-timeline-title">Requested</div><div class="v-timeline-desc">Sofia Varga · Procurement Analyst</div></div>
+            </div>
+            <div class="v-timeline-item">
+              <div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--safety-yellow);"></div><div class="v-timeline-line"></div></div>
+              <div><div class="v-timeline-title">Pending — Department Head</div><div class="v-timeline-desc">Awaiting sign-off from Markus Krüger</div></div>
+            </div>
+            <div class="v-timeline-item">
+              <div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--panel-border);"></div></div>
+              <div><div class="t-small" style="color:var(--text-3);">Finance Review</div><div class="v-timeline-desc">Not yet started</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 6. QUALITY ASSURANCE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="quality-assurance" class="showcase-section" style="background:var(--bg-1);">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">06 · Quality</div>
+        <div class="section-title">Quality Assurance</div>
+        <div class="section-desc">Defect tracking, inspections, compliance audits, and corrective action workflows.</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+      <div class="card"><div class="card__body"><div class="comp-label">Defect Rate</div><div class="t-mono-lg c-orange">1.8%</div></div></div>
+      <div class="card"><div class="card__body"><div class="comp-label">Inspections Today</div><div class="t-mono-lg">214</div></div></div>
+      <div class="card"><div class="card__body"><div class="comp-label">Open CAPAs</div><div class="t-mono-lg c-red">4</div></div></div>
+      <div class="card"><div class="card__body"><div class="comp-label">Audit Compliance</div><div class="t-mono-lg c-green">99.2%</div></div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.3fr 1fr;gap:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Defect Tracking — Batch BX-2026-0619</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Defect ID</th><th>Type</th><th>Station</th><th>Severity</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-cell">DF-9012</td><td>Surface scratch</td><td class="mono-cell">QA-2</td><td><span class="priority priority--low">Minor</span></td><td><span class="badge badge--green">Resolved</span></td></tr>
+              <tr><td class="mono-cell">DF-9015</td><td>Dimensional deviation</td><td class="mono-cell">QA-1</td><td><span class="priority priority--high">Major</span></td><td><span class="badge badge--orange">Under Review</span></td></tr>
+              <tr><td class="mono-cell">DF-9018</td><td>Weld porosity</td><td class="mono-cell">QA-3</td><td><span class="priority priority--critical">Critical</span></td><td><span class="badge badge--red">CAPA Opened</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">CAPA Workflow — CAPA-0091</span></div>
+        <div class="card__body">
+          <div class="t-small c-text-2" style="margin-bottom:10px;">Root cause: weld porosity from inconsistent shielding gas flow.</div>
+          <div class="v-timeline">
+            <div class="v-timeline-item"><div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--success-green);"></div><div class="v-timeline-line"></div></div><div><div class="v-timeline-title">Containment</div><div class="v-timeline-desc">Affected lot quarantined — completed</div></div></div>
+            <div class="v-timeline-item"><div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--success-green);"></div><div class="v-timeline-line"></div></div><div><div class="v-timeline-title">Root Cause Analysis</div><div class="v-timeline-desc">5-Why completed by QA team</div></div></div>
+            <div class="v-timeline-item"><div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--safety-yellow);"></div></div><div><div class="v-timeline-title">Corrective Action — In Progress</div><div class="v-timeline-desc">Gas flow regulator replacement scheduled</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card__head"><span class="card__title">Audit Log</span></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Entity</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">2026-06-19 14:02:11</td><td>Elena Fischer</td><td>Approved inspection report</td><td class="mono-cell">QA-RPT-4012</td></tr>
+            <tr><td class="mono-cell">2026-06-19 13:47:55</td><td>Sofia Varga</td><td>Opened CAPA</td><td class="mono-cell">CAPA-0091</td></tr>
+            <tr><td class="mono-cell">2026-06-19 12:15:08</td><td>System</td><td>Auto-flagged dimensional deviation</td><td class="mono-cell">DF-9015</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 7. EMPLOYEE OPERATIONS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="employee-operations" class="showcase-section">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">07 · Workforce</div>
+        <div class="section-title">Employee Operations</div>
+        <div class="section-desc">Technicians, operators, shift planning, attendance, and certifications.</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;">
+      <div class="card"><div class="card__body">
+        <div class="flex items-center gap-2" style="margin-bottom:10px;">
+          <div class="avatar-chip__circle" style="width:38px;height:38px;font-size:13px;background:var(--electric-blue-dim);color:var(--electric-blue);">EF</div>
+          <div><div class="t-h3">Elena Fischer</div><div class="t-small c-text-2">Senior Maintenance Technician</div></div>
+        </div>
+        <div class="flex gap-2" style="margin-bottom:8px;"><span class="badge badge--green">On Shift</span><span class="badge badge--blue">Line C-22</span></div>
+        <div class="t-mono-sm c-text-3">Certifications: Hydraulics L3 · Electrical Safety</div>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <div class="flex items-center gap-2" style="margin-bottom:10px;">
+          <div class="avatar-chip__circle" style="width:38px;height:38px;font-size:13px;background:var(--machine-orange-dim);color:var(--machine-orange);">MK</div>
+          <div><div class="t-h3">Markus Krüger</div><div class="t-small c-text-2">Maintenance Lead</div></div>
+        </div>
+        <div class="flex gap-2" style="margin-bottom:8px;"><span class="badge badge--green">On Shift</span><span class="badge badge--blue">Conveyor CX-09</span></div>
+        <div class="t-mono-sm c-text-3">Certifications: Robotics L2 · Lockout-Tagout</div>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <div class="flex items-center gap-2" style="margin-bottom:10px;">
+          <div class="avatar-chip__circle" style="width:38px;height:38px;font-size:13px;background:var(--success-green-dim);color:var(--success-green);">SV</div>
+          <div><div class="t-h3">Sofia Varga</div><div class="t-small c-text-2">Procurement Analyst</div></div>
+        </div>
+        <div class="flex gap-2" style="margin-bottom:8px;"><span class="badge badge--gray">Off Shift</span></div>
+        <div class="t-mono-sm c-text-3">Certifications: Vendor Management · ISO 9001 Auditor</div>
+      </div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.4fr 1fr;gap:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Shift Planning — Week 25</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Employee</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th></tr></thead>
+            <tbody>
+              <tr><td>Elena Fischer</td><td class="mono-cell">B</td><td class="mono-cell">B</td><td class="mono-cell">B</td><td class="mono-cell">Off</td><td class="mono-cell">B</td></tr>
+              <tr><td>Markus Krüger</td><td class="mono-cell">A</td><td class="mono-cell">A</td><td class="mono-cell">Off</td><td class="mono-cell">A</td><td class="mono-cell">A</td></tr>
+              <tr><td>Sofia Varga</td><td class="mono-cell">Day</td><td class="mono-cell">Day</td><td class="mono-cell">Day</td><td class="mono-cell">Day</td><td class="mono-cell">Off</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Attendance — Today</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="progress-row"><span class="t-small" style="width:90px;">Present</span><div class="progress"><div class="progress__fill progress__fill--green" style="width:94%;"></div></div><span class="progress-row__pct t-num">94%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:90px;">On leave</span><div class="progress"><div class="progress__fill progress__fill--yellow" style="width:4%;"></div></div><span class="progress-row__pct t-num">4%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:90px;">Absent</span><div class="progress"><div class="progress__fill progress__fill--red" style="width:2%;"></div></div><span class="progress-row__pct t-num">2%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 8. INDUSTRIAL ANALYTICS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="industrial-analytics" class="showcase-section" style="background:var(--bg-1);">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">08 · Analytics</div>
+        <div class="section-title">Industrial Analytics</div>
+        <div class="section-desc">OEE trends, downtime root causes, energy consumption, and sustainability metrics.</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">OEE Trend — Last 7 Days</span></div>
+        <div class="card__body">
+          <svg width="100%" height="140" viewBox="0 0 600 140" preserveAspectRatio="none">
+            <line x1="0" y1="35" x2="600" y2="35" stroke="var(--panel-border-soft)" stroke-width="1"/>
+            <line x1="0" y1="70" x2="600" y2="70" stroke="var(--panel-border-soft)" stroke-width="1"/>
+            <line x1="0" y1="105" x2="600" y2="105" stroke="var(--panel-border-soft)" stroke-width="1"/>
+            <polyline points="0,60 100,52 200,58 300,40 400,44 500,28 600,32" fill="none" stroke="var(--safety-yellow)" stroke-width="2.5"/>
+            <polyline points="0,90 100,84 200,88 300,76 400,80 500,68 600,70" fill="none" stroke="var(--electric-blue)" stroke-width="2" opacity=".7"/>
+          </svg>
+          <div class="flex gap-4" style="margin-top:6px;">
+            <span class="t-small c-text-2"><span style="display:inline-block;width:8px;height:8px;background:var(--safety-yellow);border-radius:2px;margin-right:5px;"></span>OEE %</span>
+            <span class="t-small c-text-2"><span style="display:inline-block;width:8px;height:8px;background:var(--electric-blue);border-radius:2px;margin-right:5px;"></span>Performance %</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Downtime Pareto</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="progress-row"><span class="t-small" style="width:130px;">Unplanned faults</span><div class="progress"><div class="progress__fill progress__fill--red" style="width:42%;"></div></div><span class="progress-row__pct t-num">42%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:130px;">Changeovers</span><div class="progress"><div class="progress__fill progress__fill--orange" style="width:27%;"></div></div><span class="progress-row__pct t-num">27%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:130px;">Material delays</span><div class="progress"><div class="progress__fill progress__fill--yellow" style="width:18%;"></div></div><span class="progress-row__pct t-num">18%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:130px;">Minor stops</span><div class="progress"><div class="progress__fill progress__fill--blue" style="width:13%;"></div></div><span class="progress-row__pct t-num">13%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div class="card"><div class="card__body">
+        <div class="comp-label">Energy Consumption</div>
+        <div class="t-mono-lg c-blue">312<span style="font-size:13px;color:var(--text-2);"> MWh/wk</span></div>
+        <div class="t-small c-text-2" style="margin-top:6px;">▼ 4.1% vs. last week</div>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <div class="comp-label">CO₂ Emissions</div>
+        <div class="t-mono-lg c-green">88.4<span style="font-size:13px;color:var(--text-2);"> t/wk</span></div>
+        <div class="t-small c-text-2" style="margin-top:6px;">▼ 6.0% vs. target</div>
+      </div></div>
+      <div class="card"><div class="card__body">
+        <div class="comp-label">Production Trend</div>
+        <div class="t-mono-lg c-yellow">+4.2<span style="font-size:13px;color:var(--text-2);">% MoM</span></div>
+        <div class="t-small c-text-2" style="margin-top:6px;">14,820 units today</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- 9. LOGISTICS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="logistics" class="showcase-section">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">09 · Logistics</div>
+        <div class="section-title">Logistics</div>
+        <div class="section-desc">Inbound and outbound shipments, dock scheduling, fleet status, and container tracking.</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Inbound Shipments</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Shipment</th><th>Vendor</th><th>Dock</th><th>ETA</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-cell">SH-7741</td><td>Baltic Fasteners</td><td class="mono-cell">Dock 3</td><td class="mono-cell">14:45</td><td><span class="badge badge--green">Received</span></td></tr>
+              <tr><td class="mono-cell">SH-7745</td><td>Northline Steel</td><td class="mono-cell">Dock 1</td><td class="mono-cell">16:10</td><td><span class="badge badge--blue">In Transit</span></td></tr>
+              <tr><td class="mono-cell">SH-7748</td><td>Veridian Hydraulics</td><td class="mono-cell">Dock 2</td><td class="mono-cell">Tomorrow</td><td><span class="badge badge--gray">Scheduled</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Outbound Shipments</span></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Shipment</th><th>Customer</th><th>Dock</th><th>Departure</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-cell">OUT-3301</td><td>Auto Components GmbH</td><td class="mono-cell">Dock 4</td><td class="mono-cell">15:30</td><td><span class="badge badge--blue">Loading</span></td></tr>
+              <tr><td class="mono-cell">OUT-3298</td><td>Rhine Mobility AG</td><td class="mono-cell">Dock 5</td><td class="mono-cell">13:00</td><td><span class="badge badge--green">Departed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:14px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Dock Scheduling</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="flex justify-between t-small"><span>Dock 1</span><span class="badge badge--blue">Inbound 16:10</span></div>
+          <div class="flex justify-between t-small"><span>Dock 2</span><span class="badge badge--gray">Free</span></div>
+          <div class="flex justify-between t-small"><span>Dock 3</span><span class="badge badge--green">Idle</span></div>
+          <div class="flex justify-between t-small"><span>Dock 4</span><span class="badge badge--blue">Loading</span></div>
+          <div class="flex justify-between t-small"><span>Dock 5</span><span class="badge badge--gray">Free</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Fleet Status</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="flex justify-between t-small"><span class="mono-cell">TRK-014</span><span class="badge badge--green">En Route</span></div>
+          <div class="flex justify-between t-small"><span class="mono-cell">TRK-009</span><span class="badge badge--gray">Idle</span></div>
+          <div class="flex justify-between t-small"><span class="mono-cell">TRK-021</span><span class="badge badge--orange">Maintenance</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Container Tracking</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="flex justify-between t-small"><span class="mono-cell">CNT-55102</span><span class="t-mono-sm c-text-2">Rotterdam Port</span></div>
+          <div class="flex justify-between t-small"><span class="mono-cell">CNT-55098</span><span class="t-mono-sm c-text-2">In Transit — A40</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- UI COMPONENT INVENTORY -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="component-inventory" class="showcase-section" style="background:var(--bg-1);">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">Design System</div>
+        <div class="section-title">UI Component Inventory</div>
+        <div class="section-desc">Core interface primitives used throughout IronWorks.</div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px;">
+
+      <!-- Buttons -->
+      <div>
+        <div class="comp-label">Buttons</div>
+        <div class="flex gap-2" style="flex-wrap:wrap;margin-bottom:10px;">
+          <button class="btn btn--primary">Primary Action</button>
+          <button class="btn btn--blue">Telemetry</button>
+          <button class="btn btn--outline">Secondary</button>
+          <button class="btn btn--ghost">Ghost</button>
+          <button class="btn btn--danger">Critical</button>
+          <button class="btn btn--success">Confirm</button>
+          <button class="btn btn--primary" disabled>Disabled</button>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Icon Buttons</div>
+        <div class="flex gap-2" style="margin-bottom:10px;">
+          <button class="icon-btn" title="Refresh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+          <button class="icon-btn" title="Export"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+          <button class="icon-btn" title="Settings"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Inputs &amp; Search</div>
+        <div class="flex flex-col gap-3" style="margin-bottom:10px;max-width:380px;">
+          <div class="field"><label class="field__label field__label--req">Work order ID</label><input class="input input--mono" placeholder="WO-XXXXX"></div>
+          <div class="search-input-wrap">
+            <span class="search-input-wrap__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></span>
+            <input class="input" placeholder="Search machines, work orders, vendors…">
+          </div>
+          <select class="select"><option>Line A-17</option><option>Line B-09</option><option>Line C-22</option><option>Line D-05</option></select>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Filters &amp; Segmented Controls</div>
+        <div class="filter-bar" style="margin-bottom:10px;">
+          <button class="filter-btn active" onclick="setFilterBtn(this)">All</button>
+          <button class="filter-btn" onclick="setFilterBtn(this)">Critical</button>
+          <button class="filter-btn" onclick="setFilterBtn(this)">Running</button>
+        </div>
+        <div class="segmented">
+          <button class="segmented__btn active" onclick="setSegment(this)">Day</button>
+          <button class="segmented__btn" onclick="setSegment(this)">Week</button>
+          <button class="segmented__btn" onclick="setSegment(this)">Month</button>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Toggles &amp; Checkboxes</div>
+        <div class="flex flex-col gap-2">
+          <label class="checkbox-row"><input type="checkbox" checked> Auto-acknowledge minor alerts</label>
+          <label class="flex items-center gap-2"><span class="toggle"><input type="checkbox" checked><span class="toggle__track"></span><span class="toggle__thumb"></span></span><span class="t-small">Enable telemetry streaming</span></label>
+        </div>
+      </div>
+
+      <!-- Badges, breadcrumbs, pagination, tabs, accordion -->
+      <div>
+        <div class="comp-label">Badges &amp; Status Pills</div>
+        <div class="flex gap-2" style="flex-wrap:wrap;margin-bottom:10px;">
+          <span class="badge badge--green"><span class="badge__dot badge__dot--pulse"></span>Running</span>
+          <span class="badge badge--orange">Maintenance</span>
+          <span class="badge badge--red"><span class="badge__dot badge__dot--pulse"></span>Critical</span>
+          <span class="badge badge--yellow">Warning</span>
+          <span class="badge badge--blue">Scheduled</span>
+          <span class="badge badge--gray">Idle</span>
+        </div>
+        <div class="flex gap-2" style="flex-wrap:wrap;margin-bottom:10px;">
+          <span class="pill pill--running">● Line Running</span>
+          <span class="pill pill--maint">● Under Maintenance</span>
+          <span class="pill pill--idle">● Idle</span>
+          <span class="pill pill--critical">● Critical Fault</span>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Breadcrumbs</div>
+        <div class="breadcrumbs" style="margin-bottom:10px;">
+          <a href="#">Plant Rhein-Maas</a><span class="breadcrumbs__sep">/</span><a href="#">Line C-22</a><span class="breadcrumbs__sep">/</span><span class="breadcrumbs__current">CNC-404</span>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Pagination</div>
+        <div class="pagination" style="margin-bottom:10px;">
+          <button class="page-btn">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">›</button>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Accordion</div>
+        <div class="accordion" id="demo-accordion">
+          <div class="accordion-item open">
+            <button class="accordion-trigger" onclick="toggleAccordion(this)">CNC-404 — Fault History <span class="accordion-trigger__chevron">▾</span></button>
+            <div class="accordion-panel"><div class="accordion-panel__inner">3 faults in the last 30 days. Most recent: vibration anomaly, flagged 2 minutes ago. Recommend bearing inspection.</div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-trigger" onclick="toggleAccordion(this)">Spare Parts on Hand <span class="accordion-trigger__chevron">▾</span></button>
+            <div class="accordion-panel"><div class="accordion-panel__inner">Bearing kit (×4), spindle seal (×2), drive belt (×6) — Zone C1.</div></div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-trigger" onclick="toggleAccordion(this)">Service Contract <span class="accordion-trigger__chevron">▾</span></button>
+            <div class="accordion-panel"><div class="accordion-panel__inner">Covered under Northline Steel equipment partnership through Dec 2027.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs full width demo -->
+    <div style="margin-top:24px;">
+      <div class="comp-label">Tabs</div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'demo-tab-1')">Overview</button>
+        <button class="tab-btn" onclick="switchTab(this,'demo-tab-2')">Telemetry</button>
+        <button class="tab-btn" onclick="switchTab(this,'demo-tab-3')">Logs</button>
+      </div>
+      <div id="demo-tab-1" class="tab-panel active"><p class="t-small c-text-2">CNC-404 is currently operating at reduced capacity pending bearing inspection.</p></div>
+      <div id="demo-tab-2" class="tab-panel"><p class="t-small c-text-2">Vibration: 4.2mm/s (warning threshold 5.0mm/s). Spindle temp: 61°C.</p></div>
+      <div id="demo-tab-3" class="tab-panel"><p class="t-small c-text-2">14:02:11 — Vibration anomaly flagged. 13:40:02 — Shift handover logged.</p></div>
+    </div>
+
+    <!-- Cards, drawers, modals, toasts, skeletons, empty states -->
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
+      <div>
+        <div class="comp-label">Drawers, Modals &amp; Toasts</div>
+        <div class="flex gap-2" style="flex-wrap:wrap;">
+          <button class="btn btn--outline btn--sm" onclick="openDrawer()">Open Drawer</button>
+          <button class="btn btn--outline btn--sm" onclick="openModal('modal-confirm')">Confirmation Dialog</button>
+          <button class="btn btn--outline btn--sm" onclick="showToast('success','Work order updated','WO-88421 marked as in progress.')">Success Toast</button>
+          <button class="btn btn--outline btn--sm" onclick="showToast('warn','Reorder threshold reached','RM-2240-S has fallen below safety stock.')">Warning Toast</button>
+          <button class="btn btn--outline btn--sm" onclick="showToast('error','Safety interlock triggered','Line D-05 robot cell — emergency stop engaged.')">Error Toast</button>
+        </div>
+
+        <div class="comp-label" style="margin-top:18px;">Loading &amp; Skeleton States</div>
+        <div class="card" style="margin-bottom:10px;">
+          <div class="card__body" style="display:flex;flex-direction:column;gap:8px;">
+            <div class="skeleton skel-lg" style="width:60%;"></div>
+            <div class="skeleton skel-text" style="width:90%;"></div>
+            <div class="skeleton skel-text" style="width:75%;"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="loading-screen">
+            <div class="loading-ring"></div>
+            <div class="loading-text">SYNCING TELEMETRY…</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="comp-label">Empty State</div>
+        <div class="empty-state" style="margin-bottom:18px;">
+          <div class="empty-state__icon">⛭</div>
+          <div class="empty-state__title">No active alerts for this line</div>
+          <div class="empty-state__desc">Line A-17 is operating within normal parameters. New alerts will appear here automatically.</div>
+        </div>
+
+        <div class="comp-label">Command Palette</div>
+        <div class="t-small c-text-2" style="margin-bottom:8px;">Press <kbd style="font-family:var(--font-mono);background:var(--panel-2);padding:1px 6px;border-radius:3px;">Ctrl</kbd> + <kbd style="font-family:var(--font-mono);background:var(--panel-2);padding:1px 6px;border-radius:3px;">K</kbd> anywhere, or:</div>
+        <button class="btn btn--outline btn--sm" onclick="openCommandPalette()">Open Command Palette</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- ADVANCED ENTERPRISE COMPONENTS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="enterprise-components" class="showcase-section">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">Governance</div>
+        <div class="section-title">Advanced Enterprise Components</div>
+        <div class="section-desc">Permissions, audit, approvals, asset lifecycle, incidents, and safety compliance.</div>
+      </div>
+    </div>
+
+    <!-- Permission matrix + Role management -->
+    <div class="grid" style="grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Permission Matrix</span></div>
+        <div class="table-wrap">
+          <table class="perm-matrix">
+            <thead><tr><th>Role</th><th>View Production</th><th>Edit Work Orders</th><th>Approve POs</th><th>Manage Users</th></tr></thead>
+            <tbody>
+              <tr><td>Plant Manager</td><td><span class="perm-check perm-check--on">✓</span></td><td><span class="perm-check perm-check--on">✓</span></td><td><span class="perm-check perm-check--on">✓</span></td><td><span class="perm-check perm-check--on">✓</span></td></tr>
+              <tr><td>Maintenance Lead</td><td><span class="perm-check perm-check--on">✓</span></td><td><span class="perm-check perm-check--on">✓</span></td><td><span class="perm-check perm-check--off"></span></td><td><span class="perm-check perm-check--off"></span></td></tr>
+              <tr><td>Technician</td><td><span class="perm-check perm-check--on">✓</span></td><td><span class="perm-check perm-check--off"></span></td><td><span class="perm-check perm-check--off"></span></td><td><span class="perm-check perm-check--off"></span></td></tr>
+              <tr><td>Procurement Analyst</td><td><span class="perm-check perm-check--off"></span></td><td><span class="perm-check perm-check--off"></span></td><td><span class="perm-check perm-check--on">✓</span></td><td><span class="perm-check perm-check--off"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Role Management</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="flex justify-between items-center"><div><div class="t-small c-text-0" style="font-weight:600;">Plant Manager</div><div class="t-mono-sm c-text-3">3 users</div></div><button class="btn btn--ghost btn--sm">Edit</button></div>
+          <div class="flex justify-between items-center"><div><div class="t-small c-text-0" style="font-weight:600;">Maintenance Lead</div><div class="t-mono-sm c-text-3">5 users</div></div><button class="btn btn--ghost btn--sm">Edit</button></div>
+          <div class="flex justify-between items-center"><div><div class="t-small c-text-0" style="font-weight:600;">Technician</div><div class="t-mono-sm c-text-3">22 users</div></div><button class="btn btn--ghost btn--sm">Edit</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escalation flow + Digital signatures -->
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div class="card">
+        <div class="card__head"><span class="card__title">Escalation Flow — Critical Fault</span></div>
+        <div class="card__body">
+          <div class="v-timeline">
+            <div class="v-timeline-item"><div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--alert-red);"></div><div class="v-timeline-line"></div></div><div><div class="v-timeline-time">14:32:07</div><div class="v-timeline-title">Fault detected — auto-escalated</div><div class="v-timeline-desc">Robot cell D-05 safety interlock triggered</div></div></div>
+            <div class="v-timeline-item"><div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--machine-orange);"></div><div class="v-timeline-line"></div></div><div><div class="v-timeline-time">14:32:40</div><div class="v-timeline-title">Notified Shift Lead</div><div class="v-timeline-desc">Elena Fischer acknowledged within 33s</div></div></div>
+            <div class="v-timeline-item"><div class="v-timeline-left"><div class="v-timeline-dot" style="background:var(--safety-yellow);"></div></div><div><div class="v-timeline-time">14:34:12</div><div class="v-timeline-title">Escalated to Plant Manager</div><div class="v-timeline-desc">No resolution within 2 min SLA — awaiting response</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Digital Signatures — WO-88421 Sign-off</span></div>
+        <div class="card__body">
+          <div class="signature-block" style="margin-bottom:10px;">
+            <div class="signature-line">E. Fischer</div>
+            <div class="signature-meta">Elena Fischer · Senior Technician · Signed 2026-06-19 14:18 CET</div>
+          </div>
+          <div class="signature-block">
+            <div class="signature-line" style="color:var(--text-3);">— Awaiting signature —</div>
+            <div class="signature-meta">Markus Krüger · Maintenance Lead · Pending</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equipment registry + asset lifecycle -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card__head"><span class="card__title">Equipment Registry</span></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Asset ID</th><th>Type</th><th>Location</th><th>Install Date</th><th>Warranty</th><th>Health</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">CNC-404</td><td>5-axis CNC mill</td><td class="mono-cell">Line C-22</td><td class="mono-cell">2021-03-14</td><td><span class="badge badge--gray">Expired</span></td><td><span class="badge badge--orange">61/100</span></td></tr>
+            <tr><td class="mono-cell">CX-12</td><td>Belt conveyor</td><td class="mono-cell">Floor 1</td><td class="mono-cell">2023-08-02</td><td><span class="badge badge--green">Active</span></td><td><span class="badge badge--green">91/100</span></td></tr>
+            <tr><td class="mono-cell">Robot Cell D-05</td><td>6-axis robotic arm</td><td class="mono-cell">Line D-05</td><td class="mono-cell">2024-11-19</td><td><span class="badge badge--green">Active</span></td><td><span class="badge badge--red">42/100</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card__head"><span class="card__title">Asset Lifecycle Tracker — CNC-404</span></div>
+      <div class="card__body">
+        <div class="lifecycle-track">
+          <div class="lifecycle-stage lifecycle-stage--done"><div class="lifecycle-stage__bar"></div><div class="lifecycle-stage__label">Procured</div></div>
+          <div class="lifecycle-stage lifecycle-stage--done"><div class="lifecycle-stage__bar"></div><div class="lifecycle-stage__label">Commissioned</div></div>
+          <div class="lifecycle-stage lifecycle-stage--current"><div class="lifecycle-stage__bar"></div><div class="lifecycle-stage__label">In Service</div></div>
+          <div class="lifecycle-stage"><div class="lifecycle-stage__bar"></div><div class="lifecycle-stage__label">Refurbishment</div></div>
+          <div class="lifecycle-stage"><div class="lifecycle-stage__bar"></div><div class="lifecycle-stage__label">Decommission</div></div>
+        </div>
+        <div class="t-small c-text-2" style="margin-top:10px;">5 years in service. Refurbishment recommended within 12 months based on usage hours.</div>
+      </div>
+    </div>
+
+    <!-- Incident management + Safety compliance -->
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card" style="border-color:rgba(231,76,60,.25);">
+        <div class="card__head"><span class="card__title">Incident Management</span><span class="badge badge--green">0 open</span></div>
+        <div class="card__body">
+          <div class="empty-state">
+            <div class="empty-state__icon">🛡</div>
+            <div class="empty-state__title">No open safety incidents</div>
+            <div class="empty-state__desc">142 consecutive days without a reportable incident at Plant Rhein-Maas.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__head"><span class="card__title">Safety Compliance Dashboard</span></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="progress-row"><span class="t-small" style="width:140px;">PPE compliance audits</span><div class="progress"><div class="progress__fill progress__fill--green" style="width:99%;"></div></div><span class="progress-row__pct t-num">99%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:140px;">Lockout-tagout adherence</span><div class="progress"><div class="progress__fill progress__fill--green" style="width:100%;"></div></div><span class="progress-row__pct t-num">100%</span></div>
+          <div class="progress-row"><span class="t-small" style="width:140px;">Fire drill completion</span><div class="progress"><div class="progress__fill progress__fill--yellow" style="width:88%;"></div></div><span class="progress-row__pct t-num">88%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- DESIGN GUIDELINES -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="design-guidelines" class="showcase-section" style="background:var(--bg-1);">
+  <div class="shell">
+    <div class="section-head">
+      <div class="section-head__left">
+        <div class="section-eyebrow">Reference</div>
+        <div class="section-title">Design Guidelines</div>
+        <div class="section-desc">Color tokens, typography, spacing, and usage recommendations for the IronWorks design system.</div>
+      </div>
+    </div>
+
+    <div class="comp-label">Color Tokens</div>
+    <div class="grid" style="grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px;">
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#0F1318;"></div><div class="token-swatch__name">Background 0</div><div class="token-swatch__hex">#0F1318</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#151B22;"></div><div class="token-swatch__name">Background 1</div><div class="token-swatch__hex">#151B22</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#1C242D;"></div><div class="token-swatch__name">Background 2</div><div class="token-swatch__hex">#1C242D</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#222C37;"></div><div class="token-swatch__name">Panel 1</div><div class="token-swatch__hex">#222C37</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#2A3643;"></div><div class="token-swatch__name">Panel 2</div><div class="token-swatch__hex">#2A3643</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#F2B705;"></div><div class="token-swatch__name">Safety Yellow</div><div class="token-swatch__hex">#F2B705</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#E67E22;"></div><div class="token-swatch__name">Machine Orange</div><div class="token-swatch__hex">#E67E22</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#2ECC71;"></div><div class="token-swatch__name">Success Green</div><div class="token-swatch__hex">#2ECC71</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#E74C3C;"></div><div class="token-swatch__name">Alert Red</div><div class="token-swatch__hex">#E74C3C</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#4FA3FF;"></div><div class="token-swatch__name">Electric Blue</div><div class="token-swatch__hex">#4FA3FF</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#F2F4F7;"></div><div class="token-swatch__name">Text 0</div><div class="token-swatch__hex">#F2F4F7</div></div>
+      <div class="token-swatch"><div class="token-swatch__box" style="background:#7F8A96;"></div><div class="token-swatch__name">Text 2</div><div class="token-swatch__hex">#7F8A96</div></div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
+      <div>
+        <div class="comp-label">Typography Scale</div>
+        <div class="card"><div class="card__body" style="display:flex;flex-direction:column;gap:12px;">
+          <div><div class="t-display">Display 28/700</div><div class="t-mono-sm c-text-3">Plant overview headlines</div></div>
+          <div><div class="t-h1">Heading 1 22/700</div><div class="t-mono-sm c-text-3">Section titles</div></div>
+          <div><div class="t-h2">Heading 2 18/700</div><div class="t-mono-sm c-text-3">Card titles</div></div>
+          <div><div class="t-body">Body 14/400 — used for descriptions and table content</div></div>
+          <div><div class="t-micro c-text-2">MICRO 11/600 — labels, eyebrows, table headers</div></div>
+          <div><div class="t-mono-md">MONO 15/600 — telemetry, IDs, machine codes</div></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="comp-label">Spacing Tokens</div>
+        <div class="card"><div class="card__body" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="flex items-center gap-3"><div style="width:4px;height:14px;background:var(--safety-yellow);"></div><span class="t-mono-sm">--sp-1 · 4px</span></div>
+          <div class="flex items-center gap-3"><div style="width:8px;height:14px;background:var(--safety-yellow);"></div><span class="t-mono-sm">--sp-2 · 8px</span></div>
+          <div class="flex items-center gap-3"><div style="width:16px;height:14px;background:var(--safety-yellow);"></div><span class="t-mono-sm">--sp-4 · 16px</span></div>
+          <div class="flex items-center gap-3"><div style="width:24px;height:14px;background:var(--safety-yellow);"></div><span class="t-mono-sm">--sp-6 · 24px</span></div>
+          <div class="flex items-center gap-3"><div style="width:40px;height:14px;background:var(--safety-yellow);"></div><span class="t-mono-sm">--sp-8 · 40px</span></div>
+          <div class="flex items-center gap-3"><div style="width:64px;height:14px;background:var(--safety-yellow);"></div><span class="t-mono-sm">--sp-10 · 64px</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:24px;">
+      <div>
+        <div class="comp-label">Component Inventory</div>
+        <div class="card"><div class="card__body">
+          <div class="t-small c-text-1" style="line-height:1.8;">
+            Buttons · Icon buttons · Inputs · Search · Dropdowns · Filters · Segmented controls · Tabs · Accordions · Breadcrumbs · Pagination · Badges · Status pills · Progress bars · Timelines · Data tables · Cards · Drawers · Modals · Confirmation dialogs · Toasts · Skeleton loaders · Empty states · Loading screens · Command palette · Permission matrix · Audit logs · Approval workflow · Role management · Escalation flow · Digital signatures · Equipment registry · Asset lifecycle tracker · Incident management · Safety compliance dashboard
+          </div>
+        </div></div>
+      </div>
+      <div>
+        <div class="comp-label">Usage Recommendations</div>
+        <div class="card"><div class="card__body">
+          <ul style="display:flex;flex-direction:column;gap:8px;">
+            <li class="t-small c-text-1">— Use <strong class="c-yellow">Safety Yellow</strong> only for primary actions and brand marks, never for alerts.</li>
+            <li class="t-small c-text-1">— Reserve <strong class="c-red">Alert Red</strong> exclusively for critical faults and safety incidents.</li>
+            <li class="t-small c-text-1">— All machine IDs, timestamps, and quantities use <strong class="t-mono">IBM Plex Mono</strong> for tabular alignment.</li>
+            <li class="t-small c-text-1">— Pulsing dots indicate live state only — never use on static or historical data.</li>
+            <li class="t-small c-text-1">— Panels use 1px hairline borders, never shadows, to stay legible under factory-floor lighting.</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<footer style="background:var(--bg-0);border-top:1px solid var(--panel-border-soft);padding:28px 0;">
+  <div class="shell flex items-center justify-between" style="flex-wrap:wrap;gap:12px;">
+    <div class="flex items-center gap-3">
+      <div class="nav-brand__mark" style="width:26px;height:26px;font-size:12px;">IW</div>
+      <span class="t-small c-text-2">IronWorks MES/ERP · Plant Rhein-Maas · Build v4.12.0</span>
+    </div>
+    <span class="t-mono-sm c-text-3">© 2026 IronWorks Industrial Systems. Internal use only.</span>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- DRAWER -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="drawer-overlay" id="notifications-drawer">
+  <div class="drawer">
+    <div class="drawer__head">
+      <span class="drawer__title">Notifications</span>
+      <button class="modal__close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer__body">
+      <div class="feed-list">
+        <div class="feed-item"><span class="feed-dot feed-dot--orange"></span><span class="feed-text"><strong>CNC-404</strong> vibration anomaly flagged — inspection recommended</span><span class="feed-time">2m</span></div>
+        <div class="feed-item"><span class="feed-dot feed-dot--yellow"></span><span class="feed-text">Stock alert: <strong>RM-2240-S</strong> below reorder point</span><span class="feed-time">9m</span></div>
+        <div class="feed-item"><span class="feed-dot feed-dot--blue"></span><span class="feed-text">PO-55012 approved for <strong>Northline Steel</strong></span><span class="feed-time">22m</span></div>
+        <div class="feed-item"><span class="feed-dot feed-dot--green"></span><span class="feed-text">WO-88419 completed by <strong>Markus Krüger</strong></span><span class="feed-time">1h</span></div>
+        <div class="feed-item"><span class="feed-dot feed-dot--orange"></span><span class="feed-text">RFQ-2241 awaiting response from <strong>Veridian Hydraulics</strong></span><span class="feed-time">2h</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODALS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-new-wo">
+  <div class="modal">
+    <div class="modal__head"><span class="modal__title">New Work Order</span><button class="modal__close" onclick="closeModal('modal-new-wo')">✕</button></div>
+    <div class="modal__body">
+      <div class="field" style="margin-bottom:12px;"><label class="field__label field__label--req">Asset</label><select class="select"><option>CNC-404</option><option>Conveyor CX-12</option><option>Robot Cell D-05</option></select></div>
+      <div class="field" style="margin-bottom:12px;"><label class="field__label field__label--req">Description</label><textarea class="textarea" rows="3" placeholder="Describe the issue or maintenance task…"></textarea></div>
+      <div class="field" style="margin-bottom:12px;"><label class="field__label">Priority</label>
+        <div class="flex gap-2"><label class="radio-row"><input type="radio" name="prio" checked> Critical</label><label class="radio-row"><input type="radio" name="prio"> High</label><label class="radio-row"><input type="radio" name="prio"> Medium</label></div>
+      </div>
+      <div class="field"><label class="field__label">Assign technician</label><select class="select"><option>Elena Fischer</option><option>Markus Krüger</option><option>Sofia Varga</option></select></div>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('modal-new-wo')">Cancel</button>
+      <button class="btn btn--primary" onclick="closeModal('modal-new-wo'); showToast('success','Work order created','New work order added to the queue.')">Create Work Order</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal modal--sm">
+    <div class="modal__head"><span class="modal__title">Confirm Action</span><button class="modal__close" onclick="closeModal('modal-confirm')">✕</button></div>
+    <div class="modal__body"><p class="t-body c-text-1">This will mark WO-88421 as complete and notify the requesting department. This action cannot be undone.</p></div>
+    <div class="modal__footer">
+      <button class="btn btn--ghost" onclick="closeModal('modal-confirm')">Cancel</button>
+      <button class="btn btn--danger" onclick="closeModal('modal-confirm'); showToast('success','Work order completed','WO-88421 marked as complete.')">Confirm Completion</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- COMMAND PALETTE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="cmdk-overlay" id="command-palette">
+  <div class="cmdk-box">
+    <div class="cmdk-input-row">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="cmdk-input" id="cmdk-input" placeholder="Search machines, work orders, vendors, technicians…" autocomplete="off">
+      <kbd style="font-family:var(--font-mono);font-size:10px;color:var(--text-3);border:1px solid var(--panel-border);padding:1px 5px;border-radius:3px;">ESC</kbd>
+    </div>
+    <div class="cmdk-list">
+      <div class="cmdk-group-label">Machines</div>
+      <div class="cmdk-item"><span class="cmdk-item__icon">⚙</span>CNC-404 — Line C-22<span class="cmdk-item__meta">61/100 health</span></div>
+      <div class="cmdk-item"><span class="cmdk-item__icon">⚙</span>Conveyor CX-12<span class="cmdk-item__meta">91/100 health</span></div>
+      <div class="cmdk-group-label">Work Orders</div>
+      <div class="cmdk-item"><span class="cmdk-item__icon">▤</span>WO-88421 — Bearing replacement<span class="cmdk-item__meta">In Progress</span></div>
+      <div class="cmdk-item"><span class="cmdk-item__icon">▤</span>WO-88423 — Tooling calibration<span class="cmdk-item__meta">Blocked</span></div>
+      <div class="cmdk-group-label">Vendors</div>
+      <div class="cmdk-item"><span class="cmdk-item__icon">⛛</span>Northline Steel<span class="cmdk-item__meta">Preferred</span></div>
+      <div class="cmdk-group-label">People</div>
+      <div class="cmdk-item"><span class="cmdk-item__icon">◉</span>Elena Fischer — Senior Technician</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TOAST STACK -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="toast-stack" id="toast-stack"></div>
+
+<!-- BODY_CONTENT_PLACEHOLDER -->
+</body>
+<!-- ===================================================== -->
+<!-- HTML END -->
+<!-- ===================================================== -->
+
+<!-- ===================================================== -->
+<!-- JS START -->
+<!-- ===================================================== -->
+<script>
+/* JS_PLACEHOLDER */
+</script>
+<!-- ===================================================== -->
+<!-- JS END -->
+<!-- ===================================================== -->
+</html>

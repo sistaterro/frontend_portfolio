@@ -40,6 +40,7 @@ assets/
   atlas.png
   blackstone.png
   forum.png
+  ironworks.png
   lumex.png
   medcore.png
   newsroom.png
@@ -99,6 +100,18 @@ assets/
 **Feel:** loud, underground, opinionated, social, high-energy  
 **Best for:** forums, creator communities, media feeds, social dashboards, content-heavy apps  
 **Visual signature:** dark burnt surfaces, hot orange accents, condensed display type, mono metadata, chunky cards, post composers, media badges, modals, toasts, and forum-native interaction states.
+
+---
+
+### IronWorks
+
+![IronWorks aesthetic preview](assets/ironworks.png)
+
+**File:** `ironworks.html`  
+**Type:** Manufacturing execution / industrial ERP design system  
+**Feel:** operational, rugged, technical, safety-aware, plant-floor ready  
+**Best for:** manufacturing systems, MES dashboards, ERP operations, maintenance tools, procurement workflows, industrial command centers  
+**Visual signature:** dark steel surfaces, safety yellow accents, machine orange warnings, mono telemetry, production KPIs, equipment health grids, work orders, audit logs, and factory-control interactions.
 
 ---
 

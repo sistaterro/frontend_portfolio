@@ -30,6 +30,9 @@ assets/hrcomponent.png
 forum.html
 assets/forum.png
 
+ironworks.html
+assets/ironworks.png
+
 blackstone.html
 assets/blackstone.png
 
@@ -88,6 +91,7 @@ When a user asks for a new aesthetic:
 - `atlas.html` - Aerospace / robotics / defense mission-control design system. Deep navy, technical telemetry, precise and high-stakes.
 - `blackstone.html` - Premium executive finance / investment design system. Charcoal, ivory, muted gold, formal and high-trust.
 - `forum.html` - Forum / community media platform component system. Dark, loud, orange, condensed, social.
+- `ironworks.html` - Manufacturing execution / industrial ERP design system. Dark steel, safety yellow, machine telemetry, plant-floor operations.
 - `lumex.html` - Neon futurism / solar tech. Dark, glowing, particle-driven, premium tech.
 - `medcore.html` - Healthcare / telemedicine / hospital operations design system. Clean medical blues, teal accents, accessible and calm.
 - `newsroom.html` - Editorial / journalism / publishing design system. Warm paper, serif hierarchy, thin rules, credible and print-inspired.
